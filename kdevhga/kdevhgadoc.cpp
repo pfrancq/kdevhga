@@ -30,11 +30,28 @@
 */
 
 
+
+//-----------------------------------------------------------------------------
+// include files for ANSI C/C++
+#include <stdlib.h>
+
+
+//-----------------------------------------------------------------------------
+// include files for R Project
+#include <rxml/rxmlstruct.h>
+#include <rxml/rxmlfile.h>
+#include <rxml/rxmltagcursor.h>
+using namespace RXML;
+
+
+//-----------------------------------------------------------------------------
 // include files for Qt
 #include <qdir.h>
 #include <qfileinfo.h>
 #include <qwidget.h>
 
+
+//-----------------------------------------------------------------------------
 // include files for KDE
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -42,200 +59,274 @@
 #include <kio/job.h>
 #include <kio/netaccess.h>
 
+
+//-----------------------------------------------------------------------------
 // application specific includes
 #include "kdevhga.h"
 #include "kdevhgaview.h"
 #include "kdevhgadoc.h"
 
-KDevHGADoc::KDevHGADoc()
+
+
+//-----------------------------------------------------------------------------
+//
+// class KDevHGADoc
+//
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+KDevHGADoc::KDevHGADoc(void)
+	: Objs(0), Words(100)
 {
-  pViewList = new QList<KDevHGAView>;
-  pViewList->setAutoDelete(false);
+	pViewList = new QList<KDevHGAView>;
+	pViewList->setAutoDelete(false);
 }
 
-KDevHGADoc::~KDevHGADoc()
-{
-  delete pViewList;
-}
 
-void KDevHGADoc::addView(KDevHGAView *view)
+//-----------------------------------------------------------------------------
+void KDevHGADoc::addView(KDevHGAView* view)
 {
-  pViewList->append(view);
+	pViewList->append(view);
 	changedViewList();
 }
 
-void KDevHGADoc::removeView(KDevHGAView *view)
+
+//-----------------------------------------------------------------------------
+void KDevHGADoc::removeView(KDevHGAView* view)
 {
-	  pViewList->remove(view);
-	  if(!pViewList->isEmpty())
-			changedViewList();
-		else
-			deleteContents();
+	pViewList->remove(view);
+	if(!pViewList->isEmpty())
+		changedViewList();
+	else
+		deleteContents();
 }
 
-void KDevHGADoc::changedViewList(){	
-	
+
+//-----------------------------------------------------------------------------
+void KDevHGADoc::changedViewList(void)
+{
 	KDevHGAView *w;
-	if((int)pViewList->count() == 1){
-  	w=pViewList->first();
-  	w->setCaption(URL().fileName());
+	if((int)pViewList->count() == 1)
+	{
+		w=pViewList->first();
+		w->setCaption(URL().fileName());
 	}
-	else{	
+	else
+	{
 		int i;
-    for( i=1,w=pViewList->first(); w!=0; i++, w=pViewList->next())
-  		w->setCaption(QString(URL().fileName()+":%1").arg(i));	
+		for( i=1,w=pViewList->first(); w!=0; i++, w=pViewList->next())
+			w->setCaption(QString(URL().fileName()+":%1").arg(i));
 	}
 }
 
-bool KDevHGADoc::isLastView() {
-  return ((int) pViewList->count() == 1);
+
+//-----------------------------------------------------------------------------
+bool KDevHGADoc::isLastView(void)
+{
+	return ((int) pViewList->count() == 1);
 }
 
 
-void KDevHGADoc::updateAllViews(KDevHGAView *sender)
+//-----------------------------------------------------------------------------
+void KDevHGADoc::updateAllViews(KDevHGAView* sender)
 {
-  KDevHGAView *w;
-  for(w=pViewList->first(); w!=0; w=pViewList->next())
-  {
-     w->update(sender);
-  }
+	KDevHGAView *w;
 
-}
-
-void KDevHGADoc::setURL(const KURL &url)
-{
-  doc_url=url;
-}
-
-const KURL& KDevHGADoc::URL() const
-{
-  return doc_url;
-}
-
-void KDevHGADoc::closeDocument()
-{
-  KDevHGAView *w;
-  if(!isLastView())
-  {
-    for(w=pViewList->first(); w!=0; w=pViewList->next())
-    {
-   	 	if(!w->close())
- 				break;
-    }
+	for(w=pViewList->first(); w!=0; w=pViewList->next())
+	{
+		w->update(sender);
 	}
-  if(isLastView())
-  {
-  	w=pViewList->first();
-  	w->close();
-  }
 }
 
-bool KDevHGADoc::newDocument()
+
+//-----------------------------------------------------------------------------
+void KDevHGADoc::setURL(const KURL& url)
 {
-  /////////////////////////////////////////////////
-  // TODO: Add your document initialization code here
-  /////////////////////////////////////////////////
-  modified=false;
-  return true;
+	doc_url=url;
 }
 
-bool KDevHGADoc::openDocument(const KURL &url, const char *format /*=0*/)
+
+//-----------------------------------------------------------------------------
+const KURL& KDevHGADoc::URL(void) const
 {
+	return doc_url;
+}
 
-  QString tmpfile;
-  KIO::NetAccess::download( url, tmpfile );
 
-  /////////////////////////////////////////////////
-	QFile f( tmpfile );
-	if ( !f.open( IO_ReadOnly ) )
+//-----------------------------------------------------------------------------
+void KDevHGADoc::closeDocument(void)
+{
+	KDevHGAView *w;
+
+	if(!isLastView())
+	{
+		for(w=pViewList->first(); w!=0; w=pViewList->next())
+		{
+			if(!w->close())
+				break;
+		}
+	}
+	if(isLastView())
+	{
+		w=pViewList->first();
+		w->close();
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+bool KDevHGADoc::newDocument(void)
+{
+	// TODO: Add your document initialization code here
+	modified=false;
+	return true;
+}
+
+
+//-----------------------------------------------------------------------------
+bool KDevHGADoc::openDocument(const KURL& url,const char* /*format*/)
+{
+	QString tmpfile;
+	char tmp[100];
+	RXMLTag *tag;
+	unsigned int i;
+	RObjH* obj;
+	Word* w;
+
+	// Load File
+	KIO::NetAccess::download(url,tmpfile);
+	QFile fl(tmpfile);
+	if(!fl.open(IO_ReadOnly))
 		return false;
-  /////////////////////////////////////////////////
-  // TODO: Add your document opening code here
-  /////////////////////////////////////////////////
-	f.close();
+	fl.close();
+	strcpy(tmp,tmpfile);
 
-  /////////////////////////////////////////////////
-  KIO::NetAccess::removeTempFile( tmpfile );
-  doc_url=url;
-	
-  modified=false;
-  return true;
+	RXMLStruct s;
+	RXMLFile f(tmp,&s);
+
+	// Load Objects
+	tag=s.GetTag("Objects");
+	if(tag)
+	{
+		// Read number objects info
+		Objs=new RObjs<RObjH>(tag->NbPtr);
+
+		// Read each objects
+		RXMLTagCursor cObjs(tag);
+		for(i=0,cObjs.Start();!cObjs.End();i++,cObjs.Next())
+			if(cObjs()->GetName()=="Object")
+			{
+				RXMLTagCursor cWords(cObjs());
+				Objs->InsertPtr(obj=new RObjH(i,cObjs()->GetAttrValue("Id"),cObjs()->NbPtr));
+				for(cWords.Start();!cWords.End();cWords.Next())
+					if(cWords()->GetName()=="Include")
+					{
+						w=Words.GetInsertPtr<RString>(cWords()->GetAttrValue("Word"));
+						if(w->Id==0xFFFFFFFF)
+							w->Id=Words.NbPtr-1;
+						obj->AddAttribute(w->Id);
+					}
+			}
+	}
+
+	// Remove
+	KIO::NetAccess::removeTempFile( tmpfile );
+	doc_url=url;
+	modified=false;
+	return true;
 }
 
-bool KDevHGADoc::saveDocument(const KURL &url, const char *format /*=0*/)
+
+//-----------------------------------------------------------------------------
+bool KDevHGADoc::saveDocument(const KURL& url, const char* /*format*/)
 {
 //	QFile f( filename );
 //	if ( !f.open( IO_WriteOnly ) )
 //		return false;
 //
-//  /////////////////////////////////////////////////
 //  // TODO: Add your document saving code here
-//  /////////////////////////////////////////////////
 //
 //  f.close();
 //
 //  modified=false;
 //	m_filename=filename;
 //	m_title=QFileInfo(f).fileName();
-  return true;
+	return true;
 }
 
-void KDevHGADoc::deleteContents()
+
+//-----------------------------------------------------------------------------
+void KDevHGADoc::deleteContents(void)
 {
-  /////////////////////////////////////////////////
   // TODO: Add implementation to delete the document contents
-  /////////////////////////////////////////////////
-
+	if(Objs)
+	{
+		delete Objs;
+		Objs=0;
+	}
 }
 
+
+//-----------------------------------------------------------------------------
 bool KDevHGADoc::canCloseFrame(KDevHGAView* pFrame)
 {
 	if(!isLastView())
 		return true;
-		
+
 	bool ret=false;
-  if(isModified())
-  {
+	if(isModified())
+	{
 		KURL saveURL;
-  	switch(KMessageBox::warningYesNoCancel(pFrame, i18n("The current file has been modified.\n"
-                          "Do you want to save it?"),URL().fileName()))
-    {
+		switch(KMessageBox::warningYesNoCancel(pFrame, i18n("The current file has been modified.\nDo you want to save it?"),URL().fileName()))
+	{
 			case KMessageBox::Yes:
 				if(URL().fileName().contains(i18n("Untitled")))
 				{
-					saveURL=KFileDialog::getSaveURL(QDir::currentDirPath(),
-                      i18n("*|All files"), pFrame, i18n("Save as..."));
-          if(saveURL.isEmpty())
-          	return false;
+					saveURL=KFileDialog::getSaveURL(QDir::currentDirPath(),i18n("*|All files"), pFrame, i18n("Save as..."));
+					if(saveURL.isEmpty())
+						return false;
 				}
 				else
 						saveURL=URL();
-					
+
 				if(!saveDocument(saveURL))
 				{
- 					switch(KMessageBox::warningYesNo(pFrame,i18n("Could not save the current document !\n"
-																												"Close anyway ?"), i18n("I/O Error !")))
- 					{
- 						case KMessageBox::Yes:
- 							ret=true;
- 						case KMessageBox::No:
- 							ret=false;
- 					}	        			
+					switch(KMessageBox::warningYesNo(pFrame,i18n("Could not save the current document !\nClose anyway ?"), i18n("I/O Error !")))
+					{
+						case KMessageBox::Yes:
+							ret=true;
+						case KMessageBox::No:
+							ret=false;
+					}
 				}
 				else
 					ret=true;
 				break;
+
 			case KMessageBox::No:
 				ret=true;
 				break;
+
 			case KMessageBox::Cancel:
 			default:
-				ret=false; 				
+				ret=false;
 				break;
 		}
 	}
 	else
 		ret=true;
-		
+
 	return ret;
+}
+
+
+//-----------------------------------------------------------------------------
+KDevHGADoc::~KDevHGADoc(void)
+{
+	if(Objs)
+	{
+		delete Objs;
+		Objs=0;
+	}
+	delete pViewList;
 }

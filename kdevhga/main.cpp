@@ -30,17 +30,25 @@
 */
 
 
+
+//-----------------------------------------------------------------------------
+// include files for KDE
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
 #include <klocale.h>
 
+
+//-----------------------------------------------------------------------------
+// include files for current project
 #include "kdevhga.h"
 
+
+//-----------------------------------------------------------------------------
 static const char *description =
-	I18N_NOOP("KDevHGA");
-// INSERT A DESCRIPTION FOR YOUR APPLICATION HERE
-	
-	
+	I18N_NOOP("KDevHGA\nDevelopment Application for HGA");
+
+
+//-----------------------------------------------------------------------------
 static KCmdLineOptions options[] =
 {
   { "+[File]", I18N_NOOP("file to open"), 0 },
@@ -48,43 +56,44 @@ static KCmdLineOptions options[] =
   // INSERT YOUR COMMANDLINE OPTIONS HERE
 };
 
+
+//-----------------------------------------------------------------------------
+KDevHGAApp* theApp;
+
+
+//-----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
-
 	KAboutData aboutData( "kdevhga", I18N_NOOP("KDevHGA"),
 		VERSION, description, KAboutData::License_GPL,
-		"(c) 2000, Pascal Francq", 0, 0, "pfrancq@ulb.ac.be");
-	aboutData.addAuthor("Pascal Francq",I18N_NOOP("Maintainer"), "pfrancq@ulb.ac.be");
+		"(c) 1998-2001, Université Libre de Bruxelles", 0, "http://www.ulb.ac.be", "pfrancq@ulb.ac.be");
+	aboutData.addAuthor("Pascal Francq",I18N_NOOP("Project Manager"), "pfrancq@ulb.ac.be");
 	
 	KCmdLineArgs::init( argc, argv, &aboutData );
 	KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
-  KApplication app;
+	KApplication app;
  
-  if (app.isRestored())
-  {
-    RESTORE(KDevHGAApp);
-  }
-  else 
-  {
-    KDevHGAApp *testmdi = new KDevHGAApp();
-    testmdi->show();
+	if (app.isRestored())
+	{
+		RESTORE(KDevHGAApp);
+	}
+	else
+	{
+		theApp = new KDevHGAApp();
+		theApp->show();
 
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+		KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 		
 		if (args->count())
 		{
 			for(int i=0;i<args->count();i++)
 			{
-        testmdi->openDocumentFile(args->arg(i));
+				theApp->openDocumentFile(args->arg(i));
 		  }
 		}
-		else
-		{
-		  testmdi->openDocumentFile();
-		}
 		args->clear();
-  }
+	}
 
-  return app.exec();
+	return app.exec();
 }  
