@@ -1,0 +1,12 @@
+# KDE Config File  
+[Desktop Entry]
+Type=Application
+Exec=kdevhga -caption "%c" %i %m  
+Icon=kdevhga.png
+MiniIcon=kdevhga.png
+DocPath=kdevhga/index.html
+Comment=
+Comment[de]=
+Terminal=0
+Name=KDevHGA
+Name[de]=KDevHGA
