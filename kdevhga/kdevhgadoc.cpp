@@ -199,7 +199,7 @@ bool KDevHGADoc::openDocument(const KURL& url,const char* /*format*/)
 
 	RXMLStruct s;
 	RXMLFile f(tmp,&s);
-	f.Open(Read);
+	f.Open(RIO::Read);
 
 	// Load Objects
 	tag=s.GetTag("Objects");
