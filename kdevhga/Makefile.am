@@ -5,7 +5,7 @@ kdevhga_SOURCES = gnodeinfos.cpp khgaprjview.cpp khgaheuristicview.cpp \
 		ghga.cpp ginsth.cpp gchromoh.cpp main.cpp qtreeinfos.cpp
 
 kdevhga_LDADD  = $(KDEVHGA_ADD) $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) \
-		$(LIB_QT) $(LIBSOCKET)
+		$(LIB_QT) $(LIBSOCKET) $(LIB_R)
 
 SUBDIRS =
 
