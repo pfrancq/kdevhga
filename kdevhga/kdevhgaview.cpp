@@ -76,7 +76,8 @@ void KDevHGAView::print(QPrinter *pPrinter)
   }
 }
 
-void KDevHGAView::closeEvent(QCloseEvent* e){
+void KDevHGAView::closeEvent(QCloseEvent* /*e*/)
+{
 
 // DO NOT CALL QWidget::closeEvent(e) here !!
 // This will accept the closing by QCloseEvent::accept() by default.

@@ -46,11 +46,9 @@
 // include files for R Project
 #include <rstd/rstring.h>
 #include <rstd/rcontainer.h>
-using namespace RStd;
 #include <rga/robjs.h>
-using namespace RGA;
 #include <rhga/robjh.h>
-using namespace RHGA;
+using namespace R;
 
 
 //-----------------------------------------------------------------------------
@@ -211,7 +209,7 @@ public:
 	* Loads the document by filename and format and emits the updateViews()
 	* signal.
 	*/
-	bool openDocument(const KURL& url,const char* format=0);
+	bool openDocument(const KURL& url=0,const char* format=0);
 
 	/**
 	* Saves the document under filename and format.
@@ -244,11 +242,11 @@ public:
 	~KDevHGADoc(void);
 
 	// friend classes
-	friend KDevHGAView;
-	friend KHGAGAView;
-	friend KHGAHeuristicView;
-	friend KHGAPrjView;
-	friend QListWords;
+	friend class KDevHGAView;
+	friend class KHGAGAView;
+	friend class KHGAHeuristicView;
+	friend class KHGAPrjView;
+	friend class QListWords;
 };
 
 

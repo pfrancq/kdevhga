@@ -30,8 +30,8 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rcontainercursor.h>
-using namespace RStd;
+#include <rstd/rcursor.h>
+using namespace R;
 
 
 //-----------------------------------------------------------------------------
@@ -64,7 +64,7 @@ void KHGAPrjView::createPrj(void)
 {
 	char tmp[100];
 	QListViewItem *item=0,*item2=0,*item3;
-	RContainerCursor<RObjH,unsigned int,true,false> Objs(doc->Objs);
+	RCursor<RObjH,unsigned int> Objs(doc->Objs);
 	unsigned int i;
 	unsigned int *ptr;
 

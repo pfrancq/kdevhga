@@ -36,9 +36,8 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rga/rgasignals.h>
-using namespace RGA;
 #include <rhga/rhga.h>
-using namespace RHGA;
+using namespace R;
 
 
 //-----------------------------------------------------------------------------
@@ -51,7 +50,6 @@ using namespace RHGA;
 // include files for Qt Widgets
 #include <rga/qgamonitor.h>
 #include <rga/qxmlcontainer.h>
-using namespace RGA;
 
 
 //-----------------------------------------------------------------------------

@@ -130,7 +130,7 @@ public:
 	~KDevHGAView(void);
 
 	// friend classes
-	friend KDevHGADoc;
+	friend class KDevHGADoc;
 };
 
 

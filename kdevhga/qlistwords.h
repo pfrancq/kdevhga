@@ -39,7 +39,7 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rhga/rnodesga.h>
-using namespace RHGA;
+using namespace R;
 
 
 //-----------------------------------------------------------------------------
@@ -71,7 +71,7 @@ class QListWords : public QListView
 	void ConstNode(QListViewItem* p,QListViewItem*& cur,RNodeWords* n);
 
 public:
-	QListWords(KDevHGADoc* pDoc,QWidget* parent=0, const char* name=0);
+	QListWords(KDevHGADoc* pDoc,QWidget* parent=0);
 	void setNodes(RNodesGA<RNodeWords,RObjH,RNodeWordsData>* nodes);
 	~QListWords(void);
 };

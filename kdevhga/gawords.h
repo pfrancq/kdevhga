@@ -39,7 +39,7 @@
 // includes files for R Project
 #include <rhga/robjh.h>
 #include <rhga/rnodesga.h>
-using namespace RHGA;
+using namespace R;
 
 
 //-----------------------------------------------------------------------------

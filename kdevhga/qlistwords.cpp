@@ -49,7 +49,7 @@
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-QListWords::QListWords(KDevHGADoc* pDoc,QWidget* parent, const char* name)
+QListWords::QListWords(KDevHGADoc* pDoc,QWidget* parent)
 	: QListView(parent,"Results"), Doc(pDoc)
 {
 	addColumn("Resulting Tree");

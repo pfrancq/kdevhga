@@ -35,11 +35,10 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rmath/random.h>
-using namespace RMath;
+#include <rstd/random.h>
 #include <rhga/rhga.h>
 #include <rhga/rtreeheuristic.h>
-using namespace RHGA;
+using namespace R;
 
 
 //-----------------------------------------------------------------------------

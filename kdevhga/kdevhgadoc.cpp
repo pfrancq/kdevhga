@@ -38,10 +38,9 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rxml/rxmlstruct.h>
-#include <rxml/rxmlfile.h>
-#include <rxml/rxmltagcursor.h>
-using namespace RXML;
+#include <rstd/rxmlstruct.h>
+#include <rstd/rxmlfile.h>
+using namespace R;
 
 
 //-----------------------------------------------------------------------------
@@ -212,16 +211,15 @@ bool KDevHGADoc::openDocument(const KURL& url,const char* /*format*/)
 		Objs=new RObjs<RObjH>(tag->NbPtr);
 
 		// Read each objects
-		RXMLTagCursor cObjs(tag);
-		for(i=0,cObjs.Start();!cObjs.End();i++,cObjs.Next())
-			if(cObjs()->GetName()=="Object")
+		for(i=0,tag->Start();!tag->End();i++,tag->Next())
+			if((*tag)()->GetName()=="Object")
 			{
-				RXMLTagCursor cWords(cObjs());
-				Objs->InsertPtr(obj=new RObjH(i,cObjs()->GetAttrValue("Id"),cObjs()->NbPtr));
-				for(cWords.Start();!cWords.End();cWords.Next())
-					if(cWords()->GetName()=="Include")
+				RXMLTagCursor cWords();
+				Objs->InsertPtr(obj=new RObjH(i,(*tag)()->GetAttrValue("Id"),(*tag)()->NbPtr));
+				for((*tag)()->Start();!(*tag)()->End();(*tag)()->Next())
+					if((*((*tag)()))()->GetName()=="Include")
 					{
-						w=Words.GetInsertPtr<RString>(cWords()->GetAttrValue("Word"));
+						w=Words.GetInsertPtr<RString>((*((*tag)()))()->GetAttrValue("Word"));
 						if(w->Id==0xFFFFFFFF)
 							w->Id=Words.NbPtr-1;
 						obj->AddAttribute(w->Id);
@@ -238,7 +236,7 @@ bool KDevHGADoc::openDocument(const KURL& url,const char* /*format*/)
 
 
 //-----------------------------------------------------------------------------
-bool KDevHGADoc::saveDocument(const KURL& url, const char* /*format*/)
+bool KDevHGADoc::saveDocument(const KURL& /*url*/, const char* /*format*/)
 {
 //	QFile f( filename );
 //	if ( !f.open( IO_WriteOnly ) )

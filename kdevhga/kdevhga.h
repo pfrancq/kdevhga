@@ -45,7 +45,7 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rhga/rhga.h>
-using namespace RHGA;
+using namespace R;
 
 
 //-----------------------------------------------------------------------------
@@ -59,6 +59,7 @@ using namespace RHGA;
 #include <kapp.h>
 #include <kmainwindow.h>
 #include <kaction.h>
+#include <kurl.h>
 
 
 //-----------------------------------------------------------------------------
@@ -445,9 +446,9 @@ public:
 	~KDevHGAApp(void);
 
 	// friend classes
-	friend KDevHGAView;
-	friend KHGAHeuristicView;
-	friend KHGAGAView;
+	friend class KDevHGAView;
+	friend class KHGAHeuristicView;
+	friend class KHGAGAView;
 };
 
 

@@ -54,6 +54,9 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <kstdaction.h>
+#include <kshortcut.h>
+#include <kstatusbar.h>
+#include <kpopupmenu.h>
 
 
 //-----------------------------------------------------------------------------
@@ -136,15 +139,15 @@ void KDevHGAApp::initActions(void)
 	editPaste->setStatusText(i18n("Pastes the clipboard contents to actual position"));
 
 	// Menu "Heuristic"
-	heuristicFF=new KAction(i18n("&First Fit Heuristic"),KAccel::stringToKey("Alt+F"),this,SLOT(slotHeuristicFF(void)),actionCollection(),"heuristic_ff");
-	heuristicRun=new KAction(i18n("&Run Heuristic"),"run",KAccel::stringToKey("Alt+R"),this,SLOT(slotHeuristicRun(void)),actionCollection(),"heuristic_run");
-	heuristicNext=new KAction(i18n("&Next step for Heuristic"),"next",KAccel::stringToKey("Alt+N"),this,SLOT(slotHeuristicNext(void)),actionCollection(),"heuristic_next");
+	heuristicFF=new KAction(i18n("&First Fit Heuristic"),KKey("Alt+F").keyCodeQt(),this,SLOT(slotHeuristicFF(void)),actionCollection(),"heuristic_ff");
+	heuristicRun=new KAction(i18n("&Run Heuristic"),"run",KKey("Alt+R").keyCodeQt(),this,SLOT(slotHeuristicRun(void)),actionCollection(),"heuristic_run");
+	heuristicNext=new KAction(i18n("&Next step for Heuristic"),"next",KKey("Alt+N").keyCodeQt(),this,SLOT(slotHeuristicNext(void)),actionCollection(),"heuristic_next");
 
 	// Menu "GA"
-	GAInit=new KAction(i18n("&Initialize"),"reload",KAccel::stringToKey("Alt+I"),this,SLOT(slotGAInit(void)),actionCollection(),"ga_init");
-	GAStart=new KAction(i18n("&Start"),"exec",KAccel::stringToKey("Alt+S"),this,SLOT(slotGAStart(void)),actionCollection(),"ga_start");
-	GAPause=new KAction(i18n("&Pause"),"player_pause",KAccel::stringToKey("Alt+P"),this,SLOT(slotGAPause(void)),actionCollection(),"ga_pause");
-	GAStop=new KAction(i18n("&Stop"),"stop",KAccel::stringToKey("Alt+T"),this,SLOT(slotGAStop(void)),actionCollection(),"ga_stop");
+	GAInit=new KAction(i18n("&Initialize"),"reload",KKey("Alt+I").keyCodeQt(),this,SLOT(slotGAInit(void)),actionCollection(),"ga_init");
+	GAStart=new KAction(i18n("&Start"),"exec",KKey("Alt+S").keyCodeQt(),this,SLOT(slotGAStart(void)),actionCollection(),"ga_start");
+	GAPause=new KAction(i18n("&Pause"),"player_pause",KKey("Alt+P").keyCodeQt(),this,SLOT(slotGAPause(void)),actionCollection(),"ga_pause");
+	GAStop=new KAction(i18n("&Stop"),"stop",KKey("Alt+T").keyCodeQt(),this,SLOT(slotGAStop(void)),actionCollection(),"ga_stop");
 
 	// Menu "View"
 	viewToolBar = KStdAction::showToolbar(this, SLOT(slotViewToolBar()), actionCollection());
@@ -304,13 +307,13 @@ void KDevHGAApp::readOptions(void)
 
 
 //-----------------------------------------------------------------------------
-void KDevHGAApp::saveProperties(KConfig* _cfg)
+void KDevHGAApp::saveProperties(KConfig* /*_cfg*/)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-void KDevHGAApp::readProperties(KConfig* _cfg)
+void KDevHGAApp::readProperties(KConfig* /*_cfg*/)
 {
 }
 
