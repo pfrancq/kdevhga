@@ -1,0 +1,218 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2001-08-28 09:42+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: ENCODING\n"
+
+#: kdevhga.cpp:104
+msgid "New &Window"
+msgstr ""
+
+#: kdevhga.cpp:105
+msgid "&Tile"
+msgstr ""
+
+#: kdevhga.cpp:106
+msgid "&Cascade"
+msgstr ""
+
+#: kdevhga.cpp:108
+msgid "Creates a new document"
+msgstr ""
+
+#: kdevhga.cpp:109
+msgid "Opens an existing document"
+msgstr ""
+
+#: kdevhga.cpp:110
+msgid "Opens a recently used file"
+msgstr ""
+
+#: kdevhga.cpp:111
+msgid "Saves the actual document"
+msgstr ""
+
+#: kdevhga.cpp:112
+msgid "Saves the actual document as..."
+msgstr ""
+
+#: kdevhga.cpp:113
+msgid "Closes the actual document"
+msgstr ""
+
+#: kdevhga.cpp:114
+msgid "Prints out the actual document"
+msgstr ""
+
+#: kdevhga.cpp:115
+msgid "Quits the application"
+msgstr ""
+
+#: kdevhga.cpp:117
+msgid "Cuts the selected section and puts it to the clipboard"
+msgstr ""
+
+#: kdevhga.cpp:118
+msgid "Copies the selected section to the clipboard"
+msgstr ""
+
+#: kdevhga.cpp:119
+msgid "Pastes the clipboard contents to actual position"
+msgstr ""
+
+#: kdevhga.cpp:121
+msgid "Enables/disables the toolbar"
+msgstr ""
+
+#: kdevhga.cpp:122
+msgid "Enables/disables the statusbar"
+msgstr ""
+
+#: kdevhga.cpp:124
+msgid "&Window"
+msgstr ""
+
+#: kdevhga.cpp:137 kdevhga.cpp:205 kdevhga.cpp:337 kdevhga.cpp:352
+#: kdevhga.cpp:361 kdevhga.cpp:379 kdevhga.cpp:405 kdevhga.cpp:418
+#: kdevhga.cpp:429 kdevhga.cpp:449 kdevhga.cpp:460 kdevhga.cpp:471
+#: kdevhga.cpp:482 kdevhga.cpp:493 kdevhga.cpp:510 kdevhga.cpp:527
+#: kdevhga.cpp:541
+msgid "Ready."
+msgstr ""
+
+#: kdevhga.cpp:167 kdevhga.cpp:342 kdevhga.cpp:357
+msgid "Opening file..."
+msgstr ""
+
+#: kdevhga.cpp:186
+#, c-format
+msgid "Untitled%1"
+msgstr ""
+
+#: kdevhga.cpp:196
+msgid "Could not open document !"
+msgstr ""
+
+#: kdevhga.cpp:196
+msgid "Error !"
+msgstr ""
+
+#: kdevhga.cpp:276
+msgid ""
+"One or more documents have been modified.\n"
+"Save changes before exiting?"
+msgstr ""
+
+#: kdevhga.cpp:287 kdevhga.cpp:376 kdevhga.cpp:396
+msgid "Could not save the current document !"
+msgstr ""
+
+#: kdevhga.cpp:287 kdevhga.cpp:376 kdevhga.cpp:396 kdevhgadoc.cpp:217
+msgid "I/O Error !"
+msgstr ""
+
+#: kdevhga.cpp:333
+msgid "Creating new document..."
+msgstr ""
+
+#: kdevhga.cpp:345 kdevhga.cpp:387 kdevhgadoc.cpp:207
+msgid "*|All files"
+msgstr ""
+
+#: kdevhga.cpp:345
+msgid "Open File..."
+msgstr ""
+
+#: kdevhga.cpp:366
+msgid "Saving file..."
+msgstr ""
+
+#: kdevhga.cpp:384
+msgid "Saving file with a new filename..."
+msgstr ""
+
+#: kdevhga.cpp:410
+msgid "Closing file..."
+msgstr ""
+
+#: kdevhga.cpp:423
+msgid "Printing..."
+msgstr ""
+
+#: kdevhga.cpp:434
+msgid "Exiting..."
+msgstr ""
+
+#: kdevhga.cpp:454
+msgid "Reverting last action..."
+msgstr ""
+
+#: kdevhga.cpp:465
+msgid "Cutting selection..."
+msgstr ""
+
+#: kdevhga.cpp:476
+msgid "Copying selection to clipboard..."
+msgstr ""
+
+#: kdevhga.cpp:487
+msgid "Inserting clipboard contents..."
+msgstr ""
+
+#: kdevhga.cpp:498
+msgid "Toggle the toolbar..."
+msgstr ""
+
+#: kdevhga.cpp:515
+msgid "Toggle the statusbar..."
+msgstr ""
+
+#: kdevhga.cpp:532
+msgid "Opening a new application window..."
+msgstr ""
+
+#: kdevhgadoc.cpp:200
+msgid ""
+"The current file has been modified.\n"
+"Do you want to save it?"
+msgstr ""
+
+#: kdevhgadoc.cpp:216
+msgid ""
+"Could not save the current document !\n"
+"Close anyway ?"
+msgstr ""
+
+#: main.cpp:40 main.cpp:54
+msgid "KDevHGA"
+msgstr ""
+
+#: main.cpp:46
+msgid "file to open"
+msgstr ""
+
+#: main.cpp:57
+msgid "Maintainer"
+msgstr ""
+
+#: _translatorinfo.cpp:1 _translatorinfo.cpp:1
+msgid ""
+"_: NAME OF TRANSLATORS\n"
+"Your names"
+msgstr ""
+
+#: _translatorinfo.cpp:3 _translatorinfo.cpp:3
+msgid ""
+"_: EMAIL OF TRANSLATORS\n"
+"Your emails"
+msgstr ""
