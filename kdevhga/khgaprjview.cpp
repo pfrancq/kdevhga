@@ -66,7 +66,6 @@ void KHGAPrjView::createPrj(void)
 	QListViewItem *item=0,*item2=0,*item3;
 	RCursor<RObjH,unsigned int> Objs(doc->Objs);
 	unsigned int i;
-	unsigned int *ptr;
 
 	// Construct Objects
 	sprintf(tmp,"Objects (%u)",doc->Objs->NbPtr);
@@ -75,14 +74,14 @@ void KHGAPrjView::createPrj(void)
 	{
 
 		// Name of the object
-		sprintf(tmp,"%s (%u)",Objs()->GetName()(),Objs()->GetId());
+		sprintf(tmp,"%s (%u)",Objs()->GetName(),Objs()->GetId());
 		item2 = new QListViewItem(item,item2,tmp);
 		item3=0;
 
 		// Words
-		for(i=Objs()->GetAttr()->NbAttr+1,ptr=Objs()->GetAttr()->List;--i;ptr++)
+		for(i=0;i<Objs()->GetAttr()->GetNbAttr();i++)
 		{
-			sprintf(tmp,"Attribute: \"%s\" (%u)",doc->Words.GetPtr<unsigned int>(*ptr,false)->W(),*ptr);
+			sprintf(tmp,"Attribute: \"%s\" (%u)",doc->Words.GetPtr<unsigned int>((*Objs()->GetAttr())[i],false)->W(),(*Objs()->GetAttr())[i]);
 			item3=new QListViewItem(item2,item3,tmp);
 		}
 		

@@ -99,7 +99,7 @@ KHGAGAView::KHGAGAView(KDevHGADoc* pDoc,QWidget *parent, const char *name,int wf
 	}
 	catch(eGA& e)
 	{
-		KMessageBox::error(this,QString(e.Msg));
+		KMessageBox::error(this,e.Msg.Latin1());
 		Instance=0;
 	}
 	catch(bad_alloc)
@@ -166,7 +166,7 @@ void KHGAGAView::RunGA(void)
 		}
 		catch(eGA& e)
 		{
-			KMessageBox::error(this,QString(e.Msg));
+			KMessageBox::error(this,e.Msg.Latin1());
 		}
 	}
 }

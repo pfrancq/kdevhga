@@ -1,8 +1,8 @@
 ####### kdevelop will overwrite this part!!! (begin)##########
 bin_PROGRAMS = kdevhga
-kdevhga_SOURCES = gawords.cpp qlistwords.cpp khgaprjview.cpp khgaheuristicview.cpp \
+kdevhga_SOURCES = gawords.cpp khgaprjview.cpp khgaheuristicview.cpp \
 		khgagaview.cpp kappoptions.ui kdevhgaview.cpp kdevhgadoc.cpp kdevhga.cpp \
-		ghga.cpp ginsth.cpp gchromoh.cpp main.cpp
+		ghga.cpp ginsth.cpp gchromoh.cpp main.cpp qlistwords.cpp
 
 kdevhga_LDADD  = $(R_LIB)/rhga/librhga.la $(R_LIB)/rstd/librstd.la $(R_LIB)/rga/librga.la \
 		$(QTWIDGETS_LIB)/rga/libkde_rga.la $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) \

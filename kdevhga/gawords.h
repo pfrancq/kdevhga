@@ -74,6 +74,9 @@ public:
 
 	int Compare(const GNodeWords* n) const;
 
+	int Compare(const GNodeWords& n) const;
+
+	void Evaluate(double& val, double nbchoices);
 	GNodeWords& operator=(const GNodeWords& w);
 };
 

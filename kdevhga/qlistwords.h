@@ -39,8 +39,9 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rhga/rnodesga.h>
+#include <rhga/robjh.h>
+#include <rhga/rattrlist.h>
 using namespace R;
-
 
 //-----------------------------------------------------------------------------
 // include files for Qt
@@ -73,8 +74,10 @@ class QListWords : public QListView
 	GChromoH* Chromos;
 	RNodesGA<MyNode,RObjH,GNodeWordsData,KHGAHeuristicView>* Nodes;
 
-	void ConstNode(QListViewItem* p,QListViewItem*& cur,GNodeWords* n);
-	void ConstNode(QListViewItem* p,QListViewItem*& cur,MyNode* n);
+	QString constAttr(const RAttrList* attr);
+	void constObjs(RObjH** objs,unsigned int nb,QListViewItem* item);
+	void constNode(QListViewItem* p,QListViewItem*& cur,GNodeWords* n);
+	void constNode(QListViewItem* p,QListViewItem*& cur,MyNode* n);
 
 public:
 	QListWords(KDevHGADoc* pDoc,QWidget* parent=0);

@@ -35,11 +35,12 @@
 using namespace R;
 using namespace GALILEI;
 
+
 //-----------------------------------------------------------------------------
-// include files for Qt
+// include files for Qt / KDE
 #include <qpixmap.h>
-
-
+#include <kiconloader.h>
+#include <kglobal.h>
 
 
 //-----------------------------------------------------------------------------
@@ -66,106 +67,91 @@ QListWords::QListWords(KDevHGADoc* pDoc,QWidget* parent)
 
 
 //-----------------------------------------------------------------------------
-void QListWords::ConstNode(QListViewItem* p,QListViewItem*& cur,GNodeWords* n)
+QString QListWords::constAttr(const RAttrList* attr)
 {
-	static char tmp[200],tmp2[100];
-	unsigned int i,j;
-	const unsigned int* ptr;
-	GNodeWords** N;
-	RObjH** O;
-	QListViewItem* item2;
-	QListViewItem* item;
+	QString str;
+	unsigned int i;
 
-	sprintf(tmp,"Node: %u (",n->GetId());
-	for(i=n->GetAttr()->NbAttr+1,ptr=n->GetAttr()->List;--i;ptr++)
+	str="(";
+	for(i=0;i<attr->GetNbAttr();i++)
 	{
-		sprintf(tmp2,"\"%s\"",Doc->Words.GetPtr<unsigned int>(*ptr,false)->W());
-		strcat(tmp,tmp2);
 		if(i>1)
-			strcat(tmp,",");
+			str+=",";
+		str+=QString("\"")+Doc->Words.GetPtr<unsigned int>((*attr)[i],false)->W.Latin1()+"\"";
 	}
-	strcat(tmp,")");
-	item=cur;
-	item2=0;
-	if(p)
-		item=new QListViewItem(p,item,tmp);
-	else
-		item=new QListViewItem(this,tmp);
-	item->setPixmap(0,QPixmap("/usr/share/icons/hicolor/16x16/filesystems/folder.png"));
+	str+=")";
+	return(str);
+}
 
-	// Continue the tree with the subnodes.
-	for(i=n->GetNbNodes()+1,N=n->GetNodes();--i;N++)
-	{
-		ConstNode(item,item2,*N);
-	}
 
-	// Continue the tree with the subobjects.
-	for(i=n->GetNbObjs()+1,O=n->GetObjects();--i;O++)
+//-----------------------------------------------------------------------------
+void QListWords::constObjs(RObjH** objs,unsigned int nb,QListViewItem* item)
+{
+	QString str;
+	QListViewItem* item2=0;
+
+	for(nb++;--nb;objs++)
 	{
-		sprintf(tmp,"Object %s (",(*O)->GetName()());
-		for(j=(*O)->GetAttr()->NbAttr+1,ptr=(*O)->GetAttr()->List;--j;ptr++)
-		{
-			sprintf(tmp2,"\"%s\"",Doc->Words.GetPtr<unsigned int>(*ptr,false)->W());
-			strcat(tmp,tmp2);
-			if(j>1)
-				strcat(tmp,",");
-		}
-		strcat(tmp,")");
-		item2=new QListViewItem(item,item2,tmp);
-		item2->setPixmap(0,QPixmap("/usr/share/icons/hicolor/16x16/mimetypes/document.png"));
+		str=QString("Objects ")+(*objs)->GetName().Latin1()+" "+constAttr((*objs)->GetAttr());
+		item2=new QListViewItem(item,item2,str);
+		item2->setPixmap(0,QPixmap(KGlobal::iconLoader()->loadIcon("document",KIcon::Small)));
 	}
 }
 
 
 //-----------------------------------------------------------------------------
-void QListWords::ConstNode(QListViewItem* p,QListViewItem*& cur,MyNode* n)
+void QListWords::constNode(QListViewItem* p,QListViewItem*& cur,GNodeWords* n)
 {
-	static char tmp[200],tmp2[100];
-	unsigned int i,j;
-	const unsigned int* ptr;
-	MyNode** N;
-	RObjH** O;
-	QListViewItem* item2;
-	QListViewItem* item;
+	QString str;
+	unsigned int i;
+	GNodeWords** N;
+	QListViewItem* item2=0;
+	QListViewItem* item=0;
 
-	sprintf(tmp,"Node: %u (",n->GetId());
-	for(i=n->GetAttr()->NbAttr+1,ptr=n->GetAttr()->List;--i;ptr++)
-	{
-		sprintf(tmp2,"\"%s\"",Doc->Words.GetPtr<unsigned int>(*ptr,false)->W());
-		strcat(tmp,tmp2);
-		if(i>1)
-			strcat(tmp,",");
-	}
-	strcat(tmp,")");
+	str="Node: "+QString::number(n->GetId())+" "+constAttr(n->GetAttr());
 	item=cur;
-	item2=0;
 	if(p)
-		item=new QListViewItem(p,item,tmp);
+		item=new QListViewItem(p,item,str);
 	else
-		item=new QListViewItem(this,tmp);
-	item->setPixmap(0,QPixmap("/usr/share/icons/hicolor/16x16/filesystems/folder.png"));
+		item=new QListViewItem(this,str);
+	item->setPixmap(0,QPixmap(KGlobal::iconLoader()->loadIcon("folder",KIcon::Small)));
 
 	// Continue the tree with the subnodes.
 	for(i=n->GetNbNodes()+1,N=n->GetNodes();--i;N++)
 	{
-		ConstNode(item,item2,*N);
+		constNode(item,item2,*N);
 	}
 
 	// Continue the tree with the subobjects.
-	for(i=n->GetNbObjs()+1,O=n->GetObjects();--i;O++)
+	constObjs(n->GetObjects(),n->GetNbObjs(),item);
+}
+
+
+//-----------------------------------------------------------------------------
+void QListWords::constNode(QListViewItem* p,QListViewItem*& cur,MyNode* n)
+{
+	QString str;
+	unsigned int i;
+	MyNode** N;
+	QListViewItem* item2=0;
+	QListViewItem* item=0;
+
+	str="Node: "+QString::number(n->GetId())+" "+constAttr(n->GetAttr());
+	item=cur;
+	if(p)
+		item=new QListViewItem(p,item,str);
+	else
+		item=new QListViewItem(this,str);
+	item->setPixmap(0,QPixmap(KGlobal::iconLoader()->loadIcon("folder",KIcon::Small)));
+
+	// Continue the tree with the subnodes.
+	for(i=n->GetNbNodes()+1,N=n->GetNodes();--i;N++)
 	{
-		sprintf(tmp,"Object %s (",(*O)->GetName()());
-		for(j=(*O)->GetAttr()->NbAttr+1,ptr=(*O)->GetAttr()->List;--j;ptr++)
-		{
-			sprintf(tmp2,"\"%s\"",Doc->Words.GetPtr<unsigned int>(*ptr,false)->W());
-			strcat(tmp,tmp2);
-			if(j>1)
-				strcat(tmp,",");
-		}
-		strcat(tmp,")");
-		item2=new QListViewItem(item,item2,tmp);
-		item2->setPixmap(0,QPixmap("/usr/share/icons/hicolor/16x16/mimetypes/document.png"));
+		constNode(item,item2,*N);
 	}
+
+	// Continue the tree with the subobjects.
+	constObjs(n->GetObjects(),n->GetNbObjs(),item);
 }
 
 
@@ -180,7 +166,7 @@ void QListWords::setNodes(GChromoH* chromos)
 	Nodes=0;
 	clear();
 	for(i=Chromos->Top->GetNbNodes()+1,N=Chromos->Top->GetNodes();--i;N++)
-		ConstNode(0,cur,*N);
+		constNode(0,cur,*N);
 	repaint();
 }
 
@@ -196,7 +182,7 @@ void QListWords::setNodes(RNodesGA<MyNode,RObjH,GNodeWordsData,KHGAHeuristicView
 	Chromos=0;
 	clear();
 	for(i=Nodes->Top->GetNbNodes()+1,N=Nodes->Top->GetNodes();--i;N++)
-		ConstNode(0,cur,*N);
+		constNode(0,cur,*N);
 	repaint();
 }
 

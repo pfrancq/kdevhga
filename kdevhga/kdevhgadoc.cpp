@@ -219,7 +219,7 @@ bool KDevHGADoc::openDocument(const KURL& url,const char* /*format*/)
 				for((*tag)()->Start();!(*tag)()->End();(*tag)()->Next())
 					if((*((*tag)()))()->GetName()=="Include")
 					{
-						w=Words.GetInsertPtr<RString>((*((*tag)()))()->GetAttrValue("Word"));
+						w=Words.GetInsertPtr<RString>((*((*tag)()))()->GetAttrValue("Attribute"));
 						if(w->Id==0xFFFFFFFF)
 							w->Id=Words.NbPtr-1;
 						obj->AddAttribute(w->Id);

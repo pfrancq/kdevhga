@@ -109,6 +109,11 @@ public:
 	virtual bool StopCondition(void);
 
 	/**
+	* This function can be used to do a traitement after the GA stops.
+	*/
+	virtual void PostRun(void);
+
+	/**
 	* Destruct the instance.
 	*/
 	virtual ~GInstH(void);

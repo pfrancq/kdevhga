@@ -66,6 +66,31 @@ int GNodeWords::Compare(const GNodeWords* n) const
 
 
 //------------------------------------------------------------------------------
+int GNodeWords::Compare(const GNodeWords& n) const
+{
+	return(Id-n.Id);
+}
+
+
+//------------------------------------------------------------------------------
+void GNodeWords::Evaluate(double& val, double nbchoices)
+{
+	GNodeWords** ptr;
+	unsigned int i;
+
+	// Update count for this level
+	nbchoices+=NbSubNodes+NbSubObjects;
+
+	// For each objects add number of choices to get there
+	val+=NbSubObjects*nbchoices;
+
+	// Go through each subnodes in order to continue computing the value
+	for(i=NbSubNodes+1,ptr=GetNodes();--i;ptr++)
+		(*ptr)->Evaluate(val,nbchoices);
+}
+
+
+//------------------------------------------------------------------------------
 GNodeWords& GNodeWords::operator=(const GNodeWords& w)
 {
 	RNodeGA<GNodeWords,RObjH,GNodeWordsData,GChromoH>::operator=(w);

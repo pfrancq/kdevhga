@@ -57,7 +57,6 @@ using namespace GALILEI;
 #include "kdevhgadoc.h"
 
 
-
 //-----------------------------------------------------------------------------
 //
 // class MyNode
@@ -190,7 +189,7 @@ void KHGAHeuristicView::NextStep(void)
 	}
 	catch(RTreeHeuristicException& e)
     {
-		KMessageBox::error(this,QString(e.Msg));
+		KMessageBox::error(this,e.Msg.Latin1());
 		Stop=true;
     }
 }

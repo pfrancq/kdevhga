@@ -67,7 +67,10 @@ void GChromoH::Init(GThreadDataH* thData) throw(bad_alloc)
 //------------------------------------------------------------------------------
 void GChromoH::Evaluate(void) throw(eGA)
 {
-	(*Fitness)=1.0;
+	double val=0.0;
+
+	Top->Evaluate(val,0.0);
+	(*Fitness)=val/static_cast<double>(Objs->GetNb());
 }
 
 
