@@ -4,7 +4,7 @@
 
 	Document representing a HGA problem - Implementation.
 
-	Copyright 1998-2004 by the Université Libre de Bruxelles.
+	Copyright 1998-2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -199,7 +199,7 @@ bool KDevHGADoc::openDocument(const KURL& url,const char* /*format*/)
 
 	RXMLStruct s;
 	RXMLFile f(tmp,&s);
-	f.Process();
+	f.Open(Read);
 
 	// Load Objects
 	tag=s.GetTag("Objects");
