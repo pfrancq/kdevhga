@@ -171,10 +171,6 @@ void KHGAHeuristicView::NextStep(void)
 	try
 	{
 		TreeHeur->PutNextObject();
-		if(step)
-		{
-			draw->setNodes(this);
-		}
 
 		// test if the end
 		if(TreeHeur->IsEnd())
@@ -183,6 +179,10 @@ void KHGAHeuristicView::NextStep(void)
 			result->setText("Done");
 			draw->setNodes(this);
 			emit endRun();
+		}
+		else
+		{
+			draw->setNodes(this);
 		}
 		KApplication::kApplication()->processEvents(1000);
 	}
