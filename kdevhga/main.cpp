@@ -66,34 +66,30 @@ int main(int argc, char *argv[])
 {
 	KAboutData aboutData( "kdevhga", I18N_NOOP("KDevHGA"),
 		VERSION, description, KAboutData::License_GPL,
-		"(c) 1998-2001, Université Libre de Bruxelles", 0, "http://www.ulb.ac.be", "pfrancq@ulb.ac.be");
+		"(c) 1998-2002, UniversitÃ© Libre de Bruxelles\nCAD/CAM Department", 0, "http://cfao.ulb.ac.be", "pfrancq@ulb.ac.be");
 	aboutData.addAuthor("Pascal Francq",I18N_NOOP("Project Manager"), "pfrancq@ulb.ac.be");
-	
+
 	KCmdLineArgs::init( argc, argv, &aboutData );
 	KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
-	KApplication app;
- 
-	if (app.isRestored())
+	try
 	{
-		RESTORE(KDevHGAApp);
-	}
-	else
-	{
-		theApp = new KDevHGAApp();
-		theApp->show();
+		KApplication app;
 
-		KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-		
-		if (args->count())
+		if(app.isRestored())
 		{
-			for(int i=0;i<args->count();i++)
-			{
-				theApp->openDocumentFile(args->arg(i));
-		  }
+			RESTORE(KDevHGAApp);
 		}
-		args->clear();
+		else
+		{
+			theApp = new KDevHGAApp();
+			theApp->show();
+		}
+		return app.exec();
 	}
-
-	return app.exec();
-}  
+	catch(...)
+	{
+		cout<<"Problem"<<endl;
+	}
+ 	return(0);
+}

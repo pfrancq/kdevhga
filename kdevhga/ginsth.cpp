@@ -1,12 +1,13 @@
 /*
 
-	R Project Library
+	RInsth.hh
 
-	gawords.cpp
+	Class representing an instance of a HGA - Implementation
 
-	Description - Implementation.
+	Copyright 1998-2003 by the Université Libre de Bruxelles.
 
-	(C) 2001 by Pascal Francq
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -30,44 +31,65 @@
 */
 
 
-
 //------------------------------------------------------------------------------
-// include files for current application
+// include files for GALILEI
+#include <ginsth.h>
+#include <gchromoh.h>
 #include <gawords.h>
 using namespace R;
 using namespace GALILEI;
 
 
+
 //------------------------------------------------------------------------------
-GNodeWordsData::GNodeWordsData(unsigned int max) : MaxAttr(max)
+//
+// GThreadDataH
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+GThreadDataH::GThreadDataH(GInstH *owner) throw(bad_alloc)
+	: RThreadDataH<GInstH,GChromoH,GNodeWords,RObjH,GNodeWordsData>(owner)
 {
 }
 
 
 //------------------------------------------------------------------------------
-GNodeWords::GNodeWords(RNodesGA<GNodeWords,RObjH,GNodeWordsData,GChromoH>* owner,unsigned id,GNodeWordsData* data)
-	: RNodeGA<GNodeWords,RObjH,GNodeWordsData,GChromoH>(owner,id,data)
+GThreadDataH::~GThreadDataH(void)
+{
+}
+
+
+
+//------------------------------------------------------------------------------
+//
+// GInstH
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+GInstH::GInstH(unsigned int max,unsigned int popsize,RObjs<RObjH>* objs,HeuristicType h,RDebug* debug) throw(bad_alloc)
+	: RInstH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeWords,RObjH,GNodeWordsData>(popsize,objs,h,debug),
+	  MaxGen(max)
 {
 }
 
 
 //------------------------------------------------------------------------------
-GNodeWords::GNodeWords(const GNodeWords* w)
-	: RNodeGA<GNodeWords,RObjH,GNodeWordsData,GChromoH>(w)
+void GInstH::Init(GNodeWordsData* hdata) throw(bad_alloc)
 {
+	RInstH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeWords,RObjH,GNodeWordsData>::Init(hdata);
 }
 
 
 //------------------------------------------------------------------------------
-int GNodeWords::Compare(const GNodeWords* n) const
+bool GInstH::StopCondition(void)
 {
-	return(Id-n->Id);
+	return(Gen==MaxGen);
 }
 
 
 //------------------------------------------------------------------------------
-GNodeWords& GNodeWords::operator=(const GNodeWords& w)
+GInstH::~GInstH(void)
 {
-	RNodeGA<GNodeWords,RObjH,GNodeWordsData,GChromoH>::operator=(w);
-	return(*this);
 }

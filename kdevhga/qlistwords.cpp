@@ -30,15 +30,22 @@
 */
 
 
+//-----------------------------------------------------------------------------
+#include <gchromoh.h>
+using namespace R;
+using namespace GALILEI;
 
 //-----------------------------------------------------------------------------
 // include files for Qt
 #include <qpixmap.h>
 
 
+
+
 //-----------------------------------------------------------------------------
 #include "qlistwords.h"
 #include "kdevhgadoc.h"
+#include "khgaheuristicview.h"
 
 
 
@@ -50,7 +57,7 @@
 
 //-----------------------------------------------------------------------------
 QListWords::QListWords(KDevHGADoc* pDoc,QWidget* parent)
-	: QListView(parent,"Results"), Doc(pDoc)
+	: QListView(parent,"Results"), Doc(pDoc), Chromos(0), Nodes(0)
 {
 	addColumn("Resulting Tree");
 	setRootIsDecorated(true);
@@ -59,18 +66,17 @@ QListWords::QListWords(KDevHGADoc* pDoc,QWidget* parent)
 
 
 //-----------------------------------------------------------------------------
-void QListWords::ConstNode(QListViewItem* p,QListViewItem*& cur,RNodeWords* n)
+void QListWords::ConstNode(QListViewItem* p,QListViewItem*& cur,GNodeWords* n)
 {
 	static char tmp[200],tmp2[100];
 	unsigned int i,j;
 	const unsigned int* ptr;
-	RNodeWords** N;
+	GNodeWords** N;
 	RObjH** O;
 	QListViewItem* item2;
 	QListViewItem* item;
 
-//	sprintf(tmp,"Node: %u (",n->GetId());
-	tmp[0]=0;
+	sprintf(tmp,"Node: %u (",n->GetId());
 	for(i=n->GetAttr()->NbAttr+1,ptr=n->GetAttr()->List;--i;ptr++)
 	{
 		sprintf(tmp2,"\"%s\"",Doc->Words.GetPtr<unsigned int>(*ptr,false)->W());
@@ -78,7 +84,7 @@ void QListWords::ConstNode(QListViewItem* p,QListViewItem*& cur,RNodeWords* n)
 		if(i>1)
 			strcat(tmp,",");
 	}
-	//strcat(tmp,")");
+	strcat(tmp,")");
 	item=cur;
 	item2=0;
 	if(p)
@@ -88,13 +94,13 @@ void QListWords::ConstNode(QListViewItem* p,QListViewItem*& cur,RNodeWords* n)
 	item->setPixmap(0,QPixmap("/usr/share/icons/hicolor/16x16/filesystems/folder.png"));
 
 	// Continue the tree with the subnodes.
-	for(i=n->GetNbSubNodes()+1,N=&Nodes->Used.Tab[n->GetSubNodes()];--i;N++)
+	for(i=n->GetNbNodes()+1,N=n->GetNodes();--i;N++)
 	{
 		ConstNode(item,item2,*N);
 	}
 
 	// Continue the tree with the subobjects.
-	for(i=n->GetNbSubObjects()+1,O=&Nodes->ObjsAss.Tab[n->GetSubObjects()];--i;O++)
+	for(i=n->GetNbObjs()+1,O=n->GetObjects();--i;O++)
 	{
 		sprintf(tmp,"Object %s (",(*O)->GetName()());
 		for(j=(*O)->GetAttr()->NbAttr+1,ptr=(*O)->GetAttr()->List;--j;ptr++)
@@ -112,24 +118,41 @@ void QListWords::ConstNode(QListViewItem* p,QListViewItem*& cur,RNodeWords* n)
 
 
 //-----------------------------------------------------------------------------
-void QListWords::setNodes(RNodesGA<RNodeWords,RObjH,RNodeWordsData>* nodes)
+void QListWords::ConstNode(QListViewItem* p,QListViewItem*& cur,MyNode* n)
 {
 	static char tmp[200],tmp2[100];
 	unsigned int i,j;
 	const unsigned int* ptr;
-	RNodeWords** N;
-	QListViewItem* cur=0;
+	MyNode** N;
 	RObjH** O;
+	QListViewItem* item2;
+	QListViewItem* item;
 
-	Nodes=nodes;
-	clear();
+	sprintf(tmp,"Node: %u (",n->GetId());
+	for(i=n->GetAttr()->NbAttr+1,ptr=n->GetAttr()->List;--i;ptr++)
+	{
+		sprintf(tmp2,"\"%s\"",Doc->Words.GetPtr<unsigned int>(*ptr,false)->W());
+		strcat(tmp,tmp2);
+		if(i>1)
+			strcat(tmp,",");
+	}
+	strcat(tmp,")");
+	item=cur;
+	item2=0;
+	if(p)
+		item=new QListViewItem(p,item,tmp);
+	else
+		item=new QListViewItem(this,tmp);
+	item->setPixmap(0,QPixmap("/usr/share/icons/hicolor/16x16/filesystems/folder.png"));
 
-	// Construct the tree
-	for(i=Nodes->Top->GetNbSubNodes()+1,N=&Nodes->Used.Tab[Nodes->Top->GetSubNodes()];--i;N++)
-		ConstNode(0,cur,*N);
+	// Continue the tree with the subnodes.
+	for(i=n->GetNbNodes()+1,N=n->GetNodes();--i;N++)
+	{
+		ConstNode(item,item2,*N);
+	}
 
 	// Continue the tree with the subobjects.
-	for(i=Nodes->Top->GetNbSubObjects()+1,O=&Nodes->ObjsAss.Tab[Nodes->Top->GetSubObjects()];--i;O++)
+	for(i=n->GetNbObjs()+1,O=n->GetObjects();--i;O++)
 	{
 		sprintf(tmp,"Object %s (",(*O)->GetName()());
 		for(j=(*O)->GetAttr()->NbAttr+1,ptr=(*O)->GetAttr()->List;--j;ptr++)
@@ -140,10 +163,40 @@ void QListWords::setNodes(RNodesGA<RNodeWords,RObjH,RNodeWordsData>* nodes)
 				strcat(tmp,",");
 		}
 		strcat(tmp,")");
-		cur=new QListViewItem(this,cur,tmp);
-		cur->setPixmap(0,QPixmap("/usr/share/icons/hicolor/16x16/mimetypes/document.png"));
+		item2=new QListViewItem(item,item2,tmp);
+		item2->setPixmap(0,QPixmap("/usr/share/icons/hicolor/16x16/mimetypes/document.png"));
 	}
+}
 
+
+//-----------------------------------------------------------------------------
+void QListWords::setNodes(GChromoH* chromos)
+{
+	unsigned int i;
+	GNodeWords** N;
+	QListViewItem* cur=0;
+
+	Chromos=chromos;
+	Nodes=0;
+	clear();
+	for(i=Chromos->Top->GetNbNodes()+1,N=Chromos->Top->GetNodes();--i;N++)
+		ConstNode(0,cur,*N);
+	repaint();
+}
+
+
+//-----------------------------------------------------------------------------
+void QListWords::setNodes(RNodesGA<MyNode,RObjH,GNodeWordsData,KHGAHeuristicView>* nodes)
+{
+	unsigned int i;
+	MyNode** N;
+	QListViewItem* cur=0;
+
+	Nodes=nodes;
+	Chromos=0;
+	clear();
+	for(i=Nodes->Top->GetNbNodes()+1,N=Nodes->Top->GetNodes();--i;N++)
+		ConstNode(0,cur,*N);
 	repaint();
 }
 

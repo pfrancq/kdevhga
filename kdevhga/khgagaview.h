@@ -36,8 +36,12 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rga/rgasignals.h>
-#include <rhga/rhga.h>
 using namespace R;
+
+
+//-----------------------------------------------------------------------------
+#include <ghga.h>
+using namespace GALILEI;
 
 
 //-----------------------------------------------------------------------------
@@ -64,7 +68,7 @@ using namespace R;
 * running.
 * @author Pascal Francq
 */
-class KHGAGAView : public KDevHGAView//, public RGASignalsReceiver<RInstVLSI,RChromoVLSI,RFitnessVLSI>
+class KHGAGAView : public KDevHGAView, public RGASignalsReceiver<GInstH,GChromoH,GFitnessH>
 {
 	Q_OBJECT
 
@@ -106,7 +110,12 @@ class KHGAGAView : public KDevHGAView//, public RGASignalsReceiver<RInstVLSI,RCh
 	/**
 	* The GA that will be used.
 	*/
-//	RInstVLSI* Instance;
+	GInstH* Instance;
+
+	/**
+	* Data needed for the construction of the groups.
+	*/
+	GNodeWordsData* Data;
 
 	/**
 	* Number of generation already executed.
@@ -131,17 +140,17 @@ public:
 	/**
 	* GA signal to indicate that a new generation has been done.
 	*/
-//	virtual void receiveGenSig(GenSig* sig);
-	
+	virtual void receiveGenSig(GenSig* sig);
+
 	/**
 	* GA signal to interact with the system.
 	*/
-//	virtual void receiveInteractSig(InteractSig *sig);
+	virtual void receiveInteractSig(InteractSig *sig);
 
 	/**
 	* GA signal to signify that the best chromosome has changed.
 	*/
-//	virtual void receiveBestSig(BestSig *sig);
+	virtual void receiveBestSig(BestSig *sig);
 
 	/**
 	* Run the GA.
@@ -177,7 +186,7 @@ signals:
 	/**
 	* Signal to emit after a generation is done.
 	*/
-	void signalSetGen(unsigned int gen,unsigned int best,double value);
+	void signalSetGen(const unsigned int gen,const unsigned int best,const double value);
 
 public:
 

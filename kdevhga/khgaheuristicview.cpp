@@ -35,8 +35,14 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
+#include <rhga/robjh.h>
 #include <rhga/rfirstnodeheuristic.h>
+using namespace R;
 
+
+#include <ginsth.h>
+#include <gawords.h>
+using namespace GALILEI;
 
 //-----------------------------------------------------------------------------
 // include files for Qt/KDE
@@ -54,19 +60,51 @@
 
 //-----------------------------------------------------------------------------
 //
+// class MyNode
+//
+//-----------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------
+MyNode::MyNode(RNodesGA<MyNode,RObjH,GNodeWordsData,KHGAHeuristicView>* owner,unsigned id,GNodeWordsData* data)
+	: RNodeGA<MyNode,RObjH,GNodeWordsData,KHGAHeuristicView>(owner,id,data)
+{
+}
+
+
+//------------------------------------------------------------------------------
+MyNode::MyNode(const MyNode* w)
+	: RNodeGA<MyNode,RObjH,GNodeWordsData,KHGAHeuristicView>(w)
+{
+}
+
+
+//------------------------------------------------------------------------------
+int MyNode::Compare(const MyNode* n)
+{
+	return(Id-n->Id);
+}
+
+
+
+//-----------------------------------------------------------------------------
+//
 // class KHGAHeuristicView
 //
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 KHGAHeuristicView::KHGAHeuristicView(KDevHGADoc* pDoc,HeuristicType pType,QWidget *parent, const char *name,int wflags)
-	: KDevHGAView(pDoc,parent,name,wflags), RNodesGA<RNodeWords,RObjH,RNodeWordsData>(pDoc->Objs->NbPtr,pDoc->Objs),
-	  Random(0), type(pType), TreeHeur(0), Data(0)
+	: KDevHGAView(pDoc,parent,name,wflags), RNodesGA<MyNode,RObjH,GNodeWordsData,KHGAHeuristicView>(pDoc->Objs,pDoc->Objs->NbPtr),
+	  Random(0), type(pType), Data(0), TreeHeur(0), Objs(0)
 {
-	Data=new RNodeWordsData(20);
+	Data=new GNodeWordsData(20);
 	Init(Data);
+	Objs=new RCursor<RObjH,unsigned int>();
+	Objs->Set(pDoc->Objs);
 	nbObjs = pDoc->Objs->NbPtr;
 	draw=new QListWords(pDoc,this);
+	draw->setNodes(this);
 	result=new QLabel(this);
 
 	// Init the random generator
@@ -78,10 +116,11 @@ KHGAHeuristicView::KHGAHeuristicView(KDevHGADoc* pDoc,HeuristicType pType,QWidge
 	switch(pType)
 	{
 		case FirstFit:
-			TreeHeur = new RFirstNodeHeuristic<RNodeWords,RObjH,RNodeWordsData>(Random,pDoc->Objs);
+			TreeHeur = new RFirstNodeHeuristic<MyNode,RObjH,GNodeWordsData,KHGAHeuristicView>(Random,Objs,0);
 			break;
 	}
 	TreeHeur->Init(this);
+
 	connect(this,SIGNAL(endRun()),theApp,SLOT(slotEndHeuristic(void)));
 }
 
@@ -134,19 +173,16 @@ void KHGAHeuristicView::NextStep(void)
 	try
 	{
 		TreeHeur->PutNextObject();
-//		if(step)
-//		{
-//			draw->addInfo(CurInfo);
-//			while(free->NbPtr>nbFree)
-//				addFree(free->Tab[nbFree++]);
-//		}
+		if(step)
+		{
+			draw->setNodes(this);
+		}
 
 		// test if the end
 		if(TreeHeur->IsEnd())
 		{
 			TreeHeur->PostRun();
 			result->setText("Done");
-			Verify();
 			draw->setNodes(this);
 			emit endRun();
 		}
@@ -178,4 +214,8 @@ KHGAHeuristicView::~KHGAHeuristicView()
 		delete TreeHeur;
 	if(Random)
 		delete Random;
+	if(Objs)
+		delete Objs;
+	if(Data)
+		delete Data;
 }

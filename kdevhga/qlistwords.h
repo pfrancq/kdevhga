@@ -50,12 +50,16 @@ using namespace R;
 
 //-----------------------------------------------------------------------------
 // include files for current application
-#include "gawords.h"
+#include <gawords.h>
+#include <ghga.h>
+using namespace GALILEI;
 
 
 //-----------------------------------------------------------------------------
 // forward class declaration
 class KDevHGADoc;
+class KHGAHeuristicView;
+class MyNode;
 
 
 //-----------------------------------------------------------------------------
@@ -66,13 +70,16 @@ class QListWords : public QListView
 {
 	Q_OBJECT
 	KDevHGADoc* Doc;
-	RNodesGA<RNodeWords,RObjH,RNodeWordsData>* Nodes;
+	GChromoH* Chromos;
+	RNodesGA<MyNode,RObjH,GNodeWordsData,KHGAHeuristicView>* Nodes;
 
-	void ConstNode(QListViewItem* p,QListViewItem*& cur,RNodeWords* n);
+	void ConstNode(QListViewItem* p,QListViewItem*& cur,GNodeWords* n);
+	void ConstNode(QListViewItem* p,QListViewItem*& cur,MyNode* n);
 
 public:
 	QListWords(KDevHGADoc* pDoc,QWidget* parent=0);
-	void setNodes(RNodesGA<RNodeWords,RObjH,RNodeWordsData>* nodes);
+	void setNodes(GChromoH* chromos);
+	void setNodes(RNodesGA<MyNode,RObjH,GNodeWordsData,KHGAHeuristicView>* nodes);
 	~QListWords(void);
 };
 

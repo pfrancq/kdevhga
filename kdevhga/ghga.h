@@ -2,11 +2,14 @@
 
 	R Project Library
 
-	gawords.cpp
+	HGA.h
 
-	Description - Implementation.
+	Hierarchical Genetic Algorithms - Header.
 
-	(C) 2001 by Pascal Francq
+	Copyright 1998-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -32,42 +35,70 @@
 
 
 //------------------------------------------------------------------------------
-// include files for current application
-#include <gawords.h>
-using namespace R;
-using namespace GALILEI;
+#ifndef GHGAH
+#define GHGAH
 
 
 //------------------------------------------------------------------------------
-GNodeWordsData::GNodeWordsData(unsigned int max) : MaxAttr(max)
-{
-}
+// include files for R Project
+#include <rga/rfitness.h>
+#include <rhga/robjh.h>
+#include <rhga/rhga.h>
+#include <rhga/rnodega.h>
+#include <rhga/rnodesga.h>
 
 
 //------------------------------------------------------------------------------
-GNodeWords::GNodeWords(RNodesGA<GNodeWords,RObjH,GNodeWordsData,GChromoH>* owner,unsigned id,GNodeWordsData* data)
-	: RNodeGA<GNodeWords,RObjH,GNodeWordsData,GChromoH>(owner,id,data)
-{
-}
+namespace GALILEI{
+//------------------------------------------------------------------------------
 
 
 //------------------------------------------------------------------------------
-GNodeWords::GNodeWords(const GNodeWords* w)
-	: RNodeGA<GNodeWords,RObjH,GNodeWordsData,GChromoH>(w)
-{
-}
+// Forward class declaration
+class GNodeWordsData;
+class GNodeWords;
+class GThreadDataH;
+class GChromoH;
+class GInstH;
 
 
 //------------------------------------------------------------------------------
-int GNodeWords::Compare(const GNodeWords* n) const
+/**
+* This class represent the fitness for the GALILEI HGA.
+* @author Pascal Francq
+* @short GALILEI HGA Fitness.
+*/
+class GFitnessH : public R::RFitness<double,false>
 {
-	return(Id-n->Id);
-}
+public:
+
+	/**
+	* Construct the fitness.
+	*/
+	GFitnessH(void) : R::RFitness<double,false>() {}
+
+	/**
+	* Assignment operator with a fitness f.
+	*/
+	GFitnessH& operator=(const GFitnessH &f)
+	{
+		R::RFitness<double,false>::operator=(f);
+		return(*this);
+	}
+
+	/**
+	* Assignment operator with a double value.
+	*/
+	GFitnessH& operator=(const double val)
+	{
+		R::RFitness<double,false>::operator=(val);
+		return(*this);
+	}
+};
+
+
+}//------- End of namespace GALILEI --------------------------------------------
 
 
 //------------------------------------------------------------------------------
-GNodeWords& GNodeWords::operator=(const GNodeWords& w)
-{
-	RNodeGA<GNodeWords,RObjH,GNodeWordsData,GChromoH>::operator=(w);
-	return(*this);
-}
+#endif

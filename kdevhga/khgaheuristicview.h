@@ -38,7 +38,12 @@
 #include <rstd/random.h>
 #include <rhga/rhga.h>
 #include <rhga/rtreeheuristic.h>
+#include <gawords.h>
+#include <rhga/rnodesga.h>
+#include <rhga/rnodega.h>
+#include <ghga.h>
 using namespace R;
+using namespace GALILEI;
 
 
 //-----------------------------------------------------------------------------
@@ -51,7 +56,28 @@ using namespace R;
 // include files for current application
 #include "kdevhgaview.h"
 #include "qlistwords.h"
-#include "gawords.h"
+
+
+//-----------------------------------------------------------------------------
+class KHGAHeuristicView;
+
+
+//-----------------------------------------------------------------------------
+class MyNode : public RNodeGA<MyNode,RObjH,GNodeWordsData,KHGAHeuristicView>
+{
+public:
+	/**
+	* Construct the node.
+	* @param owner          Owner of the node.
+	* @param id             Identificator of the node.
+	* @param data           Data used to construct the node.
+	*/
+	MyNode(RNodesGA<MyNode,RObjH,GNodeWordsData,KHGAHeuristicView>* owner,unsigned int id,GNodeWordsData* data);
+
+	MyNode(const MyNode* w);
+
+	int Compare(const MyNode* n);
+};
 
 
 //-----------------------------------------------------------------------------
@@ -60,7 +86,7 @@ using namespace R;
 * specific heuristic.
 * @author Pascal Francq
 */
-class KHGAHeuristicView : public KDevHGAView, public RNodesGA<RNodeWords,RObjH,RNodeWordsData>
+class KHGAHeuristicView : public KDevHGAView, public RNodesGA<MyNode,RObjH,GNodeWordsData,KHGAHeuristicView>
 {
 	Q_OBJECT
 
@@ -90,16 +116,6 @@ class KHGAHeuristicView : public KDevHGAView, public RNodesGA<RNodeWords,RObjH,R
 	QListWords* draw;
 
 	/**
-	* Heuristic used.
-	*/
-	RTreeHeuristic<RNodeWords,RObjH,RNodeWordsData>* TreeHeur;
-
-	/**
-	* Current information to treat.
-	*/
-	RObjH* CurObj;
-
-	/**
 	* Step Mode.
 	*/
 	bool step;
@@ -112,7 +128,17 @@ class KHGAHeuristicView : public KDevHGAView, public RNodesGA<RNodeWords,RObjH,R
 	/**
 	* Data needed for the construction of the groups.
 	*/
-	RNodeWordsData* Data;
+	GNodeWordsData* Data;
+
+	/**
+	* Heuristic used.
+	*/
+	RTreeHeuristic<MyNode,RObjH,GNodeWordsData,KHGAHeuristicView>* TreeHeur;
+
+	/**
+	* Objects to group.
+	*/
+	RCursor<RObjH,unsigned int>* Objs;
 
 public:
 

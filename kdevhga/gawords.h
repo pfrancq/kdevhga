@@ -39,25 +39,27 @@
 // includes files for R Project
 #include <rhga/robjh.h>
 #include <rhga/rnodesga.h>
-using namespace R;
+#include <rhga/rnodega.h>
+#include <ghga.h>
+
+
+//------------------------------------------------------------------------------
+namespace GALILEI{
+//------------------------------------------------------------------------------
 
 
 //-----------------------------------------------------------------------------
-// forward class declaration
-class RNodeWords;
-
-
-//-----------------------------------------------------------------------------
-class RNodeWordsData
+class GNodeWordsData
 {
 public:
-	RNodeWordsData(unsigned int max) : MaxAttr(max) {}
 	unsigned int MaxAttr;
+
+	GNodeWordsData(unsigned int max);
 };
 
 
 //-----------------------------------------------------------------------------
-class RNodeWords : public RNodeGA<RNodeWords,RObjH,RNodeWordsData>
+class GNodeWords : public R::RNodeGA<GNodeWords,R::RObjH,GNodeWordsData,GChromoH>
 {
 public:
 	/**
@@ -66,10 +68,17 @@ public:
 	* @param id             Identificator of the node.
 	* @param data           Data used to construct the node.
 	*/
-	RNodeWords(RNodesGA<RNodeWords,RObjH,RNodeWordsData>* owner,unsigned id,RNodeWordsData* data)
-		: RNodeGA<RNodeWords,RObjH,RNodeWordsData>(owner,id,data) {}
-	int Compare(const RNodeWords* n) {return(Id-n->Id);}
+	GNodeWords(R::RNodesGA<GNodeWords,R::RObjH,GNodeWordsData,GChromoH>* owner,unsigned int id,GNodeWordsData* data);
+
+	GNodeWords(const GNodeWords* w);
+
+	int Compare(const GNodeWords* n) const;
+
+	GNodeWords& operator=(const GNodeWords& w);
 };
+
+
+}//------- End of namespace GALILEI --------------------------------------------
 
 
 //-----------------------------------------------------------------------------

@@ -405,7 +405,7 @@ void KDevHGAApp::slotHeuristicFF(void)
 		w->resize(pWorkspace->sizeHint());
 		w->show();
 		w->setFocus();
-		w->RunHeuristic();
+		//w->RunHeuristic();
 	}
 }
 
@@ -639,19 +639,7 @@ void KDevHGAApp::slotFileQuit(void)
 {
 	slotStatusMsg(i18n("Exiting..."));
 	saveOptions();
-	// close the first window, the list makes the next one the first again.
-	// This ensures that queryClose() is called on each window to ask for closing
-	KMainWindow* w;
-	if(memberList)
-	{
-		for(w=memberList->first(); w!=0; w=memberList->first())
-		{
-			// only close the window if the closeEvent is accepted. If the user presses Cancel on the saveModified() dialog,
-			// the window and the application stay open.
-			if(!w->close())
-				break;
-		}
-	}
+	close();
 	slotStatusMsg(i18n("Ready."));
 }
 
@@ -865,4 +853,5 @@ void KDevHGAApp::slotWindowActivated(QWidget*)
 KDevHGAApp::~KDevHGAApp(void)
 {
 	delete printer;
+	delete pDocList;
 }

@@ -1,14 +1,20 @@
 ####### kdevelop will overwrite this part!!! (begin)##########
 bin_PROGRAMS = kdevhga
-kdevhga_SOURCES = gawords.cpp qlistwords.cpp khgaprjview.cpp khgaheuristicview.cpp khgagaview.cpp kappoptions.ui kdevhgaview.cpp kdevhgadoc.cpp kdevhga.cpp main.cpp 
-kdevhga_LDADD  = $(R_LIB)/rhga/librhga.la $(R_LIB)/rstd/librstd.la $(R_LIB)/rga/librga.la $(QTWIDGETS_LIB)/rga/libkde_rga.la $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET)
+kdevhga_SOURCES = gawords.cpp qlistwords.cpp khgaprjview.cpp khgaheuristicview.cpp \
+		khgagaview.cpp kappoptions.ui kdevhgaview.cpp kdevhgadoc.cpp kdevhga.cpp \
+		ghga.cpp ginsth.cpp gchromoh.cpp main.cpp
+
+kdevhga_LDADD  = $(R_LIB)/rhga/librhga.la $(R_LIB)/rstd/librstd.la $(R_LIB)/rga/librga.la \
+		$(QTWIDGETS_LIB)/rga/libkde_rga.la $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) \
+		$(LIB_QT) $(LIBSOCKET)
 
 SUBDIRS =
 
 EXTRA_DIST = main.cpp kdevhga.cpp kdevhga.h kdevhgadoc.cpp kdevhgadoc.h kdevhgaview.cpp \
 		kdevhgaview.h kdevhgaui.rc kdevhga.desktop lo32-app-kdevhga.png lo16-app-kdevhga.png \
 		kappoptions.ui khgagaview.cpp khgagaview.h khgaheuristicview.cpp khgaheuristicview.h \
-		khgaprjview.cpp khgaprjview.h qlistwords.cpp qlistwords.h gawords.h gawords.cpp
+		khgaprjview.cpp khgaprjview.h qlistwords.cpp qlistwords.h gawords.h gawords.cpp \
+		ghga.h ghga.cpp ginsth.h ginsth.cpp gchromoh.h gchromoh.cpp
 
 install-data-local:
 	$(mkinstalldirs) $(kde_appsdir)/Applications/
@@ -26,7 +32,7 @@ uninstall-local:
 ####### kdevelop will overwrite this part!!! (end)############
 # this 10 paths are KDE specific. Use them:
 # kde_htmldir       Where your docs should go to. (contains lang subdirs)
-# kde_appsdir       Where your application file (.kdelnk) should go to. 
+# kde_appsdir       Where your application file (.kdelnk) should go to.
 # kde_icondir       Where your icon should go to.
 # kde_minidir       Where your mini icon should go to.
 # kde_datadir       Where you install application data. (Use a subdir)
@@ -38,7 +44,7 @@ uninstall-local:
 # kde_wallpaperdir  Where general wallpapers should go to.
 
 # set the include path for X, qt and KDE
-INCLUDES= $(all_includes) -I$(R_LIB) -I$(QTWIDGETS_LIB) 
+ INCLUDES= $(all_includes) -I$(R_LIB) -I$(QTWIDGETS_LIB)
 
 METASOURCES = AUTO
 

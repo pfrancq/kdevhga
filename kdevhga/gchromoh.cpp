@@ -1,12 +1,13 @@
 /*
 
-	R Project Library
+	RChromoh.hh
 
-	gawords.cpp
+	Class representing a tree (chromosome) - Inline implementation
 
-	Description - Implementation.
+	Copyright 1998-2003 by the Université Libre de Bruxelles.
 
-	(C) 2001 by Pascal Francq
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -32,42 +33,45 @@
 
 
 //------------------------------------------------------------------------------
-// include files for current application
+// include files for GALILEI
+#include <rhga/robjh.h>
+#include <gchromoh.h>
+#include <ginsth.h>
 #include <gawords.h>
-using namespace R;
 using namespace GALILEI;
+using namespace R;
+
 
 
 //------------------------------------------------------------------------------
-GNodeWordsData::GNodeWordsData(unsigned int max) : MaxAttr(max)
+//
+// class GChromoH
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+GChromoH::GChromoH(GInstH* inst,unsigned id) throw(bad_alloc)
+	: RChromoH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeWords,RObjH,GNodeWordsData>(inst,id)
 {
+	(*Fitness)=100.0;
 }
 
 
 //------------------------------------------------------------------------------
-GNodeWords::GNodeWords(RNodesGA<GNodeWords,RObjH,GNodeWordsData,GChromoH>* owner,unsigned id,GNodeWordsData* data)
-	: RNodeGA<GNodeWords,RObjH,GNodeWordsData,GChromoH>(owner,id,data)
+void GChromoH::Init(GThreadDataH* thData) throw(bad_alloc)
 {
+	RChromoH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeWords,RObjH,GNodeWordsData>::Init(thData);
 }
 
 
 //------------------------------------------------------------------------------
-GNodeWords::GNodeWords(const GNodeWords* w)
-	: RNodeGA<GNodeWords,RObjH,GNodeWordsData,GChromoH>(w)
+void GChromoH::Evaluate(void) throw(eGA)
 {
+	(*Fitness)=1.0;
 }
 
 
 //------------------------------------------------------------------------------
-int GNodeWords::Compare(const GNodeWords* n) const
+GChromoH::~GChromoH(void)
 {
-	return(Id-n->Id);
-}
-
-
-//------------------------------------------------------------------------------
-GNodeWords& GNodeWords::operator=(const GNodeWords& w)
-{
-	RNodeGA<GNodeWords,RObjH,GNodeWordsData,GChromoH>::operator=(w);
-	return(*this);
 }

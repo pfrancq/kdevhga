@@ -2,11 +2,14 @@
 
 	R Project Library
 
-	gawords.cpp
+	RChromoH.h
 
-	Description - Implementation.
+	Class representing a tree (chromosome) - Header
 
-	(C) 2001 by Pascal Francq
+	Copyright 1998-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -32,42 +35,59 @@
 
 
 //------------------------------------------------------------------------------
-// include files for current application
-#include <gawords.h>
-using namespace R;
-using namespace GALILEI;
+#ifndef GChromoH_H
+#define GChromoH_H
 
 
 //------------------------------------------------------------------------------
-GNodeWordsData::GNodeWordsData(unsigned int max) : MaxAttr(max)
-{
-}
+// include files for R Project
+#include <rhga/rhga.h>
+#include <rhga/rchromoh.h>
 
 
 //------------------------------------------------------------------------------
-GNodeWords::GNodeWords(RNodesGA<GNodeWords,RObjH,GNodeWordsData,GChromoH>* owner,unsigned id,GNodeWordsData* data)
-	: RNodeGA<GNodeWords,RObjH,GNodeWordsData,GChromoH>(owner,id,data)
-{
-}
+// include files for GALILEI
+#include <ghga.h>
 
 
 //------------------------------------------------------------------------------
-GNodeWords::GNodeWords(const GNodeWords* w)
-	: RNodeGA<GNodeWords,RObjH,GNodeWordsData,GChromoH>(w)
-{
-}
+namespace GALILEI{
+//------------------------------------------------------------------------------
 
 
 //------------------------------------------------------------------------------
-int GNodeWords::Compare(const GNodeWords* n) const
+class GChromoH : public R::RChromoH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeWords,R::RObjH,GNodeWordsData>
 {
-	return(Id-n->Id);
-}
+public:
+
+	/**
+	* Construct the chromosome.
+	* @param inst           The instance.
+	* @param id             Identificator of the chromosome.
+	*/
+	GChromoH(GInstH* inst,unsigned int id) throw(bad_alloc);
+
+	/**
+	* Initialisation of the chromosome.
+	* @param thData         Pointer to the "thread-dependent" data of the
+	*                       chromosome.
+	*/
+	virtual void Init(GThreadDataH* thData) throw(bad_alloc);
+
+	/**
+	* Evaluate the quality of the solution
+	*/
+	void Evaluate(void) throw(R::eGA);
+
+	/**
+	* Destruct the chromosome.
+	*/
+	virtual ~GChromoH(void);
+};
+
+
+}//------- End of namespace GALILEI --------------------------------------------
 
 
 //------------------------------------------------------------------------------
-GNodeWords& GNodeWords::operator=(const GNodeWords& w)
-{
-	RNodeGA<GNodeWords,RObjH,GNodeWordsData,GChromoH>::operator=(w);
-	return(*this);
-}
+#endif
