@@ -74,14 +74,14 @@ void KHGAPrjView::createPrj(void)
 	{
 
 		// Name of the object
-		sprintf(tmp,"%s (%u)",Objs()->GetName(),Objs()->GetId());
+		sprintf(tmp,"%s (%u)",Objs()->GetName().Latin1(),Objs()->GetId());
 		item2 = new QListViewItem(item,item2,tmp);
 		item3=0;
 
 		// Words
 		for(i=0;i<Objs()->GetAttr()->GetNbAttr();i++)
 		{
-			sprintf(tmp,"Attribute: \"%s\" (%u)",doc->Words.GetPtr<unsigned int>((*Objs()->GetAttr())[i],false)->W(),(*Objs()->GetAttr())[i]);
+			sprintf(tmp,"Attribute: \"%s\" (%u)",doc->Words.GetPtr<unsigned int>((*Objs()->GetAttr())[i],false)->W.Latin1(),(*Objs()->GetAttr())[i]);
 			item3=new QListViewItem(item2,item3,tmp);
 		}
 		
