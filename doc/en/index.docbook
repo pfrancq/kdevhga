@@ -117,7 +117,7 @@ problems. Basically a long version of the abstract.  Don't include a
 revision history. (see installation appendix comment) -->
 
 <para>
-&kapp; is a program that lets you do absolutely nothing. Please report
+KDevHGA; is a program that lets you do absolutely nothing. Please report
 any problems or feature requests to the KDE mailing lists.
 </para>
 </chapter>
@@ -135,7 +135,7 @@ your application. -->
 patent issues. -->
 
 <screenshot>
-<screeninfo>Here's a screenshot of &kapp;</screeninfo>
+<screeninfo>Here's a screenshot of KDevHGA;</screeninfo>
 	<mediaobject>
 	  <imageobject>
 	    <imagedata fileref="screenshot.png" format="PNG"/>
@@ -218,7 +218,7 @@ or menu bars. -->
 <guimenu>File</guimenu>
 <guimenuitem>Quit</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Quits</action> &kapp;</para></listitem>
+<listitem><para><action>Quits</action> KDevHGA;</para></listitem>
 </varlistentry>
 </variablelist>
 </para>
@@ -265,7 +265,7 @@ application work. -->
 <qandaset id="faqlist">
 <qandaentry>
 <question>
-<para>My Mouse doesn't work. How do I quit &kapp;?</para>
+<para>My Mouse doesn't work. How do I quit KDevHGA;?</para>
 </question>
 <answer>
 <para>You silly goose! Check out the <link linkend="commands">Commands
@@ -294,7 +294,7 @@ distribution. -->
 <title>Credits and License</title>
 
 <para>
-&kapp;
+KDevHGA;
 </para>
 <para>
 Program copyright 1997 John Q. Hacker <email>jqh@kde.org</email>

@@ -1,10 +1,11 @@
 ####### kdevelop will overwrite this part!!! (begin)##########
 bin_PROGRAMS = kdevhga
-kdevhga_SOURCES = kdevhgaview.cpp kdevhgadoc.cpp kdevhga.cpp main.cpp 
-kdevhga_LDADD   =  $(LIB_QT) $(LIB_KDECORE) $(LIB_KDEUI) $(LIB_KFILE)  $(LIBSOCKET)
+kdevhga_SOURCES = gawords.cpp qlistwords.cpp khgaprjview.cpp khgaheuristicview.cpp khgagaview.cpp kappoptions.ui kdevhgaview.cpp kdevhgadoc.cpp kdevhga.cpp main.cpp 
+kdevhga_LDADD   = ./r/rga/librga.a ./r/rhga/librhga.a ./r/rio/librio.a ./r/rmath/librmath.a ./r/rstd/librstd.a ./r/rxml/librxml.a ./qtwidgets/rga/librga.a /home/pfrancq/prj/kdevhga/kdevhga/r/rxml/librxml.a /home/pfrancq/prj/kdevhga/kdevhga/r/rio/librio.a /home/pfrancq/prj/kdevhga/kdevhga/r/rstd/librstd.a /home/pfrancq/prj/kdevhga/kdevhga/r/rmath/librmath.a /home/pfrancq/prj/kdevhga/kdevhga/r/rga/librga.a /home/pfrancq/prj/kdevhga/kdevhga/r/rhga/librhga.a $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET)
 
+SUBDIRS = r qtwidgets 
 
-EXTRA_DIST = main.cpp kdevhga.cpp kdevhga.h kdevhgadoc.cpp kdevhgadoc.h kdevhgaview.cpp kdevhgaview.h kdevhgaui.rc kdevhga.desktop lo32-app-kdevhga.png lo16-app-kdevhga.png 
+EXTRA_DIST = main.cpp kdevhga.cpp kdevhga.h kdevhgadoc.cpp kdevhgadoc.h kdevhgaview.cpp kdevhgaview.h kdevhgaui.rc kdevhga.desktop lo32-app-kdevhga.png lo16-app-kdevhga.png kappoptions.ui khgagaview.cpp khgagaview.h khgaheuristicview.cpp khgaheuristicview.h khgaprjview.cpp khgaprjview.h qlistwords.cpp qlistwords.h gawords.h gawords.cpp 
 
 install-data-local:
 	$(mkinstalldirs) $(kde_appsdir)/Applications/
