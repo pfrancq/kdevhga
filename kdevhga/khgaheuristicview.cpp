@@ -152,11 +152,9 @@ void KHGAHeuristicView::NextStep(void)
 		}
 		KApplication::kApplication()->processEvents(1000);
 	}
-	//catch(RTreeHeuristicException& e)
-	catch(...)
+	catch(RTreeHeuristicException& e)
     {
-		//KMessageBox::error(this,QString(e.Msg));
-		KMessageBox::error(this,"Error in GA");
+		KMessageBox::error(this,QString(e.Msg));
 		Stop=true;
     }
 }
