@@ -4,7 +4,7 @@
 
 	Widget representing a tree of vectors - Implementation.
 
-	Copyright 1998-2004 by the Universitï¿½Libre de Bruxelles.
+	Copyright 1998-2004 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -72,7 +72,7 @@ QString QTreeInfos::constAttr(const RAttrList* attr)
 	str="(";
 	for(i=0;i<attr->GetNbAttr();i++)
 	{
-		if(i>1)
+		if(i>0)
 			str+=",";
 		str+=QString("\"")+Doc->Words.GetPtr<unsigned int>((*attr)[i],false)->W.Latin1()+"\"";
 	}
