@@ -27,6 +27,12 @@
 */
 
 
+
+//-----------------------------------------------------------------------------
+// include files for R library
+#include <frontend/kde/rqt.h>
+
+
 //-----------------------------------------------------------------------------
 #include <gchromoh.h>
 using namespace R;
@@ -89,7 +95,7 @@ void QTreeInfos::constObjs(RObjH** objs,unsigned int nb,QListViewItem* item)
 
 	for(nb++;--nb;objs++)
 	{
-		str=QString("Objects ")+(*objs)->GetName().Latin1()+" "+constAttr((*objs)->GetAttr());
+		str=QString("Object (")+ToQString((*objs)->GetName())+") - "+constAttr((*objs)->GetAttr());
 		item2=new QListViewItem(item,item2,str);
 		item2->setPixmap(0,QPixmap(KGlobal::iconLoader()->loadIcon("document",KIcon::Small)));
 	}
@@ -105,7 +111,14 @@ void QTreeInfos::constNode(QListViewItem* p,QListViewItem*& cur,GNodeInfos* n)
 	QListViewItem* item2=0;
 	QListViewItem* item=0;
 
-	str="Node: "+QString::number(n->GetId())+" "+constAttr(n->GetAttr());
+	// If it is a terminate node -> skip it.
+/*	if((!n->GetNbNodes())&&(p))
+	{
+		constObjs(n->GetObjects(),n->GetNbObjs(),p);
+		return;
+	}   */
+
+	str="Node ("+QString::number(n->GetId())+") - "+constAttr(n->GetAttr());
 	item=cur;
 	if(p)
 		item=new QListViewItem(p,item,str);
@@ -133,7 +146,14 @@ void QTreeInfos::constNode(QListViewItem* p,QListViewItem*& cur,MyNode* n)
 	QListViewItem* item2=0;
 	QListViewItem* item=0;
 
-	str="Node: "+QString::number(n->GetId())+" "+constAttr(n->GetAttr());
+	// If it is a terminate node -> skip it.
+/*	if((!n->GetNbNodes())&&(p))
+	{
+		constObjs(n->GetObjects(),n->GetNbObjs(),p);
+		return;
+	}    */
+
+	str="Node ("+QString::number(n->GetId())+") - "+constAttr(n->GetAttr());
 	item=cur;
 	if(p)
 		item=new QListViewItem(p,item,str);
