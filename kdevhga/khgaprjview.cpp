@@ -63,7 +63,7 @@ void KHGAPrjView::createPrj(void)
 {
 	char tmp[100];
 	QListViewItem *item=0,*item2=0,*item3;
-	RCursor<RObjH,unsigned int> Objs(doc->Objs);
+	RCursor<RObjH> Objs(doc->Objs);
 	unsigned int i;
 
 	// Construct Objects

@@ -98,7 +98,7 @@ KHGAHeuristicView::KHGAHeuristicView(KDevHGADoc* pDoc,HeuristicType pType,QWidge
 {
 	Data=new GNodeInfosData(20);
 	Init(Data);
-	Objs=new RCursor<RObjH,unsigned int>();
+	Objs=new RCursor<RObjH>();
 	Objs->Set(pDoc->Objs);
 	nbObjs = pDoc->Objs->NbPtr;
 	draw=new QTreeInfos(pDoc,this);

@@ -137,7 +137,7 @@ class KHGAHeuristicView : public KDevHGAView, public RNodesGA<MyNode,RObjH,GNode
 	/**
 	* Objects to group.
 	*/
-	RCursor<RObjH,unsigned int>* Objs;
+	RCursor<RObjH>* Objs;
 
 public:
 

@@ -132,7 +132,7 @@ class KDevHGADoc : public QObject
 	/**
 	* Container of words.
 	*/
-	RContainer<Word,unsigned int,true,true> Words;
+	RContainer<Word,true,true> Words;
 
 public:
 
