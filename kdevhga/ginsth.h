@@ -1,19 +1,15 @@
 /*
 
-	R Project Library
+	GALILEI Project
 
-	RInsth.h
+	GInsth.h
 
-	Class representing an instance of a HGA - Header
+	Class representing an instance of a HGA for GALILEI - Header
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
-
-	Version $Revision$
-
-	Last Modify: $Date$
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -60,14 +56,14 @@ namespace GALILEI{
 * @author Pascal Francq
 * @short HGA "thread-dependent" Data.
 */
-class GThreadDataH : public R::RThreadDataH<GInstH,GChromoH,GNodeWords,R::RObjH,GNodeWordsData>
+class GThreadDataH : public R::RThreadDataH<GInstH,GChromoH,GNodeInfos,R::RObjH,GNodeInfosData>
 {
 public:
 	/**
 	* Construct the data.
 	* @param data           Owner of the data.
 	*/
-	GThreadDataH(GInstH *owner) throw(bad_alloc);
+	GThreadDataH(GInstH *owner) throw(std::bad_alloc);
 
 	/**
 	* Destruct the data.
@@ -77,7 +73,7 @@ public:
 
 
 //------------------------------------------------------------------------------
-class GInstH : public R::RInstH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeWords,R::RObjH,GNodeWordsData>
+class GInstH : public R::RInstH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeInfos,R::RObjH,GNodeInfosData>
 {
 public:
 
@@ -94,12 +90,12 @@ public:
 	* @param h              The heuristic that has to be used.
 	* @param debug          Debugger.
 	*/
-	GInstH(unsigned int max,unsigned int popsize,R::RObjs<R::RObjH>* objs,R::HeuristicType h,R::RDebug* debug=0) throw(bad_alloc);
+	GInstH(unsigned int max,unsigned int popsize,R::RObjs<R::RObjH>* objs,R::HeuristicType h,R::RDebug* debug=0) throw(std::bad_alloc);
 
 	/**
 	* Initialisation of the instance.
 	*/
-	virtual void Init(GNodeWordsData* hdata) throw(bad_alloc);
+	virtual void Init(GNodeInfosData* hdata) throw(std::bad_alloc);
 
 	/**
 	* This function determines if the GA must stop. It is called after

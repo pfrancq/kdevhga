@@ -1,16 +1,15 @@
 /*
 
-	R Project Library
+	GALILEI Project
 
-	gawords.h
+	GNodeInfos.h
 
-	Description - Header.
+	Node representing a set of words. - Header.
 
-	(C) 2001 by Pascal Francq
+	Copyright 1998-2004 by the Université Libre de Bruxelles.
 
-	Version $Revision$
-
-	Last Modify: $Date$
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -31,8 +30,8 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef RGAWordsH
-#define RGAWordsH
+#ifndef RNodeWordsH
+#define RNodeWordsH
 
 
 //-----------------------------------------------------------------------------
@@ -49,17 +48,17 @@ namespace GALILEI{
 
 
 //-----------------------------------------------------------------------------
-class GNodeWordsData
+class GNodeInfosData
 {
 public:
 	unsigned int MaxAttr;
 
-	GNodeWordsData(unsigned int max);
+	GNodeInfosData(unsigned int max);
 };
 
 
 //-----------------------------------------------------------------------------
-class GNodeWords : public R::RNodeGA<GNodeWords,R::RObjH,GNodeWordsData,GChromoH>
+class GNodeInfos : public R::RNodeGA<GNodeInfos,R::RObjH,GNodeInfosData,GChromoH>
 {
 public:
 	/**
@@ -68,16 +67,16 @@ public:
 	* @param id             Identificator of the node.
 	* @param data           Data used to construct the node.
 	*/
-	GNodeWords(R::RNodesGA<GNodeWords,R::RObjH,GNodeWordsData,GChromoH>* owner,unsigned int id,GNodeWordsData* data);
+	GNodeInfos(R::RNodesGA<GNodeInfos,R::RObjH,GNodeInfosData,GChromoH>* owner,unsigned int id,GNodeInfosData* data);
 
-	GNodeWords(const GNodeWords* w);
+	GNodeInfos(const GNodeInfos* w);
 
-	int Compare(const GNodeWords* n) const;
+	int Compare(const GNodeInfos* n) const;
 
-	int Compare(const GNodeWords& n) const;
+	int Compare(const GNodeInfos& n) const;
 
 	void Evaluate(double& val, double nbchoices);
-	GNodeWords& operator=(const GNodeWords& w);
+	GNodeInfos& operator=(const GNodeInfos& w);
 };
 
 

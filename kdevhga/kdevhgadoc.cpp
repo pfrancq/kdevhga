@@ -1,16 +1,13 @@
 /*
 
-	R Project Library
+	KDevHGADoc.cpp
 
-	kdevhgadoc.cpp
+	Document representing a HGA problem - Implementation.
 
-	Description - Implementation.
+	Copyright 1998-2004 by the Université Libre de Bruxelles.
 
-	(C) 2001 by Pascal Francq
-
-	Version $Revision$
-
-	Last Modify: $Date$
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -202,6 +199,7 @@ bool KDevHGADoc::openDocument(const KURL& url,const char* /*format*/)
 
 	RXMLStruct s;
 	RXMLFile f(tmp,&s);
+	f.Process();
 
 	// Load Objects
 	tag=s.GetTag("Objects");

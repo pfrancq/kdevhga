@@ -1,16 +1,13 @@
 /*
 
-	R Project Library
-
 	main.cpp
 
 	Description - Implementation.
 
-	(C) 2001 by Pascal Francq
+	Copyright 1998-2004 by the Université Libre de Bruxelles.
 
-	Version $Revision$
-
-	Last Modify: $Date$
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -89,7 +86,7 @@ int main(int argc, char *argv[])
 	}
 	catch(...)
 	{
-		cout<<"Problem"<<endl;
+		std::cout<<"Problem"<<std::endl;
 	}
  	return(0);
 }

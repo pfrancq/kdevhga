@@ -20,4 +20,7 @@
 		<Action name="ga_stop"/>
 	</Menu>
 </MenuBar>
+<ToolBar fullWidth="true" name="mainToolBar">
+	<Action name="file_quit"/>
+</TooBar>
 </kpartgui>

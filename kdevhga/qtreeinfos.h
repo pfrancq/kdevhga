@@ -1,16 +1,13 @@
 /*
 
-	R Project Library
+	QTreeInfos.h
 
-	qlistwords.h
+	Widget representing a tree of vectors  - Header.
 
-	Description - Header.
+	Copyright 1998-2004 by the Universit�Libre de Bruxelles.
 
-	(C) 2001 by Pascal Francq
-
-	Version $Revision$
-
-	Last Modify: $Date$
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -51,7 +48,7 @@ using namespace R;
 
 //-----------------------------------------------------------------------------
 // include files for current application
-#include <gawords.h>
+#include <gnodeinfos.h>
 #include <ghga.h>
 using namespace GALILEI;
 
@@ -67,23 +64,23 @@ class MyNode;
 /**
 * @author Pascal Francq
 */
-class QListWords : public QListView
+class QTreeInfos : public QListView
 {
 	Q_OBJECT
 	KDevHGADoc* Doc;
 	GChromoH* Chromos;
-	RNodesGA<MyNode,RObjH,GNodeWordsData,KHGAHeuristicView>* Nodes;
+	RNodesGA<MyNode,RObjH,GNodeInfosData,KHGAHeuristicView>* Nodes;
 
 	QString constAttr(const RAttrList* attr);
 	void constObjs(RObjH** objs,unsigned int nb,QListViewItem* item);
-	void constNode(QListViewItem* p,QListViewItem*& cur,GNodeWords* n);
+	void constNode(QListViewItem* p,QListViewItem*& cur,GNodeInfos* n);
 	void constNode(QListViewItem* p,QListViewItem*& cur,MyNode* n);
 
 public:
-	QListWords(KDevHGADoc* pDoc,QWidget* parent=0);
+	QTreeInfos(KDevHGADoc* pDoc,QWidget* parent=0);
 	void setNodes(GChromoH* chromos);
-	void setNodes(RNodesGA<MyNode,RObjH,GNodeWordsData,KHGAHeuristicView>* nodes);
-	~QListWords(void);
+	void setNodes(RNodesGA<MyNode,RObjH,GNodeInfosData,KHGAHeuristicView>* nodes);
+	~QTreeInfos(void);
 };
 
 

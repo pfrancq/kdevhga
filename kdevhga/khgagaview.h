@@ -1,28 +1,27 @@
 /*
 
-  khgagaview.h
+	KHGAGAView.h
 
-  Description - Header.
+	Windows showig the running HGA - Header.
 
-  (c) 2001 by P. Francq.
+	Copyright 1998-2004 by the Universit�Libre de Bruxelles.
 
-  Version $Revision$
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
-  Last Modify: $Date$
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	any later version.
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
@@ -52,14 +51,14 @@ using namespace GALILEI;
 
 //-----------------------------------------------------------------------------
 // include files for Qt Widgets
-#include <rga/qgamonitor.h>
-#include <rga/qxmlcontainer.h>
+#include <frontend/kde/qgamonitor.h>
+#include <frontend/kde/qxmlcontainer.h>
 
 
 //-----------------------------------------------------------------------------
 // include files for current application
 #include "kdevhgaview.h"
-#include "qlistwords.h"
+#include <qtreeinfos.h>
 
 
 //-----------------------------------------------------------------------------
@@ -95,12 +94,12 @@ class KHGAGAView : public KDevHGAView, public RGASignalsReceiver<GInstH,GChromoH
 	/**
 	* The best solution.
 	*/
-	QListWords* Best;
+	QTreeInfos* Best;
 	
 	/**
 	* The solutions.
 	*/
-	QListWords* Sol;
+	QTreeInfos* Sol;
 	
 	/**
 	* Identificator of the current showed solution.
@@ -115,7 +114,7 @@ class KHGAGAView : public KDevHGAView, public RGASignalsReceiver<GInstH,GChromoH
 	/**
 	* Data needed for the construction of the groups.
 	*/
-	GNodeWordsData* Data;
+	GNodeInfosData* Data;
 
 	/**
 	* Number of generation already executed.

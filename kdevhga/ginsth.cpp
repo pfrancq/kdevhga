@@ -1,17 +1,15 @@
 /*
 
-	RInsth.hh
+	GALILEI Project
 
-	Class representing an instance of a HGA - Implementation
+	GInsth.hh
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Class representing an instance of a HGA for GALILEI - Implementation
+
+	Copyright 1998-2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
-
-	Version $Revision$
-
-	Last Modify: $Date$
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -31,11 +29,17 @@
 */
 
 
+
+//------------------------------------------------------------------------------
+// include files for R library
+#include <rhga/rfirstnodeheuristic.h>
+
+
 //------------------------------------------------------------------------------
 // include files for GALILEI
 #include <ginsth.h>
 #include <gchromoh.h>
-#include <gawords.h>
+#include <gnodeinfos.h>
 using namespace R;
 using namespace GALILEI;
 
@@ -48,8 +52,8 @@ using namespace GALILEI;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-GThreadDataH::GThreadDataH(GInstH *owner) throw(bad_alloc)
-	: RThreadDataH<GInstH,GChromoH,GNodeWords,RObjH,GNodeWordsData>(owner)
+GThreadDataH::GThreadDataH(GInstH *owner) throw(std::bad_alloc)
+	: RThreadDataH<GInstH,GChromoH,GNodeInfos,RObjH,GNodeInfosData>(owner)
 {
 }
 
@@ -68,17 +72,17 @@ GThreadDataH::~GThreadDataH(void)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-GInstH::GInstH(unsigned int max,unsigned int popsize,RObjs<RObjH>* objs,HeuristicType h,RDebug* debug) throw(bad_alloc)
-	: RInstH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeWords,RObjH,GNodeWordsData>(popsize,objs,h,debug),
+GInstH::GInstH(unsigned int max,unsigned int popsize,RObjs<RObjH>* objs,HeuristicType h,RDebug* debug) throw(std::bad_alloc)
+	: RInstH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeInfos,RObjH,GNodeInfosData>(popsize,objs,h,debug),
 	  MaxGen(max)
 {
 }
 
 
 //------------------------------------------------------------------------------
-void GInstH::Init(GNodeWordsData* hdata) throw(bad_alloc)
+void GInstH::Init(GNodeInfosData* hdata) throw(std::bad_alloc)
 {
-	RInstH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeWords,RObjH,GNodeWordsData>::Init(hdata);
+	RInstH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeInfos,RObjH,GNodeInfosData>::Init(hdata);
 }
 
 

@@ -1,16 +1,13 @@
 /*
 
-	R Project Library
+	QTreeInfos.cpp
 
-	qlistwords.cpp
+	Widget representing a tree of vectors - Implementation.
 
-	Description - Implementation.
+	Copyright 1998-2004 by the Universit�Libre de Bruxelles.
 
-	(C) 2001 by Pascal Francq
-
-	Version $Revision$
-
-	Last Modify: $Date$
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -44,7 +41,7 @@ using namespace GALILEI;
 
 
 //-----------------------------------------------------------------------------
-#include "qlistwords.h"
+#include <qtreeinfos.h>
 #include "kdevhgadoc.h"
 #include "khgaheuristicview.h"
 
@@ -52,12 +49,12 @@ using namespace GALILEI;
 
 //-----------------------------------------------------------------------------
 //
-// class QListWords
+// class QTreeInfos
 //
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-QListWords::QListWords(KDevHGADoc* pDoc,QWidget* parent)
+QTreeInfos::QTreeInfos(KDevHGADoc* pDoc,QWidget* parent)
 	: QListView(parent,"Results"), Doc(pDoc), Chromos(0), Nodes(0)
 {
 	addColumn("Resulting Tree");
@@ -67,7 +64,7 @@ QListWords::QListWords(KDevHGADoc* pDoc,QWidget* parent)
 
 
 //-----------------------------------------------------------------------------
-QString QListWords::constAttr(const RAttrList* attr)
+QString QTreeInfos::constAttr(const RAttrList* attr)
 {
 	QString str;
 	unsigned int i;
@@ -85,7 +82,7 @@ QString QListWords::constAttr(const RAttrList* attr)
 
 
 //-----------------------------------------------------------------------------
-void QListWords::constObjs(RObjH** objs,unsigned int nb,QListViewItem* item)
+void QTreeInfos::constObjs(RObjH** objs,unsigned int nb,QListViewItem* item)
 {
 	QString str;
 	QListViewItem* item2=0;
@@ -100,11 +97,11 @@ void QListWords::constObjs(RObjH** objs,unsigned int nb,QListViewItem* item)
 
 
 //-----------------------------------------------------------------------------
-void QListWords::constNode(QListViewItem* p,QListViewItem*& cur,GNodeWords* n)
+void QTreeInfos::constNode(QListViewItem* p,QListViewItem*& cur,GNodeInfos* n)
 {
 	QString str;
 	unsigned int i;
-	GNodeWords** N;
+	GNodeInfos** N;
 	QListViewItem* item2=0;
 	QListViewItem* item=0;
 
@@ -128,7 +125,7 @@ void QListWords::constNode(QListViewItem* p,QListViewItem*& cur,GNodeWords* n)
 
 
 //-----------------------------------------------------------------------------
-void QListWords::constNode(QListViewItem* p,QListViewItem*& cur,MyNode* n)
+void QTreeInfos::constNode(QListViewItem* p,QListViewItem*& cur,MyNode* n)
 {
 	QString str;
 	unsigned int i;
@@ -156,10 +153,10 @@ void QListWords::constNode(QListViewItem* p,QListViewItem*& cur,MyNode* n)
 
 
 //-----------------------------------------------------------------------------
-void QListWords::setNodes(GChromoH* chromos)
+void QTreeInfos::setNodes(GChromoH* chromos)
 {
 	unsigned int i;
-	GNodeWords** N;
+	GNodeInfos** N;
 	QListViewItem* cur=0;
 
 	Chromos=chromos;
@@ -172,7 +169,7 @@ void QListWords::setNodes(GChromoH* chromos)
 
 
 //-----------------------------------------------------------------------------
-void QListWords::setNodes(RNodesGA<MyNode,RObjH,GNodeWordsData,KHGAHeuristicView>* nodes)
+void QTreeInfos::setNodes(RNodesGA<MyNode,RObjH,GNodeInfosData,KHGAHeuristicView>* nodes)
 {
 	unsigned int i;
 	MyNode** N;
@@ -188,6 +185,6 @@ void QListWords::setNodes(RNodesGA<MyNode,RObjH,GNodeWordsData,KHGAHeuristicView
 
 
 //-----------------------------------------------------------------------------
-QListWords::~QListWords(void)
+QTreeInfos::~QTreeInfos(void)
 {
 }

@@ -60,6 +60,7 @@
       <programargs/>
       <terminal>false</terminal>
       <envvars/>
+      <directoryradio>executable</directoryradio>
     </run>
   </kdevautoproject>
   <kdevfileview>
@@ -82,10 +83,12 @@
       <group pattern="*rmath/*.cpp" name="Sources - Math" />
       <group pattern="*rio/*.cpp" name="Sources - IO" />
       <group pattern="*" name="Others" />
+      <hidenonprojectfiles>false</hidenonprojectfiles>
     </groups>
     <tree>
       <hidenonprojectfiles>false</hidenonprojectfiles>
       <hidepatterns>*.o,*.lo,CVS</hidepatterns>
+      <showvcsfields>false</showvcsfields>
     </tree>
   </kdevfileview>
   <kdevdoctreeview>
@@ -136,13 +139,13 @@
   </kdevclassview>
   <kdevcvs>
     <cvsoptions>-f</cvsoptions>
-    <commitoptions></commitoptions>
+    <commitoptions/>
     <updateoptions>-dP</updateoptions>
-    <addoptions></addoptions>
+    <addoptions/>
     <removeoptions>-f</removeoptions>
     <diffoptions>-u3 -p</diffoptions>
-    <logoptions></logoptions>
-    <rshoptions></rshoptions>
+    <logoptions/>
+    <rshoptions/>
     <revertoptions>-C -d -P</revertoptions>
   </kdevcvs>
   <kdevcppsupport>
@@ -155,6 +158,16 @@
       <automaticArgumentsHint>true</automaticArgumentsHint>
       <codeCompletionDelay>250</codeCompletionDelay>
       <argumentsHintDelay>400</argumentsHintDelay>
+      <automaticHeaderCompletion>true</automaticHeaderCompletion>
+      <headerCompletionDelay>250</headerCompletionDelay>
     </codecompletion>
+    <references/>
   </kdevcppsupport>
+  <kdevcvsservice>
+    <recursivewhenupdate>true</recursivewhenupdate>
+    <prunedirswhenupdate>true</prunedirswhenupdate>
+    <createdirswhenupdate>true</createdirswhenupdate>
+    <recursivewhencommitremove>true</recursivewhencommitremove>
+    <revertoptions>-C</revertoptions>
+  </kdevcvsservice>
 </kdevelop>

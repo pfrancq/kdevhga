@@ -1,16 +1,13 @@
 /*
 
-	R Project Library
+	KDevHGADoc.h
 
-	kdevhgadoc.h
+	Document representing a HGA problem - Header.
 
-	Description - Header.
+	Copyright 1998-2004 by the Universit�Libre de Bruxelles.
 
-	(C) 2001 by Pascal Francq
-
-	Version $Revision$
-
-	Last Modify: $Date$
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -69,7 +66,7 @@ class KDevHGAView;
 class KHGAGAView;
 class KHGAPrjView;
 class KHGAHeuristicView;
-class QListWords;
+class QTreeInfos;
 
 
 //-----------------------------------------------------------------------------
@@ -246,7 +243,7 @@ public:
 	friend class KHGAGAView;
 	friend class KHGAHeuristicView;
 	friend class KHGAPrjView;
-	friend class QListWords;
+	friend class QTreeInfos;
 };
 
 

@@ -1,11 +1,10 @@
 ####### kdevelop will overwrite this part!!! (begin)##########
 bin_PROGRAMS = kdevhga
-kdevhga_SOURCES = gawords.cpp khgaprjview.cpp khgaheuristicview.cpp \
+kdevhga_SOURCES = gnodeinfos.cpp khgaprjview.cpp khgaheuristicview.cpp \
 		khgagaview.cpp kappoptions.ui kdevhgaview.cpp kdevhgadoc.cpp kdevhga.cpp \
-		ghga.cpp ginsth.cpp gchromoh.cpp main.cpp qlistwords.cpp
+		ghga.cpp ginsth.cpp gchromoh.cpp main.cpp qtreeinfos.cpp
 
-kdevhga_LDADD  = $(R_LIB)/rhga/librhga.la $(R_LIB)/rstd/librstd.la $(R_LIB)/rga/librga.la \
-		$(QTWIDGETS_LIB)/rga/libkde_rga.la $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) \
+kdevhga_LDADD  = $(KDEVHGA_ADD) $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) \
 		$(LIB_QT) $(LIBSOCKET)
 
 SUBDIRS =
@@ -13,7 +12,7 @@ SUBDIRS =
 EXTRA_DIST = main.cpp kdevhga.cpp kdevhga.h kdevhgadoc.cpp kdevhgadoc.h kdevhgaview.cpp \
 		kdevhgaview.h kdevhgaui.rc kdevhga.desktop lo32-app-kdevhga.png lo16-app-kdevhga.png \
 		kappoptions.ui khgagaview.cpp khgagaview.h khgaheuristicview.cpp khgaheuristicview.h \
-		khgaprjview.cpp khgaprjview.h qlistwords.cpp qlistwords.h gawords.h gawords.cpp \
+		khgaprjview.cpp khgaprjview.h qtreeinfos.cpp qtreeinfos.h gnodeinfos.h gnodeinfos.cpp \
 		ghga.h ghga.cpp ginsth.h ginsth.cpp gchromoh.h gchromoh.cpp
 
 install-data-local:
@@ -44,7 +43,7 @@ uninstall-local:
 # kde_wallpaperdir  Where general wallpapers should go to.
 
 # set the include path for X, qt and KDE
- INCLUDES= $(all_includes) -I$(R_LIB) -I$(QTWIDGETS_LIB)
+INCLUDES= $(all_includes)
 
 METASOURCES = AUTO
 

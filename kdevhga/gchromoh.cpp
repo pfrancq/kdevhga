@@ -1,17 +1,15 @@
 /*
 
-	RChromoh.hh
+	GALILEI Project
 
-	Class representing a tree (chromosome) - Inline implementation
+	GChromoh.cpp
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Chromosomes representing a tree of vectors - Implementation
+
+	Copyright 1998-2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
-
-	Version $Revision$
-
-	Last Modify: $Date$
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -33,11 +31,15 @@
 
 
 //------------------------------------------------------------------------------
-// include files for GALILEI
+// include files for R
 #include <rhga/robjh.h>
+
+
+//------------------------------------------------------------------------------
+// include files for GALILEI
 #include <gchromoh.h>
 #include <ginsth.h>
-#include <gawords.h>
+#include <gnodeinfos.h>
 using namespace GALILEI;
 using namespace R;
 
@@ -50,17 +52,17 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-GChromoH::GChromoH(GInstH* inst,unsigned id) throw(bad_alloc)
-	: RChromoH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeWords,RObjH,GNodeWordsData>(inst,id)
+GChromoH::GChromoH(GInstH* inst,unsigned id) throw(std::bad_alloc)
+	: RChromoH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeInfos,RObjH,GNodeInfosData>(inst,id)
 {
 	(*Fitness)=100.0;
 }
 
 
 //------------------------------------------------------------------------------
-void GChromoH::Init(GThreadDataH* thData) throw(bad_alloc)
+void GChromoH::Init(GThreadDataH* thData) throw(std::bad_alloc)
 {
-	RChromoH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeWords,RObjH,GNodeWordsData>::Init(thData);
+	RChromoH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeInfos,RObjH,GNodeInfosData>::Init(thData);
 }
 
 

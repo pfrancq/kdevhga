@@ -1,19 +1,15 @@
 /*
 
-	R Project Library
+	GALILEI Project
 
 	RGA.cpp
 
-	Genetic Algorithms - Implementation
+	Hierarchical Genetic Algorithms for GALILEI - Implementation
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2004 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
-
-	Version $Revision$
-
-	Last Modify: $Date$
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -37,7 +33,5 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <ghga.h>
-#include <rga/robjs.h>
-#include <gawords.h>
 using namespace R;
 using namespace GALILEI;

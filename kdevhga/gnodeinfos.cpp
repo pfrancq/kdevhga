@@ -1,16 +1,15 @@
 /*
 
-	R Project Library
+	GALILEI Project
 
-	gawords.cpp
+	GNodeInfos.cpp
 
-	Description - Implementation.
+	Node representing a set of words - Implementation.
 
-	(C) 2001 by Pascal Francq
+	Copyright 1998-2004 by the Université Libre de Bruxelles.
 
-	Version $Revision$
-
-	Last Modify: $Date$
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -33,49 +32,49 @@
 
 //------------------------------------------------------------------------------
 // include files for current application
-#include <gawords.h>
+#include <gnodeinfos.h>
 using namespace R;
 using namespace GALILEI;
 
 
 //------------------------------------------------------------------------------
-GNodeWordsData::GNodeWordsData(unsigned int max) : MaxAttr(max)
+GNodeInfosData::GNodeInfosData(unsigned int max) : MaxAttr(max)
 {
 }
 
 
 //------------------------------------------------------------------------------
-GNodeWords::GNodeWords(RNodesGA<GNodeWords,RObjH,GNodeWordsData,GChromoH>* owner,unsigned id,GNodeWordsData* data)
-	: RNodeGA<GNodeWords,RObjH,GNodeWordsData,GChromoH>(owner,id,data)
+GNodeInfos::GNodeInfos(RNodesGA<GNodeInfos,RObjH,GNodeInfosData,GChromoH>* owner,unsigned id,GNodeInfosData* data)
+	: RNodeGA<GNodeInfos,RObjH,GNodeInfosData,GChromoH>(owner,id,data)
 {
 }
 
 
 //------------------------------------------------------------------------------
-GNodeWords::GNodeWords(const GNodeWords* w)
-	: RNodeGA<GNodeWords,RObjH,GNodeWordsData,GChromoH>(w)
+GNodeInfos::GNodeInfos(const GNodeInfos* w)
+	: RNodeGA<GNodeInfos,RObjH,GNodeInfosData,GChromoH>(w)
 {
 }
 
 
 //------------------------------------------------------------------------------
-int GNodeWords::Compare(const GNodeWords* n) const
+int GNodeInfos::Compare(const GNodeInfos* n) const
 {
 	return(Id-n->Id);
 }
 
 
 //------------------------------------------------------------------------------
-int GNodeWords::Compare(const GNodeWords& n) const
+int GNodeInfos::Compare(const GNodeInfos& n) const
 {
 	return(Id-n.Id);
 }
 
 
 //------------------------------------------------------------------------------
-void GNodeWords::Evaluate(double& val, double nbchoices)
+void GNodeInfos::Evaluate(double& val, double nbchoices)
 {
-	GNodeWords** ptr;
+	GNodeInfos** ptr;
 	unsigned int i;
 
 	// Update count for this level
@@ -91,8 +90,8 @@ void GNodeWords::Evaluate(double& val, double nbchoices)
 
 
 //------------------------------------------------------------------------------
-GNodeWords& GNodeWords::operator=(const GNodeWords& w)
+GNodeInfos& GNodeInfos::operator=(const GNodeInfos& w)
 {
-	RNodeGA<GNodeWords,RObjH,GNodeWordsData,GChromoH>::operator=(w);
+	RNodeGA<GNodeInfos,RObjH,GNodeInfosData,GChromoH>::operator=(w);
 	return(*this);
 }

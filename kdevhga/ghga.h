@@ -1,19 +1,15 @@
 /*
 
-	R Project Library
+	GALILEI Project
 
 	HGA.h
 
-	Hierarchical Genetic Algorithms - Header.
+	Hierarchical Genetic Algorithms for GALILEI - Header.
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
-
-	Version $Revision$
-
-	Last Modify: $Date$
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -35,8 +31,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef GHGAH
-#define GHGAH
+#ifndef GHGA_H
+#define GHGA_H
 
 
 //------------------------------------------------------------------------------
@@ -55,8 +51,8 @@ namespace GALILEI{
 
 //------------------------------------------------------------------------------
 // Forward class declaration
-class GNodeWordsData;
-class GNodeWords;
+class GNodeInfosData;
+class GNodeInfos;
 class GThreadDataH;
 class GChromoH;
 class GInstH;

@@ -1,28 +1,27 @@
 /*
 
-  khgagaview.cpp
+	KHGAGAView.cpp
 
-  Description - Implementation.
+	Windows showig the running HGA - Implementation.
 
-  (c) 2001 by P. Francq.
+	Copyright 1998-2004 by the Universit�Libre de Bruxelles.
 
-  Version $Revision$
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
-  Last Modify: $Date$
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	any later version.
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
@@ -69,7 +68,7 @@ KHGAGAView::KHGAGAView(KDevHGADoc* pDoc,QWidget *parent, const char *name,int wf
 	TabWidget->setGeometry(rect());
 	TabWidget->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7, (QSizePolicy::SizeType)7, TabWidget->sizePolicy().hasHeightForWidth() ) );
 	TabWidget->setBackgroundOrigin( QTabWidget::ParentOrigin );
-	Data=new GNodeWordsData(20);
+	Data=new GNodeInfosData(20);
 
 	// Stat part
 	StatSplitter=new QSplitter(QSplitter::Vertical,TabWidget,"Statistic");
@@ -81,11 +80,11 @@ KHGAGAView::KHGAGAView(KDevHGADoc* pDoc,QWidget *parent, const char *name,int wf
 	Debug=new QXMLContainer(StatSplitter);
 
 	// Solution part
-	Best = new QListWords(pDoc,TabWidget);
+	Best = new QTreeInfos(pDoc,TabWidget);
 	TabWidget->insertTab(Best,"Best Solution");
 
 	// Solution part
-	Sol = new QListWords(pDoc,TabWidget);
+	Sol = new QTreeInfos(pDoc,TabWidget);
 	sprintf(tmp,"Solution (0/%u)",((KDevHGAApp*)parentWidget()->parentWidget()->parentWidget())->GAPopSize-1);
 	TabWidget->insertTab(Sol,tmp);
 
@@ -99,10 +98,10 @@ KHGAGAView::KHGAGAView(KDevHGADoc* pDoc,QWidget *parent, const char *name,int wf
 	}
 	catch(eGA& e)
 	{
-		KMessageBox::error(this,e.Msg.Latin1());
+		KMessageBox::error(this,e.GetMsg());
 		Instance=0;
 	}
-	catch(bad_alloc)
+	catch(std::bad_alloc)
 	{
 		KMessageBox::error(this,"Memory Problems");
 		Instance=0;
@@ -166,7 +165,7 @@ void KHGAGAView::RunGA(void)
 		}
 		catch(eGA& e)
 		{
-			KMessageBox::error(this,e.Msg.Latin1());
+			KMessageBox::error(this,e.GetMsg());
 		}
 	}
 }

@@ -1,28 +1,27 @@
 /*
 
-  khgaheuristicview.cpp
+	KHGAHeuristicView.cpp
 
-  Description - Implementation.
+	Window to follow the steps of an heuristic - Implementation.
 
-  (c) 2000 by P. Francq.
+	Copyright 1998-2004 by the Universit�Libre de Bruxelles.
 
-  Version $Revision$
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
-  Last Modify: $Date$
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	any later version.
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
@@ -41,7 +40,7 @@ using namespace R;
 
 
 #include <ginsth.h>
-#include <gawords.h>
+#include <gnodeinfos.h>
 using namespace GALILEI;
 
 //-----------------------------------------------------------------------------
@@ -65,15 +64,15 @@ using namespace GALILEI;
 
 
 //------------------------------------------------------------------------------
-MyNode::MyNode(RNodesGA<MyNode,RObjH,GNodeWordsData,KHGAHeuristicView>* owner,unsigned id,GNodeWordsData* data)
-	: RNodeGA<MyNode,RObjH,GNodeWordsData,KHGAHeuristicView>(owner,id,data)
+MyNode::MyNode(RNodesGA<MyNode,RObjH,GNodeInfosData,KHGAHeuristicView>* owner,unsigned id,GNodeInfosData* data)
+	: RNodeGA<MyNode,RObjH,GNodeInfosData,KHGAHeuristicView>(owner,id,data)
 {
 }
 
 
 //------------------------------------------------------------------------------
 MyNode::MyNode(const MyNode* w)
-	: RNodeGA<MyNode,RObjH,GNodeWordsData,KHGAHeuristicView>(w)
+	: RNodeGA<MyNode,RObjH,GNodeInfosData,KHGAHeuristicView>(w)
 {
 }
 
@@ -94,15 +93,15 @@ int MyNode::Compare(const MyNode* n)
 
 //-----------------------------------------------------------------------------
 KHGAHeuristicView::KHGAHeuristicView(KDevHGADoc* pDoc,HeuristicType pType,QWidget *parent, const char *name,int wflags)
-	: KDevHGAView(pDoc,parent,name,wflags), RNodesGA<MyNode,RObjH,GNodeWordsData,KHGAHeuristicView>(pDoc->Objs,pDoc->Objs->NbPtr),
+	: KDevHGAView(pDoc,parent,name,wflags), RNodesGA<MyNode,RObjH,GNodeInfosData,KHGAHeuristicView>(pDoc->Objs,pDoc->Objs->NbPtr),
 	  Random(0), type(pType), Data(0), TreeHeur(0), Objs(0)
 {
-	Data=new GNodeWordsData(20);
+	Data=new GNodeInfosData(20);
 	Init(Data);
 	Objs=new RCursor<RObjH,unsigned int>();
 	Objs->Set(pDoc->Objs);
 	nbObjs = pDoc->Objs->NbPtr;
-	draw=new QListWords(pDoc,this);
+	draw=new QTreeInfos(pDoc,this);
 	draw->setNodes(this);
 	result=new QLabel(this);
 
@@ -115,7 +114,7 @@ KHGAHeuristicView::KHGAHeuristicView(KDevHGADoc* pDoc,HeuristicType pType,QWidge
 	switch(pType)
 	{
 		case FirstFit:
-			TreeHeur = new RFirstNodeHeuristic<MyNode,RObjH,GNodeWordsData,KHGAHeuristicView>(Random,Objs,0);
+			TreeHeur = new RFirstNodeHeuristic<MyNode,RObjH,GNodeInfosData,KHGAHeuristicView>(Random,Objs,0);
 			break;
 	}
 	TreeHeur->Init(this);

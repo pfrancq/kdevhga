@@ -1,16 +1,13 @@
 /*
 
-	R Project Library
+	KDevHGA.cpp
 
-	kdevhga.cpp
+	Main application - Implementation.
 
-	Description - Implementation.
+	Copyright 1998-2004 by the Université Libre de Bruxelles.
 
-	(C) 2001 by Pascal Francq
-
-	Version $Revision$
-
-	Last Modify: $Date$
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public

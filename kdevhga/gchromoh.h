@@ -1,19 +1,15 @@
 /*
 
-	R Project Library
+	GALILEI Project
 
-	RChromoH.h
+	GChromoH.h
 
-	Class representing a tree (chromosome) - Header
+	Chromosomes representing a tree of vectors - Header
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
-
-	Version $Revision$
-
-	Last Modify: $Date$
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -56,7 +52,7 @@ namespace GALILEI{
 
 
 //------------------------------------------------------------------------------
-class GChromoH : public R::RChromoH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeWords,R::RObjH,GNodeWordsData>
+class GChromoH : public R::RChromoH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeInfos,R::RObjH,GNodeInfosData>
 {
 public:
 
@@ -65,14 +61,14 @@ public:
 	* @param inst           The instance.
 	* @param id             Identificator of the chromosome.
 	*/
-	GChromoH(GInstH* inst,unsigned int id) throw(bad_alloc);
+	GChromoH(GInstH* inst,unsigned int id) throw(std::bad_alloc);
 
 	/**
 	* Initialisation of the chromosome.
 	* @param thData         Pointer to the "thread-dependent" data of the
 	*                       chromosome.
 	*/
-	virtual void Init(GThreadDataH* thData) throw(bad_alloc);
+	virtual void Init(GThreadDataH* thData) throw(std::bad_alloc);
 
 	/**
 	* Evaluate the quality of the solution
