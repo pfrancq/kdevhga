@@ -4,7 +4,7 @@
 
 	Document representing a HGA problem - Header.
 
-	Copyright 1998-2004 by the Universit�Libre de Bruxelles.
+	Copyright 1998-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -29,8 +29,8 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef KDEVHGADOC_H
-#define KDEVHGA_H
+#ifndef KDevHGADoc_H
+#define KDevHGADoc_H
 
 
 //-----------------------------------------------------------------------------
@@ -41,10 +41,10 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstring.h>
-#include <rstd/rcontainer.h>
-#include <rga/robjs.h>
-#include <rhga/robjh.h>
+#include <rstring.h>
+#include <rcontainer.h>
+#include <robjs.h>
+#include <robjh.h>
 using namespace R;
 
 
@@ -52,7 +52,7 @@ using namespace R;
 // include files for Qt
 #include <qobject.h>
 #include <qstring.h>
-#include <qlist.h>
+#include <qlistview.h>
 
 
 //-----------------------------------------------------------------------------
@@ -80,10 +80,10 @@ public:
 	unsigned int Id;
 
 	Word(const RString& w) : W(w), Id(0xFFFFFFFF) {}
-	int Compare(const Word* w) {return(W.Compare(w->W));}
-	int Compare(const Word& w) {return(W.Compare(w.W));}
-	int Compare(const RString& str) {return(W.Compare(str));}
-	int Compare(const unsigned int id) {return(Id-id);}
+	int Compare(const Word* w) const {return(W.Compare(w->W));}
+	int Compare(const Word& w) const {return(W.Compare(w.W));}
+	int Compare(const RString& str) const {return(W.Compare(str));}
+	int Compare(const unsigned int id) const {return(Id-id);}
 };
 
 
@@ -141,6 +141,10 @@ public:
 	*/
 	KDevHGADoc(void);
 
+	/**
+	 */
+	RString GetWord(size_t id) const;
+	
 	/**
 	* Adds a view to the document which represents the document contents.
 	* Usually this is your main view.
@@ -248,4 +252,4 @@ public:
 
 
 //-----------------------------------------------------------------------------
-#endif // KDEVHGADOC_H
+#endif // KDevHGADoc_H

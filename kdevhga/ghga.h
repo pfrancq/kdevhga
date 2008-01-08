@@ -2,11 +2,11 @@
 
 	GALILEI Project
 
-	HGA.h
+	GHGA.h
 
 	Hierarchical Genetic Algorithms for GALILEI - Header.
 
-	Copyright 1998-2004 by the Universit�Libre de Bruxelles.
+	Copyright 1998-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -37,11 +37,11 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rga/rfitness.h>
-#include <rhga/robjh.h>
-#include <rhga/rhga.h>
-#include <rhga/rnodega.h>
-#include <rhga/rnodesga.h>
+#include <rfitness.h>
+#include <robjh.h>
+#include <rhga.h>
+#include <rnodega.h>
+#include <rnodesga.h>
 
 
 //------------------------------------------------------------------------------

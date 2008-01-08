@@ -4,7 +4,7 @@
 
 	Window showing the information on one instance - Header.
 
-	Copyright 1998-2004 by the Université Libre de Bruxelles.
+	Copyright 1998-2008 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -28,8 +28,8 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef KHGAPRJVIEW_H
-#define KHGAPRJVIEW_H
+#ifndef KHGAPrjView_H
+#define KHGAPrjView_H
 
 
 //-----------------------------------------------------------------------------
@@ -67,7 +67,7 @@ public:
 	/**
 	* Return the type of the window.
 	*/
-	virtual HGAViewType getType(void) {return(Project);}
+	virtual HGAViewType getType(void) {return(vProject);}
 
 	/**
 	* Ask for setting the title.
@@ -91,7 +91,7 @@ public:
 	/**
 	* Destruct the project view.
 	*/
-	~KHGAPrjView();
+	~KHGAPrjView(void);
 };
 
 

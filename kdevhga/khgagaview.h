@@ -4,7 +4,7 @@
 
 	Windows showig the running HGA - Header.
 
-	Copyright 1998-2004 by the Universit�Libre de Bruxelles.
+	Copyright 1998-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -28,13 +28,13 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef KHGAGAVIEW_H
-#define KHGAGAVIEW_H
+#ifndef KHGAGAView_H
+#define KHGAGAView_H
 
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rga/rgasignals.h>
+#include <robject.h>
 using namespace R;
 
 
@@ -51,8 +51,8 @@ using namespace GALILEI;
 
 //-----------------------------------------------------------------------------
 // include files for Qt Widgets
-#include <frontend/kde/qgamonitor.h>
-#include <frontend/kde/qxmlcontainer.h>
+#include <qgamonitor.h>
+#include <qxmlcontainer.h>
 
 
 //-----------------------------------------------------------------------------
@@ -60,14 +60,14 @@ using namespace GALILEI;
 #include "kdevhgaview.h"
 #include <qtreeinfos.h>
 
-
+	
 //-----------------------------------------------------------------------------
 /**
 * The KHGAGAView class provides a representation of a result of a GA that is
 * running.
 * @author Pascal Francq
 */
-class KHGAGAView : public KDevHGAView, public RGASignalsReceiver<GInstH,GChromoH,GFitnessH>
+class KHGAGAView : public KDevHGAView, public RObject
 {
 	Q_OBJECT
 
@@ -112,15 +112,10 @@ class KHGAGAView : public KDevHGAView, public RGASignalsReceiver<GInstH,GChromoH
 	GInstH* Instance;
 
 	/**
-	* Data needed for the construction of the groups.
-	*/
-	GNodeInfosData* Data;
-
-	/**
 	* Number of generation already executed.
 	*/
 	unsigned int Gen;
-
+	
 public:
 
 	/**
@@ -131,25 +126,12 @@ public:
 	*/
 	KHGAGAView(KDevHGADoc* pDoc,QWidget* parent, const char* name,int wflags);
 
+	virtual RCString GetClassName(void) const {return("KHGAGAView");}
+	
 	/**
 	* Return the type of the window.
 	*/
-	virtual HGAViewType getType(void) {return(GA);}
-
-	/**
-	* GA signal to indicate that a new generation has been done.
-	*/
-	virtual void receiveGenSig(GenSig* sig);
-
-	/**
-	* GA signal to interact with the system.
-	*/
-	virtual void receiveInteractSig(InteractSig *sig);
-
-	/**
-	* GA signal to signify that the best chromosome has changed.
-	*/
-	virtual void receiveBestSig(BestSig *sig);
+	virtual HGAViewType getType(void) {return(vGA);}
 
 	/**
 	* Run the GA.
@@ -179,7 +161,11 @@ protected:
 	* The function that handle the resize event.
 	*/
 	virtual void resizeEvent(QResizeEvent*);
-
+	
+	void GenSig(const RNotification& notification);
+	void InteractSig(const RNotification& notification);
+	void BestSig(const RNotification& notification);	
+	
 signals:
 
 	/**
@@ -192,7 +178,7 @@ public:
 	/**
 	* Destruct the view.
 	*/
-	~KHGAGAView();
+	~KHGAGAView(void);
 
 	// friend classes
 	friend class KDevHGADoc;

@@ -4,7 +4,7 @@
 
 	Windows showig the running HGA - Implementation.
 
-	Copyright 1998-2004 by the Universit�Libre de Bruxelles.
+	Copyright 1998-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -28,15 +28,6 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for R Project
-// include rga needed
-
-//-----------------------------------------------------------------------------
-// include files for Qt/KDE
-#include <klocale.h>
-#include <kmessagebox.h>
-
-//-----------------------------------------------------------------------------
 // include files for GALILEI
 #include <ginsth.h>
 #include <gchromoh.h>
@@ -45,10 +36,17 @@ using namespace GALILEI;
 
 
 //-----------------------------------------------------------------------------
+// include files for KDE
+#include <klocale.h>
+#include <kmessagebox.h>
+
+
+//-----------------------------------------------------------------------------
 // include files for current application
 #include "kdevhga.h"
 #include "khgagaview.h"
 #include "kdevhgadoc.h"
+
 
 
 //-----------------------------------------------------------------------------
@@ -59,16 +57,14 @@ using namespace GALILEI;
 
 //-----------------------------------------------------------------------------
 KHGAGAView::KHGAGAView(KDevHGADoc* pDoc,QWidget *parent, const char *name,int wflags)
-	: KDevHGAView(pDoc,parent,name,wflags), CurId(0), Instance(0), Data(0)
+	: KDevHGAView(pDoc,parent,name,wflags), RObject(name), CurId(0), Instance(0)
 {
 	static char tmp[100];
 
-	setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)1, (QSizePolicy::SizeType)1, sizePolicy().hasHeightForWidth() ) );
 	TabWidget = new QTabWidget( this, "TabWidget" );
 	TabWidget->setGeometry(rect());
 	TabWidget->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7, (QSizePolicy::SizeType)7, TabWidget->sizePolicy().hasHeightForWidth() ) );
 	TabWidget->setBackgroundOrigin( QTabWidget::ParentOrigin );
-	Data=new GNodeInfosData(20);
 
 	// Stat part
 	StatSplitter=new QSplitter(QSplitter::Vertical,TabWidget,"Statistic");
@@ -92,11 +88,15 @@ KHGAGAView::KHGAGAView(KDevHGADoc* pDoc,QWidget *parent, const char *name,int wf
 	try
 	{
 		Gen=0;
-		Instance=new GInstH(theApp->GAMaxGen,theApp->GAPopSize,pDoc->Objs,FirstFit,Debug);
-		Instance->AddReceiver(this);
-		Instance->Init(Data);
+		Instance=new GInstH(theApp->GAMaxGen,theApp->GAPopSize,RCursor<RObjH>(*pDoc->Objs),FirstFit,Debug);
+		Instance->SetVerify(theApp->VerifyGA);
+		Monitor->setMaxFitness(Instance->GetMaxAttr()*2);
+		reinterpret_cast<RObject*>(this)->InsertObserver(HANDLER(KHGAGAView::GenSig),"RInst::Generation",Instance);
+		reinterpret_cast<RObject*>(this)->InsertObserver(HANDLER(KHGAGAView::InteractSig),"RInst::Interact",Instance);
+		reinterpret_cast<RObject*>(this)->InsertObserver(HANDLER(KHGAGAView::BestSig),"RInst::Best",Instance);	
+		Instance->Init();
 	}
-	catch(eGA& e)
+	catch(RHGAException& e)
 	{
 		KMessageBox::error(this,e.GetMsg());
 		Instance=0;
@@ -108,35 +108,34 @@ KHGAGAView::KHGAGAView(KDevHGADoc* pDoc,QWidget *parent, const char *name,int wf
 	}
 	catch(...)
 	{
-		KMessageBox::error(this,"Unknow Problem");
+		KMessageBox::error(this,"Unknown Problem");
 		Instance=0;
 	}
 }
 
 
 //---------------------------------------------------------------------------
-void KHGAGAView::receiveGenSig(GenSig* sig)
+void KHGAGAView::GenSig(const RNotification&)
 {
-	emit signalSetGen(sig->Gen,sig->BestGen,sig->Best->Fitness->Value);
+	emit signalSetGen(Instance->GetGen(),Instance->GetAgeBest(),Instance->BestChromosome->Fitness->Value);
 	Sol->setNodes(Instance->Chromosomes[CurId]);
 }
 
 
 //---------------------------------------------------------------------------
-void KHGAGAView::receiveInteractSig(InteractSig* /*sig*/)
+void KHGAGAView::InteractSig(const RNotification&)
 {
 	KApplication::kApplication()->processEvents(1000);
 }
 
 
 //---------------------------------------------------------------------------
-void KHGAGAView::receiveBestSig(BestSig* sig)
+void KHGAGAView::BestSig(const RNotification&)
 {
 	static char tmp[100];
-
-	sprintf(tmp,"Best Solution (Id=%u)",sig->Best->Id);
+	sprintf(tmp,"Best Solution (Id=%u)",Instance->BestChromosome->Id);
 	TabWidget->changeTab(Best,tmp);
-	Best->setNodes(sig->Best);
+	Best->setNodes(Instance->BestChromosome);
 }
 
 
@@ -161,9 +160,11 @@ void KHGAGAView::RunGA(void)
 			Instance->Run();
 			if(Gen==theApp->GAMaxGen)
 				theApp->GAPause->setEnabled(false);
+			Best->setNodes(Instance->BestChromosome);
+			Sol->setNodes(Instance->Chromosomes[CurId]);
 			KMessageBox::information(this,"Done");
 		}
-		catch(eGA& e)
+		catch(RGAException& e)
 		{
 			KMessageBox::error(this,e.GetMsg());
 		}
@@ -198,15 +199,15 @@ void KHGAGAView::keyReleaseEvent(QKeyEvent* e)
 	switch(e->key())
 	{
 		case Key_PageUp:
-			if(CurId<Instance->PopSize-1) CurId++; else CurId=0;
-			sprintf(tmp,"Solution (%u/%u)",CurId,Instance->PopSize-1);
+			if(CurId<Instance->GetPopSize()-1) CurId++; else CurId=0;
+			sprintf(tmp,"Solution (%u/%u)",CurId,Instance->GetPopSize()-1);
 			TabWidget->changeTab(Sol,tmp);
 			Sol->setNodes(Instance->Chromosomes[CurId]);
 			break;
 
 		case Key_PageDown:
-			if(CurId>0) CurId--; else CurId=Instance->PopSize-1;
-			sprintf(tmp,"Solution (%u/%u)",CurId,Instance->PopSize-1);
+			if(CurId>0) CurId--; else CurId=Instance->GetPopSize()-1;
+			sprintf(tmp,"Solution (%u/%u)",CurId,Instance->GetPopSize()-1);
 			TabWidget->changeTab(Sol,tmp);
 			Sol->setNodes(Instance->Chromosomes[CurId]);
 			break;
@@ -238,10 +239,8 @@ void KHGAGAView::resizeEvent(QResizeEvent*)
 
 
 //-----------------------------------------------------------------------------
-KHGAGAView::~KHGAGAView()
+KHGAGAView::~KHGAGAView(void)
 {
 	if(Instance)
 		delete Instance;
-	if(Data)
-		delete Data;
 }

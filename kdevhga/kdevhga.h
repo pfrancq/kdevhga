@@ -4,7 +4,7 @@
 
 	Main application - Header.
 
-	Copyright 1998-2004 by the Université Libre de Bruxelles.
+	Copyright 1998-2008 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -29,8 +29,8 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef KDEVHGA_H
-#define KDEVHGA_H
+#ifndef KDevHGA_H
+#define KDevHGA_H
 
 
 //-----------------------------------------------------------------------------
@@ -41,7 +41,7 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rhga/rhga.h>
+#include <rhga.h>
 using namespace R;
 
 
@@ -117,6 +117,26 @@ class KDevHGAApp : public KMainWindow
 	unsigned int GAPopSize;
 
 	/**
+	 * Verify the GA?
+	 */
+	bool VerifyGA;
+	
+	/**
+	 * Display full attributes?
+	 */
+	bool DisplayFull;
+	
+	/**
+	 * Display terminal nodes?
+	 */
+	bool DisplayTerminals;
+	
+	/**
+	 * Display the objects?
+	 */
+	bool DisplayObjects;
+	
+	/**
 	* The configuration object of the application.
 	*/
 	KConfig* config;
@@ -146,13 +166,9 @@ class KDevHGAApp : public KMainWindow
 	QList<KDevHGADoc>* pDocList;
 
 	// KAction pointers to enable/disable actions
-	KAction* fileNew;
 	KAction* fileOpen;
 	KRecentFilesAction* fileOpenRecent;
-	KAction* fileSave;
-	KAction* fileSaveAs;
 	KAction* fileClose;
-	KAction* filePrint;
 	KAction* fileQuit;
 	KAction* heuristicFF;
 	KAction* heuristicRun;
@@ -161,14 +177,10 @@ class KDevHGAApp : public KMainWindow
 	KAction* GAStart;
 	KAction* GAPause;
 	KAction* GAStop;
-	KAction* editCut;
-	KAction* editCopy;
-	KAction* editPaste;
 	KAction* windowNewWindow;
 	KAction* windowTile;
 	KAction* windowCascade;
 	KAction* settingsOptions;
-	KToggleAction* viewToolBar;
 	KToggleAction* viewStatusBar;
 	KActionMenu* windowMenu;
 
@@ -181,7 +193,18 @@ public:
 	*/
 	KDevHGAApp(void);
 
-
+	/**
+	 */
+	inline bool MustDisplayFull(void) const {return(DisplayFull);}
+	
+	/**
+	 */
+	inline bool MustDisplayTerminals(void) const {return(DisplayTerminals);}
+	
+	/**
+	 */
+	inline bool MustDisplayObjects(void) const {return(DisplayObjects);}	
+	
 	/**
 	* Opens a file specified by commandline option.
 	*/
@@ -251,7 +274,7 @@ protected:
 private slots:
 
 	/**
-	* Do the Center heuristic.
+	* Do the First-fit heuristic.
 	*/
 	void slotHeuristicFF(void);
 
@@ -296,11 +319,6 @@ private slots:
 	void slotSettingsOptions(void);
 
 	/**
-	* Clears the document in the actual view to reuse it as the new document.
-	*/
-	void slotFileNew(void);
-
-	/**
 	* Open a file and load it into the document.
 	*/
 	void slotFileOpen(void);
@@ -311,56 +329,15 @@ private slots:
 	void slotFileOpenRecent(const KURL& url);
 
 	/**
-	* Save a document.
-	*/
-	void slotFileSave(void);
-
-	/**
-	* Save a document by a new filename.
-	*/
-	void slotFileSaveAs(void);
-
-	/**
 	* Asks for saving if the file is modified, then closes the actual file and
 	* window.
 	*/
 	void slotFileClose(void);
 
 	/**
-	* Print the actual file.
-	*/
-	void slotFilePrint(void);
-
-	/**
 	* Closes all documents and quits the application.
 	*/
 	void slotFileQuit(void);
-
-	/**
-	* Reverts the last user action for the active window.
-	*/
-	void slotEditUndo(void);
-
-	/**
-	* Put the marked text/object into the clipboard and remove it from the
-	* document.
-	*/
-	void slotEditCut(void);
-
-	/**
-	* Put the marked text/object into the clipboard.
-	*/
-	void slotEditCopy(void);
-
-	/**
-	* Paste the clipboard into the document.
-	*/
-	void slotEditPaste(void);
-
-	/**
-	* Toggles the toolbar.
-	*/
-    void slotViewToolBar(void);
 
 	/**
 	* Toggles the statusbar.
@@ -406,6 +383,10 @@ private slots:
 	*/
 	void slotWindowActivated(QWidget* w);
 
+signals:
+	
+	void redrawTrees(void);
+	
 private:
 
 	/**
@@ -457,4 +438,4 @@ extern KDevHGAApp* theApp;
 
 
 //-----------------------------------------------------------------------------
-#endif // KDEVHGA_H
+#endif // KDevVHGA_H

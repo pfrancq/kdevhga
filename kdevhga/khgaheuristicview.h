@@ -4,7 +4,7 @@
 
 	Window to follow the steps of an heuristic - Header.
 
-	Copyright 1998-2004 by the Universit�Libre de Bruxelles.
+	Copyright 1998-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -28,18 +28,18 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef KHGAHEURISTICVIEW_H
-#define KHGAHEURISTICVIEW_H
+#ifndef KHGAHeuristicView_H
+#define KHGAHeuristicView_H
 
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/random.h>
-#include <rhga/rhga.h>
-#include <rhga/rtreeheuristic.h>
+#include <random.h>
+#include <rhga.h>
+#include <rtreeheuristic.h>
 #include <gnodeinfos.h>
-#include <rhga/rnodesga.h>
-#include <rhga/rnodega.h>
+#include <rnodesga.h>
+#include <rnodega.h>
 #include <ghga.h>
 using namespace R;
 using namespace GALILEI;
@@ -54,29 +54,10 @@ using namespace GALILEI;
 //-----------------------------------------------------------------------------
 // include files for current application
 #include "kdevhgaview.h"
+#include "gchromoh.h"
+#include "ginsth.h"
+#include "gnodeinfos.h"
 #include <qtreeinfos.h>
-
-
-//-----------------------------------------------------------------------------
-class KHGAHeuristicView;
-
-
-//-----------------------------------------------------------------------------
-class MyNode : public RNodeGA<MyNode,RObjH,GNodeInfosData,KHGAHeuristicView>
-{
-public:
-	/**
-	* Construct the node.
-	* @param owner          Owner of the node.
-	* @param id             Identificator of the node.
-	* @param data           Data used to construct the node.
-	*/
-	MyNode(RNodesGA<MyNode,RObjH,GNodeInfosData,KHGAHeuristicView>* owner,unsigned int id,GNodeInfosData* data);
-
-	MyNode(const MyNode* w);
-
-	int Compare(const MyNode* n);
-};
 
 
 //-----------------------------------------------------------------------------
@@ -85,14 +66,9 @@ public:
 * specific heuristic.
 * @author Pascal Francq
 */
-class KHGAHeuristicView : public KDevHGAView, public RNodesGA<MyNode,RObjH,GNodeInfosData,KHGAHeuristicView>
+class KHGAHeuristicView : public KDevHGAView
 {
 	Q_OBJECT
-
-	/**
-	* Random number generator.
-	*/
-	RRandom* Random;
 
 	/**
 	* Type of the heuristic.
@@ -125,19 +101,14 @@ class KHGAHeuristicView : public KDevHGAView, public RNodesGA<MyNode,RObjH,GNode
 	bool Stop;
 
 	/**
-	* Data needed for the construction of the groups.
+	* Instance (only 1 chromosome).
 	*/
-	GNodeInfosData* Data;
-
-	/**
-	* Heuristic used.
-	*/
-	RTreeHeuristic<MyNode,RObjH,GNodeInfosData,KHGAHeuristicView>* TreeHeur;
+	GInstH Inst;
 
 	/**
 	* Objects to group.
 	*/
-	RCursor<RObjH>* Objs;
+	RCursor<RObjH> Objs;
 
 public:
 
@@ -149,7 +120,7 @@ public:
 	/**
 	* Return the type of the window.
 	*/
-	virtual HGAViewType getType(void) {return(Heuristic);}
+	virtual HGAViewType getType(void) {return(vHeuristic);}
 
 	/**
 	* Ask for setting the title.
@@ -175,7 +146,7 @@ public:
 	* See if the heurisitic is running or not.
 	* @return true if the heuristic is running.
 	*/
-	bool Running(void) {return(!TreeHeur->IsEnd());}
+	bool Running(void) {return(!Inst.GetHeuristic(0)->IsEnd());}
 
 protected:
 
@@ -196,7 +167,7 @@ public:
 	/**
 	*  Destruct a heuristic view.
 	*/
-	~KHGAHeuristicView();
+	~KHGAHeuristicView(void);
 };
 
 

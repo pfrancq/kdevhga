@@ -1,131 +1,24 @@
-#MIN_CONFIG
+#MIN_CONFIG(3)
 
-#--------------- Check R and GALILEI ------------------
-R_CHK(kde)
-
-
-#--------------------- CHECK FOR RDEBUG ----------------------
-if test "$enable_debug" != "no"; then
-	CXXFLAGS="$CXXFLAGS -D_RDEBUG"
-fi
-
-
-#--------------------- RHGA LIB -----------------------------
-#VARIABLES USE :
-#	$RHGA_LIB environnement variable used for developpment
-#	$RHGA_INC_PATH = the path specified in the --with-rbp-includes
-#	$RHGA_LIB_PATH = the path specified in the --with-rbp-libs
-#	$RHGA_INC_DIR = the directory where the includes were found
-#	$RHGA_LIB_DIR = the directory where the libraries were found
-#	$KDEVHGA_ADD = the library needed by KDEVHGA_LDADD
-
-#---------------------------------------------------------
-# ---- add configure option : --with-rhga-includes=DIR ----
-if test "x$RHGA_LIB" != "x" ; then
-	RHGA_INC_PATH=$RHGA_LIB
-else
-	RHGA_INC_PATH=" /usr/include /usr/include/rhga /usr/local /usr/local/include /usr/local/include/rhga ${prefix}/include/rhga"
-fi
-AC_ARG_WITH(rhga-includes,
-	AC_HELP_STRING(
-		[--with-rhga-includes=DIR],
-		[where the RHGA includes are, like [/usr/include/rhga]. ]),
-	RHGA_INC_PATH="$withval")
-
-
-# ---- add configure option : --with-rhga-libs=DIR ----
-if test "x$RHGA_LIB" != "x" ; then
-	RHGA_LIB_PATH=$RHGA_LIB
-else
-	RHGA_LIB_PATH="/usr/lib /usr/lib/rhga /usr/local/lib /usr/local/lib/rhga ${prefix}/lib/rhga"
-fi
-AC_ARG_WITH(rhga-libs,
-	AC_HELP_STRING(
-		[--with-rhga-libs=DIR],
-		[where the RHGA libraries are installed, like [/usr/lib]. ]),
-	RHGA_LIB_PATH="$withval")
-
-
-# ---- end arg for configure ----
-
-# ---- end arg for configure ----
-
-# ---- def function to check for a specific RHGA library on the system
-AC_DEFUN(RHGA_LIB_CHK,[
-	str="$1/lib$2.*"
-	RHGA_LIB_DIR=""
-	for j in `echo $str`; do
-		if test -r $j; then
-		RHGA_LIB_DIR=$1
-		break 2
-	fi
-	done
-])
-# --- end def function -----
-
-
-# ---- def function to check for a specific HGA includes on the system
-AC_DEFUN(RHGA_INC_CHK,[
-	RHGA_INC_DIR=""
-	str="$1/$2"
-	for i in $RHGA_INC_PATH ; do
-		test -f $i/$str                    && RHGA_INC_DIR=$i/$1 && break
-		#test -f $i/rbp/$str              && RHGA_INC_DIR=$i/rbp/$1 && break
-	done
-	AC_MSG_CHECKING(for $1/$2)
-	if test -z "$RHGA_INC_DIR"; then
-		if test "x$RHGA_INC_PATH" != "x"; then
-			AC_MSG_RESULT(no)
-			AC_MSG_ERROR(Cannot find $1 header files under $RHGA_INC_PATH)
-		else
-			AC_MSG_RESULT(no)
-			AC_MSG_ERROR(Cannot find $2 headers.  Use --with-rhga-includes= to specify non-default path.)
-		fi
-	fi
-	AC_MSG_RESULT(yes in $RHGA_INC_DIR)
-
-	if test "x$i" != "x$PAST_RHGA_INC_DIR"; then
-		CPPFLAGS="-I$i $CPPFLAGS"
-	fi
-	PAST_RHGA_INC_DIR="$i"
-
-])
-# --- end def function -----
-
-# ---- check the presence of the includes for the RHGA library
-RHGA_INC_CHK(rhga,rhga.h)
-
-
-# ---- check the presence of all RHGA libraries
-for l in rhga; do
-
-	#AC_MSG_CHECKING(for lib$l)
-	for i in $RHGA_LIB_PATH ; do
-		RHGA_LIB_CHK($i/$l,$l)  #check for local presence
-		RHGA_LIB_CHK($i,$l)
-		RHGA_LIB_CHK($i/r,$l)
-	done
-	AC_MSG_CHECKING(for lib$l)
-	if test -z "$RHGA_LIB_DIR"; then
-		AC_MSG_RESULT(no)
-		AC_MSG_ERROR(Cannot find lib$l)
-	else
-		AC_MSG_RESULT(yes in $RHGA_LIB_DIR)
-	fi
-	if test "x$RHGA_LIB_DIR" != "x$PAST_RHGA_LIB_DIR"; then
-		LDFLAGS="-L$RHGA_LIB_DIR $LDFLAGS"
-	fi
-	PAST_RHGA_LIB_DIR="$RHGA_LIB_DIR"
-	KDEVHGA_ADD="$RHGA_LIB_DIR/lib$l.la $KDEVHGA_ADD"
-
-done
-
-#--------------------- END RHGA LIB -----------------------------
+#------------------------------------------------------------------------------#
+#                                                                              #
+#          This script was written by Valery VANDAELE vavdaele@ulb.ac.be       #
+#                                                                              #
+#------------------------------------------------------------------------------#
 
 
 AC_SUBST(KDEVHGA_ADD)
 
-
 AM_INIT_AUTOMAKE(kdevhga,1.0)
 
-CXXFLAGS="$CXXFLAGS $USE_EXCEPTIONS"
+
+#--------------- Check R and GALILEI ------------------
+R_CHK("rcore rmath roptimization",kde)
+GALILEI_CHK(kde)
+
+CXXFLAGS="$NOOPT_CXXFLAGS" dnl __kdevelop[noopt]__
+CFLAGS="$NOOPT_CFLAGS" dnl __kdevelop[noopt]__
+CXXFLAGS="$CXXFLAGS $USE_EXCEPTIONS" dnl __kdevelop[exc]__
+
+dnl KDE_NEED_FLEX dnl __kdevelop__
+dnl AC_PROG_YACC dnl __kdevelop__

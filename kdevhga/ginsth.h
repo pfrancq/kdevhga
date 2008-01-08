@@ -6,7 +6,7 @@
 
 	Class representing an instance of a HGA for GALILEI - Header
 
-	Copyright 1998-2004 by the Universit�Libre de Bruxelles.
+	Copyright 1998-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -37,7 +37,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rhga/rinsth.h>
+#include <rinsth.h>
 
 
 //------------------------------------------------------------------------------
@@ -56,14 +56,14 @@ namespace GALILEI{
 * @author Pascal Francq
 * @short HGA "thread-dependent" Data.
 */
-class GThreadDataH : public R::RThreadDataH<GInstH,GChromoH,GNodeInfos,R::RObjH,GNodeInfosData>
+class GThreadDataH : public R::RThreadDataH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeInfos,R::RObjH>
 {
 public:
 	/**
 	* Construct the data.
 	* @param data           Owner of the data.
 	*/
-	GThreadDataH(GInstH *owner) throw(std::bad_alloc);
+	GThreadDataH(GInstH *owner);
 
 	/**
 	* Destruct the data.
@@ -73,7 +73,7 @@ public:
 
 
 //------------------------------------------------------------------------------
-class GInstH : public R::RInstH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeInfos,R::RObjH,GNodeInfosData>
+class GInstH : public R::RInstH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeInfos,R::RObjH>
 {
 public:
 
@@ -90,12 +90,15 @@ public:
 	* @param h              The heuristic that has to be used.
 	* @param debug          Debugger.
 	*/
-	GInstH(unsigned int max,unsigned int popsize,R::RObjs<R::RObjH>* objs,R::HeuristicType h,R::RDebug* debug=0) throw(std::bad_alloc);
+	GInstH(unsigned int max,unsigned int popsize,R::RCursor<R::RObjH> objs,R::HeuristicType h,R::RDebug* debug=0);
 
+	virtual R::RCString GetClassName(void) const {return("GInstH");}
+	virtual void HandlerNotFound (const R::RNotification&) {}
+	
 	/**
 	* Initialisation of the instance.
 	*/
-	virtual void Init(GNodeInfosData* hdata) throw(std::bad_alloc);
+	virtual void Init(void);
 
 	/**
 	* This function determines if the GA must stop. It is called after

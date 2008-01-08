@@ -4,7 +4,7 @@
 
 	Generic Window  - Implementation.
 
-	Copyright 1998-2004 by the Université Libre de Bruxelles.
+	Copyright 1998-2008 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -27,58 +27,52 @@
 */
 
 
+
+//-----------------------------------------------------------------------------
 // include files for Qt
 #include <qprinter.h>
 #include <qpainter.h>
 #include <qdir.h>
-// include files for KDE
 
-// application specific includes
+
+//-----------------------------------------------------------------------------
+// Application specific includes
 #include "kdevhga.h"
 #include "kdevhgaview.h"
 #include "kdevhgadoc.h"
 
+
+
+//-----------------------------------------------------------------------------
+//
+// class KDevHGAView
+//
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
 KDevHGAView::KDevHGAView(KDevHGADoc* pDoc, QWidget *parent, const char* name, int wflags)
  : QWidget(parent, name, wflags)
 {
     doc=pDoc;
 }
 
-KDevHGAView::~KDevHGAView()
-{
-}
 
+//-----------------------------------------------------------------------------
 KDevHGADoc *KDevHGAView::getDocument() const
 {
 	return doc;
 }
 
-void KDevHGAView::update(KDevHGAView* pSender){
+
+//-----------------------------------------------------------------------------
+void KDevHGAView::update(KDevHGAView* pSender)
+{
 	if(pSender != this)
 		repaint();
 }
 
-void KDevHGAView::print(QPrinter *pPrinter)
-{
-  if (pPrinter->setup(this))
-  {
-		QPainter p;
-		p.begin(pPrinter);
-		
-		///////////////////////////////
-		// TODO: add your printing code here
-		///////////////////////////////
-		
-		p.end();
-  }
-}
 
-void KDevHGAView::closeEvent(QCloseEvent* /*e*/)
+//-----------------------------------------------------------------------------
+KDevHGAView::~KDevHGAView(void)
 {
-
-// DO NOT CALL QWidget::closeEvent(e) here !!
-// This will accept the closing by QCloseEvent::accept() by default.
-// The installed eventFilter() in KDevHGAApp takes care for closing the widget
-// or ignoring the close event
-		
 }

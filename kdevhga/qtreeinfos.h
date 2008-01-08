@@ -2,9 +2,9 @@
 
 	QTreeInfos.h
 
-	Widget representing a tree of vectors  - Header.
+	Widget representing a tree of vectors - Header.
 
-	Copyright 1998-2004 by the Universit�Libre de Bruxelles.
+	Copyright 1998-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -29,15 +29,15 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef QLISTWORDS_H
-#define QLISTWORDS_H
+#ifndef QTreeInfos_H
+#define QTreeInfos_H
 
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rhga/rnodesga.h>
-#include <rhga/robjh.h>
-#include <rhga/rattrlist.h>
+#include <rnodesga.h>
+#include <robjh.h>
+#include <rattrlist.h>
 using namespace R;
 
 //-----------------------------------------------------------------------------
@@ -57,7 +57,6 @@ using namespace GALILEI;
 // forward class declaration
 class KDevHGADoc;
 class KHGAHeuristicView;
-class MyNode;
 
 
 //-----------------------------------------------------------------------------
@@ -69,17 +68,27 @@ class QTreeInfos : public QListView
 	Q_OBJECT
 	KDevHGADoc* Doc;
 	GChromoH* Chromos;
-	RNodesGA<MyNode,RObjH,GNodeInfosData,KHGAHeuristicView>* Nodes;
 
-	QString constAttr(const RAttrList* attr);
-	void constObjs(RObjH** objs,unsigned int nb,QListViewItem* item);
+	void constObjs(RCursor<RObjH> objs,QListViewItem* item);
 	void constNode(QListViewItem* p,QListViewItem*& cur,GNodeInfos* n);
-	void constNode(QListViewItem* p,QListViewItem*& cur,MyNode* n);
 
 public:
+	
 	QTreeInfos(KDevHGADoc* pDoc,QWidget* parent=0);
 	void setNodes(GChromoH* chromos);
-	void setNodes(RNodesGA<MyNode,RObjH,GNodeInfosData,KHGAHeuristicView>* nodes);
+	
+protected slots:
+
+	/**
+	* Mouse button press event method.
+	* @param e              MouseEvent info.
+	*/
+	void slotPressEvent(QListViewItem* item,const QPoint& pt,int col);
+
+	void redraw(void);
+	
+public:
+	
 	~QTreeInfos(void);
 };
 

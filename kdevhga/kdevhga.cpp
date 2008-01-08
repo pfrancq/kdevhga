@@ -4,7 +4,7 @@
 
 	Main application - Implementation.
 
-	Copyright 1998-2004 by the Université Libre de Bruxelles.
+	Copyright 1998-2008 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -54,10 +54,11 @@
 #include <kshortcut.h>
 #include <kstatusbar.h>
 #include <kpopupmenu.h>
+#include <knuminput.h>
 
 
 //-----------------------------------------------------------------------------
-// application specific includes
+// Application specific includes
 #include "kdevhga.h"
 #include "kdevhgaview.h"
 #include "khgagaview.h"
@@ -90,12 +91,6 @@ KDevHGAApp::KDevHGAApp(void)
 	readOptions();
 
 	// disable actions at startup
-	fileSave->setEnabled(false);
-	fileSaveAs->setEnabled(false);
-	filePrint->setEnabled(false);
-	editCut->setEnabled(false);
-	editCopy->setEnabled(false);
-	editPaste->setEnabled(false);
 	heuristicFF->setEnabled(false);
 	heuristicRun->setEnabled(false);
 	heuristicNext->setEnabled(false);
@@ -110,30 +105,14 @@ KDevHGAApp::KDevHGAApp(void)
 void KDevHGAApp::initActions(void)
 {
 	// Menu "File"
-	fileNew = KStdAction::openNew(this, SLOT(slotFileNew()), actionCollection());
 	fileOpen = KStdAction::open(this, SLOT(slotFileOpen()), actionCollection());
 	fileOpenRecent = KStdAction::openRecent(this, SLOT(slotFileOpenRecent(const KURL&)), actionCollection());
-	fileSave = KStdAction::save(this, SLOT(slotFileSave()), actionCollection());
-	fileSaveAs = KStdAction::saveAs(this, SLOT(slotFileSaveAs()), actionCollection());
 	fileClose = KStdAction::close(this, SLOT(slotFileClose()), actionCollection());
-	filePrint = KStdAction::print(this, SLOT(slotFilePrint()), actionCollection());
 	fileQuit = KStdAction::quit(this, SLOT(slotFileQuit()), actionCollection());
-	fileNew->setStatusText(i18n("Creates a new document"));
 	fileOpen->setStatusText(i18n("Opens an existing document"));
 	fileOpenRecent->setStatusText(i18n("Opens a recently used file"));
-	fileSave->setStatusText(i18n("Saves the actual document"));
-	fileSaveAs->setStatusText(i18n("Saves the actual document as..."));
 	fileClose->setStatusText(i18n("Closes the actual document"));
-	filePrint ->setStatusText(i18n("Prints out the actual document"));
 	fileQuit->setStatusText(i18n("Quits the application"));
-
-	// Menu "Edit"
-	editCut = KStdAction::cut(this, SLOT(slotEditCut()), actionCollection());
-	editCopy = KStdAction::copy(this, SLOT(slotEditCopy()), actionCollection());
-	editPaste = KStdAction::paste(this, SLOT(slotEditPaste()), actionCollection());
-	editCut->setStatusText(i18n("Cuts the selected section and puts it to the clipboard"));
-	editCopy->setStatusText(i18n("Copies the selected section to the clipboard"));
-	editPaste->setStatusText(i18n("Pastes the clipboard contents to actual position"));
 
 	// Menu "Heuristic"
 	heuristicFF=new KAction(i18n("&First Fit Heuristic"),KKey("Alt+F").keyCodeQt(),this,SLOT(slotHeuristicFF(void)),actionCollection(),"heuristic_ff");
@@ -147,11 +126,10 @@ void KDevHGAApp::initActions(void)
 	GAStop=new KAction(i18n("&Stop"),"stop",KKey("Alt+T").keyCodeQt(),this,SLOT(slotGAStop(void)),actionCollection(),"ga_stop");
 
 	// Menu "View"
-	viewToolBar = KStdAction::showToolbar(this, SLOT(slotViewToolBar()), actionCollection());
+	setStandardToolBarMenuEnabled(true);
 	viewStatusBar = KStdAction::showStatusbar(this, SLOT(slotViewStatusBar()), actionCollection());
-	settingsOptions = new KAction(i18n("&Options"),"configure",0,this,SLOT(slotSettingsOptions(void)),actionCollection(),"settings_options");
-	viewToolBar->setStatusText(i18n("Enables/disables the toolbar"));
 	viewStatusBar->setStatusText(i18n("Enables/disables the statusbar"));
+	settingsOptions = new KAction(i18n("&Options"),"configure",0,this,SLOT(slotSettingsOptions(void)),actionCollection(),"settings_options");
 	settingsOptions->setStatusText(i18n("Set the options"));
 
 	// Menu" Window"
@@ -260,6 +238,10 @@ void KDevHGAApp::saveOptions(void)
 	config->writeEntry("Maximum Generation",GAMaxGen);
 	config->writeEntry("Step Generation",GAStepGen);
 	config->writeEntry("Population Size",GAPopSize);
+	config->writeEntry("Verify GA",VerifyGA);
+	config->writeEntry("Display Full Info",DisplayFull);
+	config->writeEntry("Display Terminal Nodes",DisplayTerminals);
+	config->writeEntry("Display Objects",DisplayObjects);
 }
 
 
@@ -271,9 +253,10 @@ void KDevHGAApp::readOptions(void)
 
 	// bar status settings
 	bool bViewToolbar = config->readBoolEntry("Show Toolbar", true);
-	viewToolBar->setChecked(bViewToolbar);
-	slotViewToolBar();
-
+	if(bViewToolbar)
+		toolBar()->show();
+	else
+		toolBar()->hide();
 	bool bViewStatusbar = config->readBoolEntry("Show Statusbar", true);
 	viewStatusBar->setChecked(bViewStatusbar);
 	slotViewStatusBar();
@@ -300,6 +283,10 @@ void KDevHGAApp::readOptions(void)
 	GAMaxGen=config->readUnsignedLongNumEntry("Maximum Generation",100);
 	GAStepGen=config->readUnsignedLongNumEntry("Step Generation",0);
 	GAPopSize=config->readUnsignedLongNumEntry("Population Size",16);
+	VerifyGA=config->readBoolEntry("Verify GA",false);
+	DisplayFull=config->readBoolEntry("Display Full Info",true);
+	DisplayTerminals=config->readBoolEntry("Display Terminal Nodes",true);
+	DisplayObjects=config->readBoolEntry("Display Objects",true);
 }
 
 
@@ -331,29 +318,6 @@ bool KDevHGAApp::queryClose(void)
 	}
 	if(saveFiles.isEmpty())
 		return true;
-
-	switch(KMessageBox::questionYesNoList(this,i18n("One or more documents have been modified.\nSave changes before exiting?"),saveFiles))
-	{
-		case KMessageBox::Yes:
-			for(doc=pDocList->first(); doc!=0;doc=pDocList->next())
-			{
-				if(doc->URL().fileName().contains(i18n("Untitled")))
-					slotFileSaveAs();
-				else
-				{
-					if(!doc->saveDocument(doc->URL()))
-					{
-						KMessageBox::error (this,i18n("Could not save the current document !"), i18n("I/O Error !"));
-						return false;
-					}
-				 }
-			}
-			return true;
-
-		case KMessageBox::No:
-		default:
-			return true;
-	}
 }
 
 
@@ -387,12 +351,13 @@ bool KDevHGAApp::eventFilter(QObject* object, QEvent* event)
 	return(QWidget::eventFilter(object,event));    // standard event processing
 }
 
+
 //-----------------------------------------------------------------------------
 void KDevHGAApp::slotHeuristicFF(void)
 {
 	KApplication::kApplication()->processEvents(1000);
 	KDevHGAView* m = (KDevHGAView*)pWorkspace->activeWindow();
-	if(m&&(m->getType()==Project))
+	if(m&&(m->getType()==vProject))
 	{
 		KDevHGADoc* doc = m->getDocument();
 		KHGAHeuristicView* w = new KHGAHeuristicView(doc,FirstFit,pWorkspace,0,WDestructiveClose);
@@ -420,7 +385,7 @@ void KDevHGAApp::slotEndHeuristic(void)
 	list=pWorkspace->windowList();
 	for(v=(KDevHGAView*)list.first();v!=0;v=(KDevHGAView*)list.next())
 	{
-		if(v->getType()==Heuristic)
+		if(v->getType()==vHeuristic)
 		{
 			if(((KHGAHeuristicView*)v)->Running())
 				bRun=true;
@@ -434,7 +399,7 @@ void KDevHGAApp::slotHeuristicNext(void)
 {
 	KApplication::kApplication()->processEvents(1000);
 	KDevHGAView* m = (KDevHGAView*)pWorkspace->activeWindow();
-	if(m&&(m->getType()==Heuristic))
+	if(m&&(m->getType()==vHeuristic))
 	{
 		((KHGAHeuristicView*)m)->NextStep();
 	}
@@ -446,7 +411,7 @@ void KDevHGAApp::slotHeuristicRun(void)
 {
 	KApplication::kApplication()->processEvents(1000);
 	KDevHGAView* m = (KDevHGAView*)pWorkspace->activeWindow();
-	if(m&&(m->getType()==Heuristic))
+	if(m&&(m->getType()==vHeuristic))
 	{
 		((KHGAHeuristicView*)m)->RunToEnd();
 	}
@@ -457,7 +422,7 @@ void KDevHGAApp::slotGAInit(void)
 {
 	KApplication::kApplication()->processEvents(1000);
 	KDevHGAView* m = (KDevHGAView*)pWorkspace->activeWindow();
-	if(m&&(m->getType()==Project))
+	if(m&&(m->getType()==vProject))
 	{
 		KDevHGADoc* doc = m->getDocument();
 		KHGAGAView* w = new KHGAGAView(doc,pWorkspace,0,WDestructiveClose);
@@ -476,7 +441,7 @@ void KDevHGAApp::slotGAStart(void)
 {
 	KApplication::kApplication()->processEvents(1000);
 	KDevHGAView* m = (KDevHGAView*)pWorkspace->activeWindow();
-	if(m&&(m->getType()==GA))
+	if(m&&(m->getType()==vGA))
 	{
 		((KHGAGAView*)m)->RunGA();
 	}
@@ -488,7 +453,7 @@ void KDevHGAApp::slotGAPause(void)
 {
 	KApplication::kApplication()->processEvents(1000);
 	KDevHGAView* m = (KDevHGAView*)pWorkspace->activeWindow();
-	if(m&&(m->getType()==GA))
+	if(m&&(m->getType()==vGA))
 	{
 		((KHGAGAView*)m)->PauseGA();
 	}
@@ -500,7 +465,7 @@ void KDevHGAApp::slotGAStop(void)
 {
 	KApplication::kApplication()->processEvents(1000);
 	KDevHGAView* m = (KDevHGAView*)pWorkspace->activeWindow();
-	if(m&&(m->getType()==GA))
+	if(m&&(m->getType()==vGA))
 	{
 		((KHGAGAView*)m)->StopGA();
 	}
@@ -513,27 +478,31 @@ void KDevHGAApp::slotSettingsOptions(void)
 	slotStatusMsg(i18n("Set the options..."));
 	KAppOptions dlg(this,"Options",true);
 	dlg.cbStep->setChecked(step);
-	dlg.txtMaxGen->setText(QString::number(GAMaxGen));
-	dlg.txtStepGen->setText(QString::number(GAStepGen));
+	dlg.txtMaxGen->setValue(GAMaxGen);
+	dlg.txtStepGen->setValue(GAStepGen);
 	dlg.cbGAHeuristicType->setCurrentItem(GAHeur);
-	dlg.txtPopSize->setText(QString::number(GAPopSize));
+	dlg.txtPopSize->setValue(GAPopSize);
+	dlg.VerifyGA->setChecked(VerifyGA);
+	dlg.DisplayFull->setChecked(DisplayFull);
+	dlg.DisplayTerminals->setChecked(DisplayTerminals);
+	dlg.DisplayObjects->setChecked(DisplayObjects);
+	bool HoldFull=DisplayFull;
+	bool HoldTerminals=DisplayTerminals;
+	bool HoldObjects=DisplayObjects;
 	if(dlg.exec())
 	{
 		step=dlg.cbStep->isChecked();
-		GAMaxGen=dlg.txtMaxGen->text().toULong();
-		GAStepGen=dlg.txtStepGen->text().toULong();
+		GAMaxGen=dlg.txtMaxGen->value();
+		GAStepGen=dlg.txtStepGen->value();
 		GAHeur=static_cast<HeuristicType>(dlg.cbGAHeuristicType->currentItem());
-		GAPopSize=dlg.txtPopSize->text().toULong();
+		GAPopSize=dlg.txtPopSize->value();
+		VerifyGA=dlg.VerifyGA->isChecked();
+		DisplayFull=dlg.DisplayFull->isChecked();
+		DisplayTerminals=dlg.DisplayTerminals->isChecked();
+		DisplayObjects=dlg.DisplayObjects->isChecked();
+		if((HoldFull!=DisplayFull)||(HoldTerminals!=DisplayTerminals)||(HoldObjects!=DisplayObjects))
+			emit redrawTrees();	
 	}
-	slotStatusMsg(i18n("Ready."));
-}
-
-
-//-----------------------------------------------------------------------------
-void KDevHGAApp::slotFileNew(void)
-{
-	slotStatusMsg(i18n("Creating new document..."));
-	openDocumentFile();
 	slotStatusMsg(i18n("Ready."));
 }
 
@@ -542,7 +511,7 @@ void KDevHGAApp::slotFileNew(void)
 void KDevHGAApp::slotFileOpen(void)
 {
 	slotStatusMsg(i18n("Opening file..."));
-	KURL url=KFileDialog::getOpenURL("/home/pfrancq/data/projects/hp/data",i18n("*.hd|Hierarchical Data files"), this, i18n("Open File..."));
+	KURL url=KFileDialog::getOpenURL("/home/pfrancq/data/data/hga/",i18n("*.hd|Hierarchical Data files"), this, i18n("Open File..."));
 	if(!url.isEmpty())
 	{
 		KApplication::kApplication()->processEvents();
@@ -564,49 +533,6 @@ void KDevHGAApp::slotFileOpenRecent(const KURL& url)
 
 
 //-----------------------------------------------------------------------------
-void KDevHGAApp::slotFileSave(void)
-{
-	slotStatusMsg(i18n("Saving file..."));
-	KDevHGAView* m = (KDevHGAView*)pWorkspace->activeWindow();
-	if(m)
-	{
-		KDevHGADoc* doc = m->getDocument();
-		if(doc->URL().fileName().contains(i18n("Untitled")))
-			slotFileSaveAs();
-		else
-			if(!doc->saveDocument(doc->URL()))
-				KMessageBox::error (this,i18n("Could not save the current document !"), i18n("I/O Error !"));
-	}
-	slotStatusMsg(i18n("Ready."));
-}
-
-
-//-----------------------------------------------------------------------------
-void KDevHGAApp::slotFileSaveAs(void)
-{
-	slotStatusMsg(i18n("Saving file with a new filename..."));
-	KURL url=KFileDialog::getSaveURL(QDir::currentDirPath(),i18n("*|All files"), this, i18n("Save as..."));
-	if(!url.isEmpty())
-	{
-		KDevHGAView* m = (KDevHGAView*)pWorkspace->activeWindow();
-		if(m)
-		{
-			KDevHGADoc* doc =	m->getDocument();
-			if(!doc->saveDocument(url))
-			{
-				KMessageBox::error (this,i18n("Could not save the current document !"), i18n("I/O Error !"));
-				return;
-			}
-			doc->changedViewList();
-//			setWndTitle(m);
-			fileOpenRecent->addURL(url);
-		}
-	}
-	slotStatusMsg(i18n("Ready."));
-}
-
-
-//-----------------------------------------------------------------------------
 void KDevHGAApp::slotFileClose(void)
 {
 	slotStatusMsg(i18n("Closing file..."));
@@ -621,80 +547,11 @@ void KDevHGAApp::slotFileClose(void)
 
 
 //-----------------------------------------------------------------------------
-void KDevHGAApp::slotFilePrint(void)
-{
-	slotStatusMsg(i18n("Printing..."));
-	KDevHGAView* m = (KDevHGAView*) pWorkspace->activeWindow();
-	if(m)
-		m->print( printer );
-	slotStatusMsg(i18n("Ready."));
-}
-
-
-//-----------------------------------------------------------------------------
 void KDevHGAApp::slotFileQuit(void)
 {
 	slotStatusMsg(i18n("Exiting..."));
 	saveOptions();
 	close();
-	slotStatusMsg(i18n("Ready."));
-}
-
-
-//-----------------------------------------------------------------------------
-void KDevHGAApp::slotEditUndo(void)
-{
-	slotStatusMsg(i18n("Reverting last action..."));
-	KDevHGAView* m = (KDevHGAView*) pWorkspace->activeWindow();
-	if(m)
-//		m->undo();
-	slotStatusMsg(i18n("Ready."));
-}
-
-
-//-----------------------------------------------------------------------------
-void KDevHGAApp::slotEditCut(void)
-{
-	slotStatusMsg(i18n("Cutting selection..."));
-	KDevHGAView* m = (KDevHGAView*) pWorkspace->activeWindow();
-	if(m)
-//		m->cut();
-	slotStatusMsg(i18n("Ready."));
-}
-
-
-//-----------------------------------------------------------------------------
-void KDevHGAApp::slotEditCopy(void)
-{
-	slotStatusMsg(i18n("Copying selection to clipboard..."));
-	KDevHGAView* m = (KDevHGAView*) pWorkspace->activeWindow();
-	if(m)
-//		m->copy();
-	slotStatusMsg(i18n("Ready."));
-}
-
-
-//-----------------------------------------------------------------------------
-void KDevHGAApp::slotEditPaste(void)
-{
-  slotStatusMsg(i18n("Inserting clipboard contents..."));
-	
-  KDevHGAView* m = (KDevHGAView*) pWorkspace->activeWindow();
-  if ( m )
-//    m->paste();
-		
-  slotStatusMsg(i18n("Ready."));
-}
-
-
-//-----------------------------------------------------------------------------
-void KDevHGAApp::slotViewToolBar(void)
-{
-	slotStatusMsg(i18n("Toggle the toolbar..."));
-	if(!viewToolBar->isChecked())
-		toolBar("mainToolBar")->hide();
-	else
-		toolBar("mainToolBar")->show();
 	slotStatusMsg(i18n("Ready."));
 }
 
@@ -800,19 +657,19 @@ void KDevHGAApp::slotWindowActivated(QWidget*)
 		// Update menu
 		switch(m->getType())
 		{
-			case Project:
+			case vProject:
 				bPrj=true;
 				bGA=false;
 				bHeuristic=false;
 				break;
 
-			case Heuristic:
+			case vHeuristic:
 				bPrj=false;
 				bGA=false;
 				bHeuristic=true;
 				break;
 
-			case GA:
+			case vGA:
 				bPrj=false;
 				bGA=true;
 				bHeuristic=false;

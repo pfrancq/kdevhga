@@ -4,7 +4,7 @@
 
 	Generic Window - Header.
 
-	Copyright 1998-2004 by the Université Libre de Bruxelles.
+	Copyright 1998-2008 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -29,8 +29,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef KDEVHGAVIEW_H
-#define KDEVHGAVIEW_H
+#ifndef KDevHGAView_H
+#define KDevHGAView_H
 
 
 //------------------------------------------------------------------------------
@@ -49,7 +49,7 @@
 /**
 * Defines all the possible type of view for a document.
 */
-enum HGAViewType{Nothing,Project,Heuristic,GA};
+enum HGAViewType{vNothing,vProject,vHeuristic,vGA};
 
 
 //------------------------------------------------------------------------------
@@ -99,25 +99,9 @@ public:
 	void update(KDevHGAView* pSender);
 
 	/**
-	* Contains the implementation for printing functionality and gets called by
-	* KDevHGAApp::slotFilePrint().
-	*/
-	void print(QPrinter* pPrinter);
-
-	/**
 	* Return the type of the window.
 	*/
 	virtual HGAViewType getType(void)=0;
-
-protected:
-
-	/**
-	* Overwritten QWidget::closeEvent() to catch closing views. Does nothing,
-	* as the closeEvents for KDevHGAView's are processed by
-	* KDevHGAApp::eventFilter(), so this overwitten closeEvent is necessary and
-	* has to be empty. Don't overwrite this method !
-	*/
-	virtual void closeEvent(QCloseEvent* e);
 
 public:
 
@@ -132,4 +116,4 @@ public:
 
 
 //-----------------------------------------------------------------------------
-#endif // KDEVHGAVIEW_H
+#endif // KDevHGAView_H

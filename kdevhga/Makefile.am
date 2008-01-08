@@ -4,8 +4,9 @@ kdevhga_SOURCES = gnodeinfos.cpp khgaprjview.cpp khgaheuristicview.cpp \
 		khgagaview.cpp kappoptions.ui kdevhgaview.cpp kdevhgadoc.cpp kdevhga.cpp \
 		ghga.cpp ginsth.cpp gchromoh.cpp main.cpp qtreeinfos.cpp
 
-kdevhga_LDADD  = $(KDEVHGA_ADD) $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) \
-		$(LIB_QT) $(LIBSOCKET) $(LIB_R)
+kdevhga_LDFLAGS=$(all_libraries) -export-dynamic $(KDE_RPATH)
+kdevhga_LDADD  = $(LIB_R) $(LIB_GALILEI) $(LIBKDE_GALILEI) \
+		$(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIBSOCKET)
 
 SUBDIRS =
 
@@ -47,9 +48,6 @@ INCLUDES= $(all_includes)
 
 METASOURCES = AUTO
 
-# the library search path. 
-kdevhga_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-
 rcdir = $(kde_datadir)/kdevhga
 rc_DATA = kdevhgaui.rc
 
@@ -59,3 +57,6 @@ messages: rc.cpp
 	 $(XGETTEXT) $$LIST -o $(podir)/kdevhga.pot; \
 	fi
 
+AM_CFLAGS =
+AM_CXXFLAGS =
+AM_FFLAGS =

@@ -4,7 +4,7 @@
 
 	Document representing a HGA problem - Implementation.
 
-	Copyright 1998-2004 by the Universit�Libre de Bruxelles.
+	Copyright 1998-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -35,8 +35,8 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rxmlstruct.h>
-#include <rstd/rxmlfile.h>
+#include <rxmlstruct.h>
+#include <rxmlfile.h>
 using namespace R;
 
 
@@ -76,6 +76,16 @@ KDevHGADoc::KDevHGADoc(void)
 {
 	pViewList = new QList<KDevHGAView>;
 	pViewList->setAutoDelete(false);
+}
+
+
+//-----------------------------------------------------------------------------
+RString KDevHGADoc::GetWord(size_t id) const
+{
+	Word* w=Words.GetPtr(id,false);
+	if(!w)
+		return(RString("????"));
+	return(w->W);
 }
 
 
@@ -190,7 +200,7 @@ bool KDevHGADoc::openDocument(const KURL& url,const char* /*format*/)
 	Word* w;
 
 	// Load File
-	KIO::NetAccess::download(url,tmpfile);
+	KIO::NetAccess::download(url,tmpfile,0);
 	QFile fl(tmpfile);
 	if(!fl.open(IO_ReadOnly))
 		return false;
@@ -206,27 +216,29 @@ bool KDevHGADoc::openDocument(const KURL& url,const char* /*format*/)
 	if(tag)
 	{
 		// Read number objects info
-		Objs=new RObjs<RObjH>(tag->NbPtr);
+		Objs=new RObjs<RObjH>(tag->GetNbNodes());
 
 		// Read each objects
-		for(i=0,tag->Start();!tag->End();i++,tag->Next())
-			if((*tag)()->GetName()=="Object")
+		RCursor<RXMLTag> Cur(tag->GetNodes());
+		for(i=0,Cur.Start();!Cur.End();i++,Cur.Next())
+			if(Cur()->GetName()=="Object")
 			{
 				RXMLTagCursor cWords();
-				Objs->InsertPtr(obj=new RObjH(i,(*tag)()->GetAttrValue("Id"),(*tag)()->NbPtr));
-				for((*tag)()->Start();!(*tag)()->End();(*tag)()->Next())
-					if((*((*tag)()))()->GetName()=="Include")
+				Objs->InsertPtr(obj=new RObjH(i,Cur()->GetAttrValue("Id"),Cur()->GetNbNodes()));
+				RCursor<RXMLTag> sub(Cur()->GetNodes());
+				for(sub.Start();!sub.End();sub.Next())
+					if(sub()->GetName()=="Include")
 					{
-						w=Words.GetInsertPtr<RString>((*((*tag)()))()->GetAttrValue("Attribute"));
+						w=Words.GetInsertPtr<RString>(sub()->GetAttrValue("Attribute"));
 						if(w->Id==0xFFFFFFFF)
-							w->Id=Words.NbPtr-1;
+							w->Id=Words.GetNb()-1;
 						obj->AddAttribute(w->Id);
 					}
 			}
 	}
 
 	// Remove
-	KIO::NetAccess::removeTempFile( tmpfile );
+	KIO::NetAccess::removeTempFile(tmpfile);
 	doc_url=url;
 	modified=false;
 	return true;

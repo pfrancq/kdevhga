@@ -6,7 +6,7 @@
 
 	Node representing a set of words. - Header.
 
-	Copyright 1998-2004 by the Université Libre de Bruxelles.
+	Copyright 1998-2008 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -36,9 +36,9 @@
 
 //-----------------------------------------------------------------------------
 // includes files for R Project
-#include <rhga/robjh.h>
-#include <rhga/rnodesga.h>
-#include <rhga/rnodega.h>
+#include <robjh.h>
+#include <rnodesga.h>
+#include <rnodega.h>
 #include <ghga.h>
 
 
@@ -48,26 +48,15 @@ namespace GALILEI{
 
 
 //-----------------------------------------------------------------------------
-class GNodeInfosData
-{
-public:
-	unsigned int MaxAttr;
-
-	GNodeInfosData(unsigned int max);
-};
-
-
-//-----------------------------------------------------------------------------
-class GNodeInfos : public R::RNodeGA<GNodeInfos,R::RObjH,GNodeInfosData,GChromoH>
+class GNodeInfos : public R::RNodeGA<GNodeInfos,R::RObjH,GChromoH>
 {
 public:
 	/**
 	* Construct the node.
 	* @param owner          Owner of the node.
 	* @param id             Identificator of the node.
-	* @param data           Data used to construct the node.
 	*/
-	GNodeInfos(R::RNodesGA<GNodeInfos,R::RObjH,GNodeInfosData,GChromoH>* owner,unsigned int id,GNodeInfosData* data);
+	GNodeInfos(GChromoH* owner,size_t id,size_t max);
 
 	GNodeInfos(const GNodeInfos* w);
 

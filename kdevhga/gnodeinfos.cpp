@@ -6,7 +6,7 @@
 
 	Node representing a set of words - Implementation.
 
-	Copyright 1998-2004 by the Université Libre de Bruxelles.
+	Copyright 1998-2008 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -33,26 +33,28 @@
 //------------------------------------------------------------------------------
 // include files for current application
 #include <gnodeinfos.h>
+#include <gchromoh.h>
 using namespace R;
 using namespace GALILEI;
 
 
-//------------------------------------------------------------------------------
-GNodeInfosData::GNodeInfosData(unsigned int max) : MaxAttr(max)
-{
-}
-
 
 //------------------------------------------------------------------------------
-GNodeInfos::GNodeInfos(RNodesGA<GNodeInfos,RObjH,GNodeInfosData,GChromoH>* owner,unsigned id,GNodeInfosData* data)
-	: RNodeGA<GNodeInfos,RObjH,GNodeInfosData,GChromoH>(owner,id,data)
+//
+// class GNodeInfos
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+GNodeInfos::GNodeInfos(GChromoH* owner,size_t id,size_t max)
+	: RNodeGA<GNodeInfos,RObjH,GChromoH>(owner,id,max)
 {
 }
 
 
 //------------------------------------------------------------------------------
 GNodeInfos::GNodeInfos(const GNodeInfos* w)
-	: RNodeGA<GNodeInfos,RObjH,GNodeInfosData,GChromoH>(w)
+	: RNodeGA<GNodeInfos,RObjH,GChromoH>(w)
 {
 }
 
@@ -74,9 +76,6 @@ int GNodeInfos::Compare(const GNodeInfos& n) const
 //------------------------------------------------------------------------------
 void GNodeInfos::Evaluate(double& val, double nbchoices)
 {
-	GNodeInfos** ptr;
-	unsigned int i;
-
 	// Update count for this level
 	nbchoices+=NbSubNodes+NbSubObjects;
 
@@ -84,14 +83,15 @@ void GNodeInfos::Evaluate(double& val, double nbchoices)
 	val+=NbSubObjects*nbchoices;
 
 	// Go through each subnodes in order to continue computing the value
-	for(i=NbSubNodes+1,ptr=GetNodes();--i;ptr++)
-		(*ptr)->Evaluate(val,nbchoices);
+	RCursor<GNodeInfos> Cur(Owner->GetNodes(*this));
+	for(Cur.Start();!Cur.End();Cur.Next())
+		Cur()->Evaluate(val,nbchoices);
 }
 
 
 //------------------------------------------------------------------------------
 GNodeInfos& GNodeInfos::operator=(const GNodeInfos& w)
 {
-	RNodeGA<GNodeInfos,RObjH,GNodeInfosData,GChromoH>::operator=(w);
+	RNodeGA<GNodeInfos,RObjH,GChromoH>::operator=(w);
 	return(*this);
 }

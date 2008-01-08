@@ -4,7 +4,7 @@
 
 	Window to follow the steps of an heuristic - Implementation.
 
-	Copyright 1998-2004 by the Universit�Libre de Bruxelles.
+	Copyright 1998-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -34,17 +34,20 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rhga/robjh.h>
-#include <rhga/rfirstnodeheuristic.h>
+#include <robjh.h>
+#include <rfirstnodeheuristic.h>
 using namespace R;
 
 
+//-----------------------------------------------------------------------------
+// include files for GALILEI
 #include <ginsth.h>
 #include <gnodeinfos.h>
 using namespace GALILEI;
 
+
 //-----------------------------------------------------------------------------
-// include files for Qt/KDE
+// include files for KDE
 #include <klocale.h>
 #include <kmessagebox.h>
 
@@ -56,34 +59,6 @@ using namespace GALILEI;
 #include "kdevhgadoc.h"
 
 
-//-----------------------------------------------------------------------------
-//
-// class MyNode
-//
-//-----------------------------------------------------------------------------
-
-
-//------------------------------------------------------------------------------
-MyNode::MyNode(RNodesGA<MyNode,RObjH,GNodeInfosData,KHGAHeuristicView>* owner,unsigned id,GNodeInfosData* data)
-	: RNodeGA<MyNode,RObjH,GNodeInfosData,KHGAHeuristicView>(owner,id,data)
-{
-}
-
-
-//------------------------------------------------------------------------------
-MyNode::MyNode(const MyNode* w)
-	: RNodeGA<MyNode,RObjH,GNodeInfosData,KHGAHeuristicView>(w)
-{
-}
-
-
-//------------------------------------------------------------------------------
-int MyNode::Compare(const MyNode* n)
-{
-	return(Id-n->Id);
-}
-
-
 
 //-----------------------------------------------------------------------------
 //
@@ -93,32 +68,17 @@ int MyNode::Compare(const MyNode* n)
 
 //-----------------------------------------------------------------------------
 KHGAHeuristicView::KHGAHeuristicView(KDevHGADoc* pDoc,HeuristicType pType,QWidget *parent, const char *name,int wflags)
-	: KDevHGAView(pDoc,parent,name,wflags), RNodesGA<MyNode,RObjH,GNodeInfosData,KHGAHeuristicView>(pDoc->Objs,pDoc->Objs->NbPtr),
-	  Random(0), type(pType), Data(0), TreeHeur(0), Objs(0)
+	: KDevHGAView(pDoc,parent,name,wflags), type(pType), Inst(0,1,*pDoc->Objs,FirstFit,0), Objs(*pDoc->Objs)
 {
-	Data=new GNodeInfosData(20);
-	Init(Data);
-	Objs=new RCursor<RObjH>();
-	Objs->Set(pDoc->Objs);
-	nbObjs = pDoc->Objs->NbPtr;
+	Inst.Init();
+	nbObjs = pDoc->Objs->GetNb();
 	draw=new QTreeInfos(pDoc,this);
-	draw->setNodes(this);
+	draw->setNodes(Inst.Chromosomes[0]);
 	result=new QLabel(this);
-
-	// Init the random generator
-	Random = new RRandomGood(12345);
 
 	// Init the heuristic
 	step=theApp->step;
-
-	switch(pType)
-	{
-		case FirstFit:
-			TreeHeur = new RFirstNodeHeuristic<MyNode,RObjH,GNodeInfosData,KHGAHeuristicView>(Random,Objs,0);
-			break;
-	}
-	TreeHeur->Init(this);
-
+	Inst.GetHeuristic(0)->Init(Inst.Chromosomes[0]);
 	connect(this,SIGNAL(endRun()),theApp,SLOT(slotEndHeuristic(void)));
 }
 
@@ -156,11 +116,12 @@ void KHGAHeuristicView::resizeEvent(QResizeEvent *)
 void KHGAHeuristicView::RunHeuristic(void)
 {
 	Stop=false;
+
 	// Run the heuristic
 	if(step)
 		NextStep();
 	else
-		while((!TreeHeur->IsEnd())&&(!Stop))
+		while((!Inst.GetHeuristic(0)->IsEnd())&&(!Stop))
 			NextStep();
 }
 
@@ -170,25 +131,25 @@ void KHGAHeuristicView::NextStep(void)
 {
 	try
 	{
-		TreeHeur->PutNextObject();
+		Inst.GetHeuristic(0)->PutNextObject();
 
 		// test if the end
-		if(TreeHeur->IsEnd())
+		if(Inst.GetHeuristic(0)->IsEnd())
 		{
-			TreeHeur->PostRun();
+			Inst.GetHeuristic(0)->PostRun();
 			result->setText("Done");
-			draw->setNodes(this);
+			draw->setNodes(Inst.Chromosomes[0]);
 			emit endRun();
 		}
 		else
 		{
-			draw->setNodes(this);
+			draw->setNodes(Inst.Chromosomes[0]);
 		}
 		KApplication::kApplication()->processEvents(1000);
 	}
-	catch(RTreeHeuristicException& e)
+	catch(RException& e)
     {
-		KMessageBox::error(this,e.Msg.Latin1());
+		KMessageBox::error(this,e.GetMsg());
 		Stop=true;
     }
 }
@@ -198,7 +159,7 @@ void KHGAHeuristicView::NextStep(void)
 void KHGAHeuristicView::RunToEnd(void)
 {
 	step=false;
-	while(!TreeHeur->IsEnd())
+	while(!Inst.GetHeuristic(0)->IsEnd())
 	{
 		NextStep();
 	}
@@ -206,14 +167,6 @@ void KHGAHeuristicView::RunToEnd(void)
 
 
 //-----------------------------------------------------------------------------
-KHGAHeuristicView::~KHGAHeuristicView()
+KHGAHeuristicView::~KHGAHeuristicView(void)
 {
-	if(TreeHeur)
-		delete TreeHeur;
-	if(Random)
-		delete Random;
-	if(Objs)
-		delete Objs;
-	if(Data)
-		delete Data;
 }

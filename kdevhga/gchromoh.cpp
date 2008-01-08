@@ -6,7 +6,7 @@
 
 	Chromosomes representing a tree of vectors - Implementation
 
-	Copyright 1998-2004 by the Universit�Libre de Bruxelles.
+	Copyright 1998-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -32,7 +32,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R
-#include <rhga/robjh.h>
+#include <robjh.h>
 
 
 //------------------------------------------------------------------------------
@@ -52,27 +52,27 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-GChromoH::GChromoH(GInstH* inst,unsigned id) throw(std::bad_alloc)
-	: RChromoH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeInfos,RObjH,GNodeInfosData>(inst,id)
+GChromoH::GChromoH(GInstH* inst,unsigned id)
+	: RChromoH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeInfos,RObjH>(inst,id)
 {
 	(*Fitness)=100.0;
 }
 
 
 //------------------------------------------------------------------------------
-void GChromoH::Init(GThreadDataH* thData) throw(std::bad_alloc)
+void GChromoH::Init(GThreadDataH* thData)
 {
-	RChromoH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeInfos,RObjH,GNodeInfosData>::Init(thData);
+	RChromoH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeInfos,RObjH>::Init(thData);
 }
 
 
 //------------------------------------------------------------------------------
-void GChromoH::Evaluate(void) throw(eGA)
+void GChromoH::Evaluate(void)
 {
 	double val=0.0;
 
 	Top->Evaluate(val,0.0);
-	(*Fitness)=val/static_cast<double>(Objs->GetNb());
+	(*Fitness)=val/static_cast<double>(Objs.GetNb());
 }
 
 

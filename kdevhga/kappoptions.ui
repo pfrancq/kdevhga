@@ -1,467 +1,374 @@
-<!DOCTYPE UI><UI>
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
 <class>KAppOptions</class>
-<widget>
-    <class>QDialog</class>
-    <property stdset="1">
-        <name>name</name>
+<widget class="QDialog">
+    <property name="name">
         <cstring>AppFrom</cstring>
     </property>
-    <property stdset="1">
-        <name>geometry</name>
+    <property name="geometry">
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>502</width>
-            <height>387</height>
+            <width>332</width>
+            <height>398</height>
         </rect>
     </property>
-    <property stdset="1">
-        <name>sizePolicy</name>
+    <property name="sizePolicy">
         <sizepolicy>
             <hsizetype>1</hsizetype>
             <vsizetype>1</vsizetype>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
         </sizepolicy>
     </property>
-    <property stdset="1">
-        <name>minimumSize</name>
+    <property name="minimumSize">
         <size>
             <width>0</width>
             <height>0</height>
         </size>
     </property>
-    <property stdset="1">
-        <name>baseSize</name>
+    <property name="baseSize">
         <size>
             <width>200</width>
             <height>300</height>
         </size>
     </property>
-    <property stdset="1">
-        <name>caption</name>
+    <property name="caption">
         <string>Options</string>
     </property>
-    <property stdset="1">
-        <name>sizeGripEnabled</name>
+    <property name="sizeGripEnabled">
         <bool>false</bool>
     </property>
-    <widget>
-        <class>Line</class>
-        <property stdset="1">
-            <name>name</name>
-            <cstring>Line1</cstring>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
         </property>
-        <property stdset="1">
-            <name>geometry</name>
-            <rect>
-                <x>0</x>
-                <y>330</y>
-                <width>530</width>
-                <height>20</height>
-            </rect>
-        </property>
-        <property stdset="1">
-            <name>orientation</name>
-            <enum>Horizontal</enum>
-        </property>
-    </widget>
-    <widget>
-        <class>QLayoutWidget</class>
-        <property stdset="1">
-            <name>name</name>
-            <cstring>Layout1</cstring>
-        </property>
-        <property stdset="1">
-            <name>geometry</name>
-            <rect>
-                <x>0</x>
-                <y>350</y>
-                <width>530</width>
-                <height>28</height>
-            </rect>
-        </property>
-        <hbox>
-            <property stdset="1">
-                <name>margin</name>
-                <number>0</number>
+        <widget class="QGroupBox">
+            <property name="name">
+                <cstring>GroupBox10</cstring>
             </property>
-            <property stdset="1">
-                <name>spacing</name>
-                <number>6</number>
+            <property name="title">
+                <string>Genetic Algorithm</string>
             </property>
-            <spacer>
-                <property>
-                    <name>name</name>
-                    <cstring>Spacer1</cstring>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
                 </property>
-                <property stdset="1">
-                    <name>orientation</name>
-                    <enum>Horizontal</enum>
-                </property>
-                <property stdset="1">
-                    <name>sizeType</name>
-                    <enum>Expanding</enum>
-                </property>
-                <property>
-                    <name>sizeHint</name>
-                    <size>
-                        <width>20</width>
-                        <height>20</height>
-                    </size>
-                </property>
-            </spacer>
-            <widget>
-                <class>QPushButton</class>
-                <property stdset="1">
-                    <name>name</name>
-                    <cstring>btnOK</cstring>
-                </property>
-                <property stdset="1">
-                    <name>text</name>
-                    <string>OK</string>
-                </property>
-                <property stdset="1">
-                    <name>autoResize</name>
-                    <bool>true</bool>
-                </property>
-            </widget>
-            <spacer>
-                <property>
-                    <name>name</name>
-                    <cstring>Spacer3</cstring>
-                </property>
-                <property stdset="1">
-                    <name>orientation</name>
-                    <enum>Horizontal</enum>
-                </property>
-                <property stdset="1">
-                    <name>sizeType</name>
-                    <enum>Expanding</enum>
-                </property>
-                <property>
-                    <name>sizeHint</name>
-                    <size>
-                        <width>20</width>
-                        <height>20</height>
-                    </size>
-                </property>
-            </spacer>
-            <widget>
-                <class>QPushButton</class>
-                <property stdset="1">
-                    <name>name</name>
-                    <cstring>btnCancel</cstring>
-                </property>
-                <property stdset="1">
-                    <name>text</name>
-                    <string>Cancel</string>
-                </property>
-                <property stdset="1">
-                    <name>autoResize</name>
-                    <bool>true</bool>
-                </property>
-            </widget>
-            <spacer>
-                <property>
-                    <name>name</name>
-                    <cstring>Spacer2</cstring>
-                </property>
-                <property stdset="1">
-                    <name>orientation</name>
-                    <enum>Horizontal</enum>
-                </property>
-                <property stdset="1">
-                    <name>sizeType</name>
-                    <enum>Expanding</enum>
-                </property>
-                <property>
-                    <name>sizeHint</name>
-                    <size>
-                        <width>20</width>
-                        <height>20</height>
-                    </size>
-                </property>
-            </spacer>
-        </hbox>
-    </widget>
-    <widget>
-        <class>QTabWidget</class>
-        <property stdset="1">
-            <name>name</name>
-            <cstring>TabWidget</cstring>
-        </property>
-        <property stdset="1">
-            <name>geometry</name>
-            <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>520</width>
-                <height>320</height>
-            </rect>
-        </property>
-        <property stdset="1">
-            <name>sizePolicy</name>
-            <sizepolicy>
-                <hsizetype>7</hsizetype>
-                <vsizetype>7</vsizetype>
-            </sizepolicy>
-        </property>
-        <property stdset="1">
-            <name>backgroundOrigin</name>
-            <enum>ParentOrigin</enum>
-        </property>
-        <widget>
-            <class>QWidget</class>
-            <property stdset="1">
-                <name>name</name>
-                <cstring>tab</cstring>
-            </property>
-            <attribute>
-                <name>title</name>
-                <string>GA</string>
-            </attribute>
-            <widget>
-                <class>QGroupBox</class>
-                <property stdset="1">
-                    <name>name</name>
-                    <cstring>GroupBox10</cstring>
-                </property>
-                <property stdset="1">
-                    <name>geometry</name>
-                    <rect>
-                        <x>10</x>
-                        <y>5</y>
-                        <width>495</width>
-                        <height>95</height>
-                    </rect>
-                </property>
-                <property stdset="1">
-                    <name>title</name>
-                    <string></string>
-                </property>
-                <widget>
-                    <class>QLabel</class>
-                    <property stdset="1">
-                        <name>name</name>
-                        <cstring>TextLabel1_4</cstring>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout3</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>geometry</name>
-                        <rect>
-                            <x>10</x>
-                            <y>20</y>
-                            <width>85</width>
-                            <height>16</height>
-                        </rect>
-                    </property>
-                    <property stdset="1">
-                        <name>text</name>
-                        <string>Population size</string>
-                    </property>
-                </widget>
-                <widget>
-                    <class>QLineEdit</class>
-                    <property stdset="1">
-                        <name>name</name>
-                        <cstring>txtPopSize</cstring>
-                    </property>
-                    <property stdset="1">
-                        <name>geometry</name>
-                        <rect>
-                            <x>105</x>
-                            <y>15</y>
-                            <width>40</width>
-                            <height>22</height>
-                        </rect>
-                    </property>
-                </widget>
-                <widget>
-                    <class>QLabel</class>
-                    <property stdset="1">
-                        <name>name</name>
-                        <cstring>TextLaba</cstring>
-                    </property>
-                    <property stdset="1">
-                        <name>geometry</name>
-                        <rect>
-                            <x>10</x>
-                            <y>60</y>
-                            <width>60</width>
-                            <height>20</height>
-                        </rect>
-                    </property>
-                    <property stdset="1">
-                        <name>text</name>
-                        <string>Heuristic</string>
-                    </property>
-                </widget>
-                <widget>
-                    <class>QComboBox</class>
-                    <item>
-                        <property>
-                            <name>text</name>
-                            <string>First Fit</string>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
                         </property>
-                    </item>
-                    <property stdset="1">
-                        <name>name</name>
-                        <cstring>cbGAHeuristicType</cstring>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>TextLabel1_4</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Population size</string>
+                            </property>
+                        </widget>
+                        <spacer>
+                            <property name="name">
+                                <cstring>spacer9</cstring>
+                            </property>
+                            <property name="orientation">
+                                <enum>Horizontal</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>Expanding</enum>
+                            </property>
+                            <property name="sizeHint">
+                                <size>
+                                    <width>40</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                        <widget class="KIntSpinBox">
+                            <property name="name">
+                                <cstring>txtPopSize</cstring>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout4</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>geometry</name>
-                        <rect>
-                            <x>60</x>
-                            <y>60</y>
-                            <width>120</width>
-                            <height>22</height>
-                        </rect>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>TextLaba</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Heuristic</string>
+                            </property>
+                        </widget>
+                        <spacer>
+                            <property name="name">
+                                <cstring>spacer10</cstring>
+                            </property>
+                            <property name="orientation">
+                                <enum>Horizontal</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>Expanding</enum>
+                            </property>
+                            <property name="sizeHint">
+                                <size>
+                                    <width>40</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                        <widget class="QComboBox">
+                            <item>
+                                <property name="text">
+                                    <string>First Fit</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>cbGAHeuristicType</cstring>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout5</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>TextLabel2_4</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Maximum generation</string>
+                            </property>
+                        </widget>
+                        <spacer>
+                            <property name="name">
+                                <cstring>spacer4</cstring>
+                            </property>
+                            <property name="orientation">
+                                <enum>Horizontal</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>Expanding</enum>
+                            </property>
+                            <property name="sizeHint">
+                                <size>
+                                    <width>36</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                        <widget class="KIntSpinBox">
+                            <property name="name">
+                                <cstring>txtMaxGen</cstring>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>VerifyGA</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Verify chromosomes?</string>
                     </property>
                 </widget>
-            </widget>
+            </vbox>
         </widget>
-        <widget>
-            <class>QWidget</class>
-            <property stdset="1">
-                <name>name</name>
-                <cstring>tab</cstring>
+        <widget class="QGroupBox">
+            <property name="name">
+                <cstring>GroupBox19</cstring>
             </property>
-            <attribute>
-                <name>title</name>
-                <string>General</string>
-            </attribute>
-            <widget>
-                <class>QGroupBox</class>
-                <property stdset="1">
-                    <name>name</name>
-                    <cstring>GroupBox19</cstring>
+            <property name="title">
+                <string>Run Mode</string>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
                 </property>
-                <property stdset="1">
-                    <name>geometry</name>
-                    <rect>
-                        <x>10</x>
-                        <y>5</y>
-                        <width>495</width>
-                        <height>50</height>
-                    </rect>
-                </property>
-                <property stdset="1">
-                    <name>title</name>
-                    <string>Run Mode</string>
-                </property>
-                <widget>
-                    <class>QCheckBox</class>
-                    <property stdset="1">
-                        <name>name</name>
-                        <cstring>cbStep</cstring>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout6</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>geometry</name>
-                        <rect>
-                            <x>10</x>
-                            <y>20</y>
-                            <width>94</width>
-                            <height>20</height>
-                        </rect>
-                    </property>
-                    <property stdset="1">
-                        <name>text</name>
-                        <string>Step Mode</string>
-                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>cbStep</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Step Mode</string>
+                            </property>
+                        </widget>
+                        <spacer>
+                            <property name="name">
+                                <cstring>spacer11</cstring>
+                            </property>
+                            <property name="orientation">
+                                <enum>Horizontal</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>Expanding</enum>
+                            </property>
+                            <property name="sizeHint">
+                                <size>
+                                    <width>40</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                        <widget class="QLayoutWidget">
+                            <property name="name">
+                                <cstring>layout2</cstring>
+                            </property>
+                            <hbox>
+                                <property name="name">
+                                    <cstring>unnamed</cstring>
+                                </property>
+                                <widget class="QLabel">
+                                    <property name="name">
+                                        <cstring>TextLabel2_4_2</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Step generation</string>
+                                    </property>
+                                </widget>
+                                <spacer>
+                                    <property name="name">
+                                        <cstring>spacer5</cstring>
+                                    </property>
+                                    <property name="orientation">
+                                        <enum>Horizontal</enum>
+                                    </property>
+                                    <property name="sizeType">
+                                        <enum>Expanding</enum>
+                                    </property>
+                                    <property name="sizeHint">
+                                        <size>
+                                            <width>40</width>
+                                            <height>20</height>
+                                        </size>
+                                    </property>
+                                </spacer>
+                                <widget class="KIntSpinBox">
+                                    <property name="name">
+                                        <cstring>txtStepGen</cstring>
+                                    </property>
+                                </widget>
+                            </hbox>
+                        </widget>
+                    </hbox>
                 </widget>
-            </widget>
-            <widget>
-                <class>QGroupBox</class>
-                <property stdset="1">
-                    <name>name</name>
-                    <cstring>GroupBox11</cstring>
-                </property>
-                <property stdset="1">
-                    <name>geometry</name>
-                    <rect>
-                        <x>10</x>
-                        <y>60</y>
-                        <width>495</width>
-                        <height>60</height>
-                    </rect>
-                </property>
-                <property stdset="1">
-                    <name>title</name>
-                    <string>GA</string>
-                </property>
-                <widget>
-                    <class>QLabel</class>
-                    <property stdset="1">
-                        <name>name</name>
-                        <cstring>TextLabel2_4</cstring>
-                    </property>
-                    <property stdset="1">
-                        <name>geometry</name>
-                        <rect>
-                            <x>10</x>
-                            <y>20</y>
-                            <width>120</width>
-                            <height>20</height>
-                        </rect>
-                    </property>
-                    <property stdset="1">
-                        <name>text</name>
-                        <string>Maximum generation</string>
-                    </property>
-                </widget>
-                <widget>
-                    <class>QLabel</class>
-                    <property stdset="1">
-                        <name>name</name>
-                        <cstring>TextLabel2_4_2</cstring>
-                    </property>
-                    <property stdset="1">
-                        <name>geometry</name>
-                        <rect>
-                            <x>350</x>
-                            <y>20</y>
-                            <width>90</width>
-                            <height>20</height>
-                        </rect>
-                    </property>
-                    <property stdset="1">
-                        <name>text</name>
-                        <string>Step generation</string>
-                    </property>
-                </widget>
-                <widget>
-                    <class>QLineEdit</class>
-                    <property stdset="1">
-                        <name>name</name>
-                        <cstring>txtStepGen</cstring>
-                    </property>
-                    <property stdset="1">
-                        <name>geometry</name>
-                        <rect>
-                            <x>445</x>
-                            <y>20</y>
-                            <width>40</width>
-                            <height>22</height>
-                        </rect>
-                    </property>
-                </widget>
-                <widget>
-                    <class>QLineEdit</class>
-                    <property stdset="1">
-                        <name>name</name>
-                        <cstring>txtMaxGen</cstring>
-                    </property>
-                    <property stdset="1">
-                        <name>geometry</name>
-                        <rect>
-                            <x>140</x>
-                            <y>20</y>
-                            <width>40</width>
-                            <height>22</height>
-                        </rect>
-                    </property>
-                </widget>
-            </widget>
+            </vbox>
         </widget>
-    </widget>
+        <widget class="QGroupBox">
+            <property name="name">
+                <cstring>groupBox3</cstring>
+            </property>
+            <property name="title">
+                <string>Display</string>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>DisplayFull</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Display full attributes?</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>DisplayTerminals</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Display terminal nodes?</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>DisplayObjects</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Display objects?</string>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>Layout1</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>btnOK</cstring>
+                    </property>
+                    <property name="text">
+                        <string>OK</string>
+                    </property>
+                    <property name="autoResize">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <spacer>
+                    <property name="name">
+                        <cstring>Spacer3</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>20</width>
+                            <height>20</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>btnCancel</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Cancel</string>
+                    </property>
+                    <property name="autoResize">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+    </vbox>
 </widget>
 <connections>
     <connection>
@@ -477,4 +384,13 @@
         <slot>reject()</slot>
     </connection>
 </connections>
+<includes>
+    <include location="local" impldecl="in implementation">kappoptions.ui.h</include>
+</includes>
+<layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>knuminput.h</includehint>
+    <includehint>knuminput.h</includehint>
+    <includehint>knuminput.h</includehint>
+</includehints>
 </UI>

@@ -6,7 +6,7 @@
 
 	Class representing an instance of a HGA for GALILEI - Implementation
 
-	Copyright 1998-2004 by the Universit�Libre de Bruxelles.
+	Copyright 1998-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -32,7 +32,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R library
-#include <rhga/rfirstnodeheuristic.h>
+#include <rfirstnodeheuristic.h>
 
 
 //------------------------------------------------------------------------------
@@ -52,8 +52,8 @@ using namespace GALILEI;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-GThreadDataH::GThreadDataH(GInstH *owner) throw(std::bad_alloc)
-	: RThreadDataH<GInstH,GChromoH,GNodeInfos,RObjH,GNodeInfosData>(owner)
+GThreadDataH::GThreadDataH(GInstH *owner)
+	: RThreadDataH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeInfos,RObjH>(owner)
 {
 }
 
@@ -72,24 +72,24 @@ GThreadDataH::~GThreadDataH(void)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-GInstH::GInstH(unsigned int max,unsigned int popsize,RObjs<RObjH>* objs,HeuristicType h,RDebug* debug) throw(std::bad_alloc)
-	: RInstH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeInfos,RObjH,GNodeInfosData>(popsize,objs,h,debug),
+GInstH::GInstH(unsigned int max,unsigned int popsize,RCursor<RObjH> objs,HeuristicType h,RDebug* debug)
+	: RInstH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeInfos,RObjH>(popsize,objs,h,"GALILEI GHA",debug),
 	  MaxGen(max)
 {
 }
 
 
 //------------------------------------------------------------------------------
-void GInstH::Init(GNodeInfosData* hdata) throw(std::bad_alloc)
+void GInstH::Init(void)
 {
-	RInstH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeInfos,RObjH,GNodeInfosData>::Init(hdata);
+	RInstH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeInfos,RObjH>::Init();
 }
 
 
 //------------------------------------------------------------------------------
 bool GInstH::StopCondition(void)
 {
-	return(Gen==MaxGen);
+	return(GetGen()==MaxGen);
 }
 
 

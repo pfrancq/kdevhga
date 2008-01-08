@@ -6,7 +6,7 @@
 
 	Chromosomes representing a tree of vectors - Header
 
-	Copyright 1998-2004 by the Universit�Libre de Bruxelles.
+	Copyright 1998-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -37,8 +37,8 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rhga/rhga.h>
-#include <rhga/rchromoh.h>
+#include <rhga.h>
+#include <rchromoh.h>
 
 
 //------------------------------------------------------------------------------
@@ -52,8 +52,8 @@ namespace GALILEI{
 
 
 //------------------------------------------------------------------------------
-class GChromoH : public R::RChromoH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeInfos,R::RObjH,GNodeInfosData>
-{
+class GChromoH : public R::RChromoH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeInfos,R::RObjH>
+{	
 public:
 
 	/**
@@ -61,19 +61,19 @@ public:
 	* @param inst           The instance.
 	* @param id             Identificator of the chromosome.
 	*/
-	GChromoH(GInstH* inst,unsigned int id) throw(std::bad_alloc);
+	GChromoH(GInstH* inst,unsigned int id);
 
 	/**
 	* Initialisation of the chromosome.
 	* @param thData         Pointer to the "thread-dependent" data of the
 	*                       chromosome.
 	*/
-	virtual void Init(GThreadDataH* thData) throw(std::bad_alloc);
+	virtual void Init(GThreadDataH* thData);
 
 	/**
 	* Evaluate the quality of the solution
 	*/
-	void Evaluate(void) throw(R::eGA);
+	virtual void Evaluate(void);
 
 	/**
 	* Destruct the chromosome.

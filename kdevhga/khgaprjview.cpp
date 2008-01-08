@@ -4,7 +4,7 @@
 
 	Window showing the information on one instance - Implementation.
 
-	Copyright 1998-2004 by the Université Libre de Bruxelles.
+	Copyright 1998-2008 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -29,7 +29,7 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rcursor.h>
+#include <rcursor.h>
 using namespace R;
 
 
@@ -63,11 +63,11 @@ void KHGAPrjView::createPrj(void)
 {
 	char tmp[100];
 	QListViewItem *item=0,*item2=0,*item3;
-	RCursor<RObjH> Objs(doc->Objs);
+	RCursor<RObjH> Objs(*doc->Objs);
 	unsigned int i;
 
 	// Construct Objects
-	sprintf(tmp,"Objects (%u)",doc->Objs->NbPtr);
+	sprintf(tmp,"Objects (%u)",doc->Objs->GetNb());
 	item = new QListViewItem(prj,item,tmp);
 	for(Objs.Start();!Objs.End();Objs.Next())
 	{
@@ -78,9 +78,9 @@ void KHGAPrjView::createPrj(void)
 		item3=0;
 
 		// Words
-		for(i=0;i<Objs()->GetAttr()->GetNbAttr();i++)
+		for(i=0;i<Objs()->GetAttr().GetNbAttr();i++)
 		{
-			sprintf(tmp,"Attribute: \"%s\" (%u)",doc->Words.GetPtr<unsigned int>((*Objs()->GetAttr())[i],false)->W.Latin1(),(*Objs()->GetAttr())[i]);
+			sprintf(tmp,"Attribute: \"%s\" (%u)",doc->Words.GetPtr(Objs()->GetAttr()[i],false)->W.Latin1(),Objs()->GetAttr()[i]);
 			item3=new QListViewItem(item2,item3,tmp);
 		}
 		
@@ -96,6 +96,6 @@ void KHGAPrjView::resizeEvent(QResizeEvent *)
 
 
 //-----------------------------------------------------------------------------
-KHGAPrjView::~KHGAPrjView()
+KHGAPrjView::~KHGAPrjView(void)
 {
 }
