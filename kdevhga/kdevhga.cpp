@@ -196,7 +196,7 @@ void KDevHGAApp::openDocumentFile(const KURL& url)
 
 	if(url.isEmpty())
 	{
-		// Creates an untitled window if file is 0	
+		// Creates an untitled window if file is 0
 		untitledCount+=1;
 		QString fileName=QString(i18n("Untitled%1")).arg(untitledCount);
 		KURL url;
@@ -224,7 +224,7 @@ void KDevHGAApp::openDocumentFile(const KURL& url)
 
 //-----------------------------------------------------------------------------
 void KDevHGAApp::saveOptions(void)
-{	
+{
 	config->setGroup("General Options");
 	config->writeEntry("Geometry", size());
 	config->writeEntry("Show Toolbar", toolBar()->isVisible());
@@ -318,6 +318,7 @@ bool KDevHGAApp::queryClose(void)
 	}
 	if(saveFiles.isEmpty())
 		return true;
+	return false;
 }
 
 
@@ -501,7 +502,7 @@ void KDevHGAApp::slotSettingsOptions(void)
 		DisplayTerminals=dlg.DisplayTerminals->isChecked();
 		DisplayObjects=dlg.DisplayObjects->isChecked();
 		if((HoldFull!=DisplayFull)||(HoldTerminals!=DisplayTerminals)||(HoldObjects!=DisplayObjects))
-			emit redrawTrees();	
+			emit redrawTrees();
 	}
 	slotStatusMsg(i18n("Ready."));
 }
