@@ -90,11 +90,11 @@ public:
 	* @param h              The heuristic that has to be used.
 	* @param debug          Debugger.
 	*/
-	GInstH(unsigned int max,unsigned int popsize,R::RCursor<R::RObjH> objs,R::HeuristicType h,R::RDebug* debug=0);
+	GInstH(unsigned int max,unsigned int popsize,R::RCursor<R::RObjH> objs,const R::RString& h,R::RDebug* debug=0);
 
 	virtual R::RCString GetClassName(void) const {return("GInstH");}
 	virtual void HandlerNotFound (const R::RNotification&) {}
-	
+
 	/**
 	* Initialisation of the instance.
 	*/

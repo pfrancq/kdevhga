@@ -99,7 +99,7 @@ class KDevHGAApp : public KMainWindow
 	/**
 	* Heuristic to used for the GA.
 	*/
-	HeuristicType GAHeur;
+	R::RString GAHeur;
 
 	/**
 	* Maximum number of generation.
@@ -120,22 +120,22 @@ class KDevHGAApp : public KMainWindow
 	 * Verify the GA?
 	 */
 	bool VerifyGA;
-	
+
 	/**
 	 * Display full attributes?
 	 */
 	bool DisplayFull;
-	
+
 	/**
 	 * Display terminal nodes?
 	 */
 	bool DisplayTerminals;
-	
+
 	/**
 	 * Display the objects?
 	 */
 	bool DisplayObjects;
-	
+
 	/**
 	* The configuration object of the application.
 	*/
@@ -196,15 +196,15 @@ public:
 	/**
 	 */
 	inline bool MustDisplayFull(void) const {return(DisplayFull);}
-	
+
 	/**
 	 */
 	inline bool MustDisplayTerminals(void) const {return(DisplayTerminals);}
-	
+
 	/**
 	 */
-	inline bool MustDisplayObjects(void) const {return(DisplayObjects);}	
-	
+	inline bool MustDisplayObjects(void) const {return(DisplayObjects);}
+
 	/**
 	* Opens a file specified by commandline option.
 	*/
@@ -384,9 +384,9 @@ private slots:
 	void slotWindowActivated(QWidget* w);
 
 signals:
-	
+
 	void redrawTrees(void);
-	
+
 private:
 
 	/**

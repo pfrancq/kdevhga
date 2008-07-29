@@ -29,6 +29,10 @@
 
 
 //-----------------------------------------------------------------------------
+#include <rqt.h>
+
+
+//-----------------------------------------------------------------------------
 // include files for Qt
 #include <qdir.h>
 #include <qprinter.h>
@@ -279,7 +283,7 @@ void KDevHGAApp::readOptions(void)
 	config->setGroup("Heuristic Options");
 	step=config->readBoolEntry("Step Mode",false);
 	config->setGroup("GA Options");
-	GAHeur=static_cast<HeuristicType>(config->readNumEntry("Heuristic Type",FirstFit));
+	GAHeur=config->readEntry("Heuristic Type","FirstFit").latin1();
 	GAMaxGen=config->readUnsignedLongNumEntry("Maximum Generation",100);
 	GAStepGen=config->readUnsignedLongNumEntry("Step Generation",0);
 	GAPopSize=config->readUnsignedLongNumEntry("Population Size",16);
@@ -361,7 +365,7 @@ void KDevHGAApp::slotHeuristicFF(void)
 	if(m&&(m->getType()==vProject))
 	{
 		KDevHGADoc* doc = m->getDocument();
-		KHGAHeuristicView* w = new KHGAHeuristicView(doc,FirstFit,pWorkspace,0,WDestructiveClose);
+		KHGAHeuristicView* w = new KHGAHeuristicView(doc,"FirstFit",pWorkspace,0,WDestructiveClose);
 		w->installEventFilter(this);
 		doc->addView(w);
 		w->setIcon(kapp->miniIcon());
@@ -481,7 +485,7 @@ void KDevHGAApp::slotSettingsOptions(void)
 	dlg.cbStep->setChecked(step);
 	dlg.txtMaxGen->setValue(GAMaxGen);
 	dlg.txtStepGen->setValue(GAStepGen);
-	dlg.cbGAHeuristicType->setCurrentItem(GAHeur);
+	dlg.cbGAHeuristicType->setCurrentText(ToQString(GAHeur));
 	dlg.txtPopSize->setValue(GAPopSize);
 	dlg.VerifyGA->setChecked(VerifyGA);
 	dlg.DisplayFull->setChecked(DisplayFull);
@@ -495,7 +499,7 @@ void KDevHGAApp::slotSettingsOptions(void)
 		step=dlg.cbStep->isChecked();
 		GAMaxGen=dlg.txtMaxGen->value();
 		GAStepGen=dlg.txtStepGen->value();
-		GAHeur=static_cast<HeuristicType>(dlg.cbGAHeuristicType->currentItem());
+		GAHeur=dlg.cbGAHeuristicType->currentText().latin1();
 		GAPopSize=dlg.txtPopSize->value();
 		VerifyGA=dlg.VerifyGA->isChecked();
 		DisplayFull=dlg.DisplayFull->isChecked();

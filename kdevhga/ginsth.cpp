@@ -72,7 +72,7 @@ GThreadDataH::~GThreadDataH(void)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-GInstH::GInstH(unsigned int max,unsigned int popsize,RCursor<RObjH> objs,HeuristicType h,RDebug* debug)
+GInstH::GInstH(unsigned int max,unsigned int popsize,RCursor<RObjH> objs,const RString& h,RDebug* debug)
 	: RInstH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeInfos,RObjH>(popsize,objs,h,"GALILEI GHA",debug),
 	  MaxGen(max)
 {

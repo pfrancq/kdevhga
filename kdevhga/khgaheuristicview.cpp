@@ -67,8 +67,8 @@ using namespace GALILEI;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-KHGAHeuristicView::KHGAHeuristicView(KDevHGADoc* pDoc,HeuristicType pType,QWidget *parent, const char *name,int wflags)
-	: KDevHGAView(pDoc,parent,name,wflags), type(pType), Inst(0,1,*pDoc->Objs,FirstFit,0), Objs(*pDoc->Objs)
+KHGAHeuristicView::KHGAHeuristicView(KDevHGADoc* pDoc,const RString& pType,QWidget *parent, const char *name,int wflags)
+	: KDevHGAView(pDoc,parent,name,wflags), type(pType), Inst(0,1,*pDoc->Objs,"FirstFit",0), Objs(*pDoc->Objs)
 {
 	Inst.Init();
 	nbObjs = pDoc->Objs->GetNb();
@@ -90,12 +90,8 @@ void KHGAHeuristicView::setTitle(QString _title)
 	static char today[30];
 	struct tm *l_time;
 
-	switch(type)
-	{
-		case FirstFit:
-			_title="First-Fit Heuristic: "+_title;
-			break;
-	}
+	if(type=="FirstFit")
+		_title="First-Fit Heuristic: "+_title;
 	now=time((time_t *)0);
 	l_time = localtime(&now);
 	sprintf(today," (%u-%u-%u %u:%u:%u)",l_time->tm_year+1900,l_time->tm_mon+1,l_time->tm_mday,l_time->tm_hour,l_time->tm_min,l_time->tm_sec);

@@ -73,7 +73,7 @@ class KHGAHeuristicView : public KDevHGAView
 	/**
 	* Type of the heuristic.
 	*/
-	HeuristicType type;
+	R::RString type;
 
 	/**
 	* Number of objects.
@@ -115,7 +115,7 @@ public:
 	/**
 	* Construct a heuristic view.
 	*/
-	KHGAHeuristicView(KDevHGADoc* pDoc,HeuristicType pType,QWidget* parent, const char* name,int wflags);
+	KHGAHeuristicView(KDevHGADoc* pDoc,const R::RString& pType,QWidget* parent, const char* name,int wflags);
 
 	/**
 	* Return the type of the window.

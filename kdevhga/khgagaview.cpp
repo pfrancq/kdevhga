@@ -88,12 +88,12 @@ KHGAGAView::KHGAGAView(KDevHGADoc* pDoc,QWidget *parent, const char *name,int wf
 	try
 	{
 		Gen=0;
-		Instance=new GInstH(theApp->GAMaxGen,theApp->GAPopSize,RCursor<RObjH>(*pDoc->Objs),FirstFit,Debug);
+		Instance=new GInstH(theApp->GAMaxGen,theApp->GAPopSize,RCursor<RObjH>(*pDoc->Objs),"FirstFit",Debug);
 		Instance->SetVerify(theApp->VerifyGA);
 		Monitor->setMaxFitness(Instance->GetMaxAttr()*2);
 		reinterpret_cast<RObject*>(this)->InsertObserver(HANDLER(KHGAGAView::GenSig),"RInst::Generation",Instance);
 		reinterpret_cast<RObject*>(this)->InsertObserver(HANDLER(KHGAGAView::InteractSig),"RInst::Interact",Instance);
-		reinterpret_cast<RObject*>(this)->InsertObserver(HANDLER(KHGAGAView::BestSig),"RInst::Best",Instance);	
+		reinterpret_cast<RObject*>(this)->InsertObserver(HANDLER(KHGAGAView::BestSig),"RInst::Best",Instance);
 		Instance->Init();
 	}
 	catch(RHGAException& e)
