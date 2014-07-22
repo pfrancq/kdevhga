@@ -30,13 +30,16 @@
 
 //-----------------------------------------------------------------------------
 // include files for KDE
-#include <kcmdlineargs.h>
+#include <kapplication.h>
 #include <kaboutdata.h>
-#include <klocale.h>
+#include <kcmdlineargs.h>
+#include <KDE/KLocale>
+
 
 
 //-----------------------------------------------------------------------------
 // include files for current project
+#include <rexception.h>
 #include "kdevhga.h"
 
 
@@ -46,47 +49,51 @@ static const char *description =
 
 
 //-----------------------------------------------------------------------------
-static KCmdLineOptions options[] =
-{
-  { "+[File]", I18N_NOOP("file to open"), 0 },
-  { 0, 0, 0 }
-  // INSERT YOUR COMMANDLINE OPTIONS HERE
-};
-
-
-//-----------------------------------------------------------------------------
-KDevHGAApp* theApp;
+KDevHGA* theApp;
 
 
 //-----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
-	KAboutData aboutData( "kdevhga", I18N_NOOP("KDevHGA"),
-		VERSION, description, KAboutData::License_GPL,
-		"(c) 1998-2002, Université Libre de Bruxelles\nCAD/CAM Department", 0, "http://cfao.ulb.ac.be", "pfrancq@ulb.ac.be");
-	aboutData.addAuthor("Pascal Francq",I18N_NOOP("Project Manager"), "pfrancq@ulb.ac.be");
+	setlocale(LC_CTYPE,"");
 
+    // Information about the application
+	KAboutData aboutData("kdevhga",0,ki18n("KDevHGA"),"1.89",ki18n(description),
+			KAboutData::License_GPL,ki18n("(C) 1998-2014 by Pascal Francq\n"),
+			KLocalizedString(),"http://www.otlet-institute.org", "pascal@francq.info");
+	aboutData.addAuthor(ki18n("Pascal Francq"),ki18n("Project Manager"),"pascal@francq.info");
+
+	// Init
 	KCmdLineArgs::init( argc, argv, &aboutData );
-	KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
+   KCmdLineOptions options;
+	KCmdLineArgs::addCmdLineOptions(options);
+
 
 	try
 	{
 		KApplication app;
-
-		if(app.isRestored())
+		theApp=new KDevHGA(argc,argv);
+		if(app.isSessionRestored())
 		{
-			RESTORE(KDevHGAApp);
+//			RESTORE(theApp);
 		}
 		else
 		{
-			theApp = new KDevHGAApp();
 			theApp->show();
 		}
-		return app.exec();
+		return(app.exec());
+	}
+	catch(R::RException& e)
+	{
+		std::cout<<e.GetMsg()<<std::endl;
+	}
+	catch(std::exception& e)
+	{
+		std::cout<<e.what()<<std::endl;
 	}
 	catch(...)
 	{
-		std::cout<<"Problem"<<std::endl;
+		std::cout<<"Unknown problem"<<std::endl;
 	}
  	return(0);
 }

@@ -29,6 +29,10 @@
 */
 
 
+//------------------------------------------------------------------------------
+// include files for ANSI C/C++
+#include <values.h>
+
 
 //------------------------------------------------------------------------------
 // include files for R
@@ -55,7 +59,7 @@ using namespace R;
 GChromoH::GChromoH(GInstH* inst,unsigned id)
 	: RChromoH<GInstH,GChromoH,GFitnessH,GThreadDataH,GNodeInfos,RObjH>(inst,id)
 {
-	(*Fitness)=100.0;
+	(*Fitness)=MAXDOUBLE;
 }
 
 
@@ -71,7 +75,9 @@ void GChromoH::Evaluate(void)
 {
 	double val=0.0;
 
-	Top->Evaluate(val,0.0);
+	RNodeCursor<GChromoH,GNodeInfos> Cur(*this);
+	for(Cur.Start();!Cur.End();Cur.Next())
+		Cur()->Evaluate(val,0.0);
 	(*Fitness)=val/static_cast<double>(Objs.GetNb());
 }
 

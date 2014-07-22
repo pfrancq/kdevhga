@@ -2,12 +2,9 @@
 
 	KDevHGA.h
 
-	Main application - Header.
+	Main Window - Header.
 
-	Copyright 1998-2008 by the Université Libre de Bruxelles.
-
-	Authors:
-		Pascal Francq (pfrancq@ulb.ac.be).
+	Copyright 1998-2014 by Pascal Francq (pascal@francq.info).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -41,80 +38,118 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rhga.h>
+#include <rqt.h>
+#include <rapplication.h>
 using namespace R;
 
 
 //-----------------------------------------------------------------------------
-// include files for Qt
-#include <qstrlist.h>
-#include <qworkspace.h>
-
-
-//-----------------------------------------------------------------------------
-// include files for KDE
-#include <kapp.h>
-#include <kmainwindow.h>
+// include files for Qt/KDE
+#include <QtGui/QMdiArea>
+#include <QtGui/QLabel>
+#include <QtCore/QList>
 #include <kaction.h>
-#include <kurl.h>
+#include <krecentfilesaction.h>
+#include <kxmlguiwindow.h>
 
 
-//-----------------------------------------------------------------------------
-// forward declaration of the KDevHGA classes
-class KDevHGADoc;
-class KDevHGAView;
-class KHGAGAView;
-class KHGAHeuristicView;
 
 
 //-----------------------------------------------------------------------------
 /**
-* The base class for KDevHGA application windows. It sets up the main window
-* and reads the config file as well as providing a menubar, toolbar and
-* statusbar. In initView(), your main view is created as the MDI child window
-* manager. Child windows are created in createClient(), which gets a document
-* instance as it's document to display whereby one document can have several
-* views.The MDI child is an instance of KDevHGAView, the document an instance
-* of KDevHGADoc.
+* The KDEvHGA application windows.
 *
-* KDevHGAApp reimplements the methods that KTMainWindow provides for main window handling and supports
-* full session management as well as keyboard accelerator configuration by using KAccel.
-* @see KMainWindow
-* @see KApplication
-* @see KConfig
-* @see KAccel
-*
-* @author Pascal Francq.
-* @short Main Application for the HGA.
+* @author Pascal Francq
+* @short RHGA Application.
 */
-class KDevHGAApp : public KMainWindow
+class KDevHGA : public KXmlGuiWindow, public RApplication
 {
 	Q_OBJECT
 
 	/**
-	* Run the heuristics in step mode.
-	*/
-	bool step;
+	 * Desktop of the application.
+	 */
+	QMdiArea* Desktop;
 
 	/**
-	* Heuristic to used for the GA.
+	 * Label to hold an image representing the status of the file opened.
+	 */
+	QLabel* Status;
+
+	/**
+	 * Connect to the session.
+	 */
+	KAction* aFileOpen;
+
+	/**
+	 * Initialize a new GA.
+	 */
+	KAction* aGAInit;
+
+	/**
+	 * Satrt a GA.
+	 */
+	KAction* aGAStart;
+
+	/**
+	 * Pause a GA.
+	 */
+	KAction* aGAPause;
+
+	/**
+	 * Initialize a heuristic.
+	 */
+	KAction* aHeurInit;
+
+	/**
+	 * Run a heuristic until the end.
+	 */
+	KAction* aHeurRun;
+
+	/**
+	 * Run one step of a heuristic.
+	 */
+	KAction* aHeurStep;
+
+	/**
+	 * Open a recent file.
+	 */
+	KRecentFilesAction* aFileOpenRecent;
+
+	/**
+	 * All available actions once a file is connected.
+	 */
+	QList<KAction*> Actions;
+
+	/**
+	* Run the heuristics in step mode.
 	*/
-	R::RString GAHeur;
+	bool Step;
 
 	/**
 	* Maximum number of generation.
 	*/
-	unsigned int GAMaxGen;
+	size_t MaxGen;
 
 	/**
 	* Step of generation.
 	*/
-	unsigned int GAStepGen;
+	size_t StepGen;
 
 	/**
 	* Size of the Population.
 	*/
-	unsigned int GAPopSize;
+	size_t PopSize;
+
+	/**
+	* The Log file.
+	*/
+	RString LogFileName;
+
+	/**
+	* The debug file.
+	*/
+	RString DebugFileName;
 
 	/**
 	 * Verify the GA?
@@ -136,62 +171,14 @@ class KDevHGAApp : public KMainWindow
 	 */
 	bool DisplayObjects;
 
-	/**
-	* The configuration object of the application.
-	*/
-	KConfig* config;
-
-	/**
-	* pWorkspace is the MDI frame widget that handles MDI child widgets.
-	* Inititalized in initView().
-	*/
-	QWorkspace* pWorkspace;
-
-	/**
-	* The printer instance.
-	*/
-	QPrinter* printer;
-
-	/**
-	* A counter that gets increased each time the user creates a new document with "File"->"New".
-	*/
-	int untitledCount;
-
-	/**
-	* A list of all open documents. If the last window of a document gets
-	* closed, the installed eventFilter removes this document from the list.
-	* The document list is checked for modified documents when the user is
-	* about to close the application.
-	*/
-	QList<KDevHGADoc>* pDocList;
-
-	// KAction pointers to enable/disable actions
-	KAction* fileOpen;
-	KRecentFilesAction* fileOpenRecent;
-	KAction* fileClose;
-	KAction* fileQuit;
-	KAction* heuristicFF;
-	KAction* heuristicRun;
-	KAction* heuristicNext;
-	KAction* GAInit;
-	KAction* GAStart;
-	KAction* GAPause;
-	KAction* GAStop;
-	KAction* windowNewWindow;
-	KAction* windowTile;
-	KAction* windowCascade;
-	KAction* settingsOptions;
-	KToggleAction* viewStatusBar;
-	KActionMenu* windowMenu;
-
 public:
 
 	/**
-	* Construtor of KDevHGAApp, calls all init functions to create the
-	* application.
-	* @see initMenuBar initToolBar
+	* Construtor of KDevHGA.
+	* @param argc            Number of arguments.
+	* @param argv            Values of arguments.
 	*/
-	KDevHGAApp(void);
+	KDevHGA(int argc, char *argv[]);
 
 	/**
 	 */
@@ -205,189 +192,32 @@ public:
 	 */
 	inline bool MustDisplayObjects(void) const {return(DisplayObjects);}
 
-	/**
-	* Opens a file specified by commandline option.
-	*/
-	void openDocumentFile(const KURL& url=0);
+	inline bool MustStep(void) const {return(Step);}
 
-protected:
+	inline bool MustVerify(void) const {return(VerifyGA);}
 
-	/**
-	* queryClose is called by KTMainWindow on each closeEvent of a window.
-	* Against the default implementation (only returns true), this overridden
-	* function retrieves all modified documents from the open document list and
-	* asks the user to select which files to save before exiting the
-	* application.
-	* @see KTMainWindow#queryClose
-	* @see KTMainWindow#closeEvent
-	*/
-	virtual bool queryClose(void);
+	inline size_t GetStepGen(void) const {return(StepGen);}
 
-	/**
-	* queryExit is called by KTMainWindow when the last window of the
-	* application is going to be closed during the closeEvent(). Against the
-	* default implementation that just returns true, this calls saveOptions()
-	* to save the settings of the last window's properties.
-	* @see KTMainWindow#queryExit
-	* @see KTMainWindow#closeEvent
-	*/
-	virtual bool queryExit(void);
+	inline size_t GetMaxGen(void) const {return(MaxGen);}
 
-	/**
-	* Saves the window properties for each open window during session end to
-	* the session config file, including saving the currently opened file by a
-	* temporary filename provided by KApplication.
-	* @see KTMainWindow#saveProperties
-	*/
-	virtual void saveProperties(KConfig* _cfg);
-
-	/**
-	* Reads the session config file and restores the application's state
-	* including the last opened files and documents by reading the temporary
-	* files saved by saveProperties().
-	* @see KTMainWindow#readProperties
-	*/
-	virtual void readProperties(KConfig* _cfg);
-
-	/**
-	* Event filter to catch close events for MDI child windows and is installed
-	* in createClient() on every child window. Closing a window calls the
-	* eventFilter first which removes the view from the connected documents'
-	* view list. If the last view is going to be closed, the eventFilter()
-	* tests if the document is modified; if yes, it asks the user to save the
-	* document. If the document title contains "Untitled", slotFileSaveAs()
-	* gets called to get a save name and path.
-	*/
-	virtual bool eventFilter(QObject* object, QEvent* event);
-
-	/**
-	* Creates a new child window. The document that will be connected to it has
-	* to be created before and the instances filled, with e.g. openDocument().
-	* Then call createClient() to get a new MDI child window.
-	* @see KDevHGADoc#addView
-	* @see KDevHGADoc#openDocument
-	* @param doc pointer to the document instance that the view will
-	* be connected to.
-	*/
-	void createClient(KDevHGADoc* doc);
-
-private slots:
-
-	/**
-	* Do the First-fit heuristic.
-	*/
-	void slotHeuristicFF(void);
-
-	/**
-	* One Step in the heuristic.
-	*/
-	void slotHeuristicNext(void);
-
-	/**
-	* End the heuristic.
-	*/
-	void slotEndHeuristic(void);
-
-	/**
-	* End the heuristic in once.
-	*/
-	void slotHeuristicRun(void);
-
-	/**
-	* Initialize the GA.
-	*/
-	void slotGAInit(void);
-
-	/**
-	* Start the GA.
-	*/
-	void slotGAStart(void);
-
-	/**
-	* Pause the GA.
-	*/
-	void slotGAPause(void);
-
-	/**
-	* Stop the GA.
-	*/
-	void slotGAStop(void);
-
-	/**
-	* Show the dialog box for the options.
-	*/
-	void slotSettingsOptions(void);
-
-	/**
-	* Open a file and load it into the document.
-	*/
-	void slotFileOpen(void);
-
-	/**
-	* Opens a file from the recent files menu.
-	*/
-	void slotFileOpenRecent(const KURL& url);
-
-	/**
-	* Asks for saving if the file is modified, then closes the actual file and
-	* window.
-	*/
-	void slotFileClose(void);
-
-	/**
-	* Closes all documents and quits the application.
-	*/
-	void slotFileQuit(void);
-
-	/**
-	* Toggles the statusbar.
-	*/
-	void slotViewStatusBar(void);
-
-	/**
-	* Creates a new view for the document in the active child window and adds
-	* the new view to the list of views the document maintains.
-	*/
-	void slotWindowNewWindow(void);
-
-	/**
-	* Changes the statusbar contents for the standard label permanently, used
-	* to indicate current actions.
-	* @param text the text that is displayed in the statusbar
-	*/
-	void slotStatusMsg(const QString& text);
-
-	/**
-	* Gets called when the window menu is activated; recreates the window menu
-	* with all opened window titles.
-	*/
-	void windowMenuAboutToShow(void);
-
-	/**
-	* Activates the MDI child widget when it gets selected from the window menu.
-	*/
-	void windowMenuActivated(int id);
-
-	/**
-	*
-	*/
-	void slotWindowTile(void);
-
-	/**
-	*
-	*/
-	void slotWindowCascade(void);
-
-	/**
-	* Called when a window is activated.
-	*/
-	void slotWindowActivated(QWidget* w);
-
-signals:
-
-	void redrawTrees(void);
+	inline size_t GetPopSize(void) const {return(PopSize);}
 
 private:
+
+	/**
+	 * Create an action for a given menu item.
+	 * @param title          Title of the menu item.
+	 * @param name           Name of the action (as appearing in .rc file).
+	 * @param slot           Corresponding slot.
+	 * @param icon           Icon associated.
+	 * @param key            Shortcut associated.
+	 */
+	KAction* addAction(const char* title,const char* name,const char* slot,const char* icon=0,const char* key=0);
+
+	/**
+	* Initializes the KActions of the application.
+	*/
+	void initActions(void);
 
 	/**
 	* Save general Options like all bar positions and status as well as the
@@ -396,37 +226,118 @@ private:
 	void saveOptions(void);
 
 	/**
-	* Read general Options again and initialize all variables like the recent file list.
+	* Read general Options again and initialize all variables like the recent
+	* file list.
 	*/
 	void readOptions(void);
 
 	/**
-	* Initializes the KActions of the application.
+	* Create the configuration structure. New parameters can be added by
+	* defining a new method.
 	*/
-	void initActions(void);
+	virtual void CreateConfig(void);
 
 	/**
-	* Sets up the statusbar for the main window by initialzing a statuslabel.
+	* Initialization of the application.
 	*/
-	void initStatusBar(void);
+	virtual void Init(void);
+
+public:
 
 	/**
-	* Creates the main view of the KTMainWindow instance and initializes the
-	* MDI view area including any needed connections.
+	 * Apply the configuration.
+    */
+	void Apply(void);
+
+private:
+
+	/**
+	* Changes the status bar contents for the standard label permanently, used
+	* to indicate current actions.
+	* @param text            Text that is displayed in the status bar.
 	*/
-	void initView(void);
+	void statusMsg(const QString& text);
+
+	/**
+	* Open a specific file.
+	* @param url             URL of the file.
+	*/
+	void openDocumentFile(const KUrl& url);
+
+private slots:
+
+	/**
+	 * Set the preferences.
+	 */
+	void optionsPreferences(void);
+
+public slots:
+
+	/**
+	 * Called when a window was activated.
+	 * @param window          Window activated (or 0 if no more window).
+    */
+	void subWindowActivated(QMdiSubWindow* window);
+
+private slots:
+
+	/**
+	* Open a file and load it into the document.
+	*/
+	void openFile(void);
+
+	/**
+	* Opens a file from the recent files menu.
+	*/
+	void openRecentFile(const KUrl& url);
+
+	/**
+	* Asks for saving if the file is modified, then closes the actual file and
+	* window.
+	*/
+	void closeFile(void);
+
+	/**
+	* Closes all documents and quits the application.
+	*/
+	void applicationQuit(void);
+
+	/**
+	* Initialize the GA.
+	*/
+	void GAInit(void);
+
+	/**
+	* Start the GA.
+	*/
+	void GAStart(void);
+
+	/**
+	* Pause the GA.
+	*/
+	void GAPause(void);
+
+	/**
+	* Do the First-Node heuristic.
+	*/
+	void heuristicFF(void);
+
+	/**
+	* One Step in the heuristic.
+	*/
+	void heuristicNext(void);
+
+	/**
+	* End the heuristic in once.
+	*/
+	void heuristicRun(void);
 
 public:
 
 	/**
 	* Destructor of the application.
 	*/
-	~KDevHGAApp(void);
-
-	// friend classes
-	friend class KDevHGAView;
-	friend class KHGAHeuristicView;
-	friend class KHGAGAView;
+	~KDevHGA(void);
 };
 
 
@@ -434,7 +345,7 @@ public:
 /**
 * Global pointer to the KMainWindow of the Application.
 */
-extern KDevHGAApp* theApp;
+extern KDevHGA* theApp;
 
 
 //-----------------------------------------------------------------------------

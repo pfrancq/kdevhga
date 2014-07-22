@@ -1,6 +1,6 @@
 /*
 
-	KHGAHeuristicView.h
+	KHeuristic.h
 
 	Window to follow the steps of an heuristic - Header.
 
@@ -28,36 +28,21 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef KHGAHeuristicView_H
-#define KHGAHeuristicView_H
+#ifndef KHeuristic_H
+#define KHeuristic_H
 
 
 //-----------------------------------------------------------------------------
-// include files for R Project
-#include <random.h>
-#include <rhga.h>
-#include <rtreeheuristic.h>
-#include <gnodeinfos.h>
-#include <rnodesga.h>
-#include <rnodega.h>
-#include <ghga.h>
-using namespace R;
-using namespace GALILEI;
-
-
-//-----------------------------------------------------------------------------
-// include files for Qt
-#include <qwidget.h>
-#include <qlabel.h>
+// include files for KDE/Qt
+#include <QtGui/QMdiSubWindow>
 
 
 //-----------------------------------------------------------------------------
 // include files for current application
-#include "kdevhgaview.h"
-#include "gchromoh.h"
-#include "ginsth.h"
-#include "gnodeinfos.h"
-#include <qtreeinfos.h>
+#include <ui_kheuristic.h>
+#include <ginsth.h>
+#include <kprjview.h>
+using namespace GALILEI;
 
 
 //-----------------------------------------------------------------------------
@@ -66,29 +51,19 @@ using namespace GALILEI;
 * specific heuristic.
 * @author Pascal Francq
 */
-class KHGAHeuristicView : public KDevHGAView
+class KHeuristic : public QMdiSubWindow, public Ui_KHeuristic
 {
 	Q_OBJECT
 
 	/**
-	* Type of the heuristic.
+	 * Project
 	*/
-	R::RString type;
+	KPrjView* Project;
 
 	/**
 	* Number of objects.
 	*/
 	unsigned int nbObjs;
-
-	/**
-	* Show information about the result.
-	*/
-	QLabel* result;
-
-	/**
-	* Show the polygons.
-	*/
-	QTreeInfos* draw;
 
 	/**
 	* Step Mode.
@@ -105,27 +80,12 @@ class KHGAHeuristicView : public KDevHGAView
 	*/
 	GInstH Inst;
 
-	/**
-	* Objects to group.
-	*/
-	RCursor<RObjH> Objs;
-
 public:
 
 	/**
 	* Construct a heuristic view.
 	*/
-	KHGAHeuristicView(KDevHGADoc* pDoc,const R::RString& pType,QWidget* parent, const char* name,int wflags);
-
-	/**
-	* Return the type of the window.
-	*/
-	virtual HGAViewType getType(void) {return(vHeuristic);}
-
-	/**
-	* Ask for setting the title.
-	*/
-	virtual void setTitle(QString _title);
+	KHeuristic(KPrjView* project);
 
 	/**
 	* Start the heuristic.
@@ -135,7 +95,7 @@ public:
 	/**
 	* Next step for the choosen Heuristic.
 	*/
-	void NextStep(void);
+	void NextStep(bool paint=true);
 
 	/**
 	* Run the heuristic to the end.
@@ -147,13 +107,6 @@ public:
 	* @return true if the heuristic is running.
 	*/
 	bool Running(void) {return(!Inst.GetHeuristic(0)->IsEnd());}
-
-protected:
-
-	/**
-	* Resize event method.
-	*/
-	virtual void resizeEvent(QResizeEvent *);
 
 signals:
 
@@ -167,7 +120,7 @@ public:
 	/**
 	*  Destruct a heuristic view.
 	*/
-	~KHGAHeuristicView(void);
+	~KHeuristic(void);
 };
 
 

@@ -38,57 +38,66 @@
 #include <rnodesga.h>
 #include <robjh.h>
 #include <rattrlist.h>
+#include <irproblemh.h>
 using namespace R;
+
 
 //-----------------------------------------------------------------------------
 // include files for Qt
-#include <qwidget.h>
-#include <qlistview.h>
+#include <QTreeWidget>
+#include <QTreeWidgetItem>
 
 
 //-----------------------------------------------------------------------------
 // include files for current application
 #include <gnodeinfos.h>
 #include <ghga.h>
+#include <gchromoh.h>
 using namespace GALILEI;
-
-
-//-----------------------------------------------------------------------------
-// forward class declaration
-class KDevHGADoc;
-class KHGAHeuristicView;
 
 
 //-----------------------------------------------------------------------------
 /**
 * @author Pascal Francq
 */
-class QTreeInfos : public QListView
+class QTreeInfos : public QWidget
 {
 	Q_OBJECT
-	KDevHGADoc* Doc;
-	GChromoH* Chromos;
 
-	void constObjs(RCursor<RObjH> objs,QListViewItem* item);
-	void constNode(QListViewItem* p,QListViewItem*& cur,GNodeInfos* n);
+	void* Ui;
+
+	R::iRProblemH<R::RObjH>* Problem;
+
+	GChromoH* Chromo;
+
+	void constObjs(RCursor<RObjH> objs,QTreeWidgetItem* item);
+	void constNode(QTreeWidgetItem* p,QTreeWidgetItem*& cur,GNodeInfos* n);
 
 public:
-	
-	QTreeInfos(KDevHGADoc* pDoc,QWidget* parent=0);
-	void setNodes(GChromoH* chromos);
-	
+
+	QTreeInfos(QWidget* parent=0);
+
+	void setProblem(R::iRProblemH<R::RObjH>* problem);
+	void setNodes(GChromoH* chromo);
+
+	/**
+	* The widget has changed and has to be repainted.
+	*/
+	void repaint(void);
+
+
+
 protected slots:
 
 	/**
-	* Mouse button press event method.
-	* @param e              MouseEvent info.
-	*/
-	void slotPressEvent(QListViewItem* item,const QPoint& pt,int col);
+	 * Show a context menu with information on the node clicked.
+    * @param pos            Position of the mouse.
+    */
+	void contextMenu(const QPoint& pos);
 
-	void redraw(void);
-	
+
 public:
-	
+
 	~QTreeInfos(void);
 };
 

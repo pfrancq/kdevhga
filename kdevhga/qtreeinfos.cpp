@@ -41,23 +41,17 @@ using namespace GALILEI;
 
 
 //-----------------------------------------------------------------------------
-// include files for Qt
-#include <qpixmap.h>
-#include <qpopupmenu.h>
-
-
-//-----------------------------------------------------------------------------
-// include files for KDE
+// include files for Qt/KDE
+#include <qmenu.h>
+#include <QtGui/QMouseEvent>
 #include <kiconloader.h>
-#include <kglobal.h>
 
 
 //-----------------------------------------------------------------------------
 // include files for current applications
 #include <qtreeinfos.h>
-#include "kdevhgadoc.h"
-#include "khgaheuristicview.h"
-#include "kdevhga.h"
+#include <ui_qtreeinfos.h>
+#include <kdevhga.h>
 
 
 
@@ -68,36 +62,65 @@ using namespace GALILEI;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-class MyItem : public QListViewItem
+class MyItem : public QTreeWidgetItem, public QObject
 {
 public:
 	RObjH* Obj;
 	GNodeInfos* Node;
-	KDevHGADoc* Doc;
-	
-	MyItem(KDevHGADoc* doc,QListViewItem* parent,QListViewItem* item,RObjH* obj);
-	MyItem(KDevHGADoc* doc,QListViewItem* parent,QListViewItem* item,GNodeInfos* node);
-	MyItem(KDevHGADoc* doc,QListView* parent,GNodeInfos* node);
+
+	MyItem(R::iRProblemH<R::RObjH>* problem,QTreeWidgetItem* parent/*,QTreeWidgetItem* item*/,RObjH* obj);
+	MyItem(R::iRProblemH<R::RObjH>* problem,QTreeWidgetItem* parent,QTreeWidgetItem* item,GNodeInfos* node);
+	MyItem(R::iRProblemH<R::RObjH>* problem,QTreeWidget* parent,GNodeInfos* node);
 };
 
 
 //-----------------------------------------------------------------------------
-MyItem::MyItem(KDevHGADoc* doc,QListViewItem* parent,QListViewItem* item,RObjH* obj)
-	: QListViewItem(parent,item,ToQString(obj->GetName())), Obj(obj), Node(0), Doc(doc)
+MyItem::MyItem(R::iRProblemH<R::RObjH>*,QTreeWidgetItem* parent,/*QTreeWidgetItem* item,*/RObjH* obj)
+	: QTreeWidgetItem(parent), Obj(obj), Node(0)
 {
-	setPixmap(0,QPixmap(KGlobal::iconLoader()->loadIcon("document",KIcon::Small)));
+/*	if(obj->GetId()==2)
+		cout<<"Debug"<<endl;*/
+//	cout<<"  Paint Obj "<<obj->GetId()<<endl;
+	setText(0,ToQString(obj->GetName()));
+	setIcon(0,QPixmap(KIconLoader::global()->loadIcon("document",KIconLoader::Small)));
 }
 
 
 //-----------------------------------------------------------------------------
-MyItem::MyItem(KDevHGADoc* doc,QListViewItem* parent,QListViewItem* item,GNodeInfos* node)
-	: QListViewItem(parent,item), Obj(0), Node(node), Doc(doc)
+MyItem::MyItem(R::iRProblemH<R::RObjH>* problem,QTreeWidgetItem* parent,QTreeWidgetItem* item,GNodeInfos* node)
+	: QTreeWidgetItem(parent,item), Obj(0), Node(node)
 {
 	QString str;
 	unsigned int i;
 
 	RAttrList View(20);
-	if(theApp->MustDisplayFull())
+	if(!Node->GetParent()) // theApp->MustDisplayFull())
+		View=node->GetAttr();
+	else
+	{
+
+		View.Diff(node->GetParent()->GetAttr(),node->GetAttr());
+	}
+	for(i=0;i<View.GetNbAttr();i++)
+	{
+		if(i>0)
+			str+=",";
+		str+=ToQString(problem->GetAttrLabel(View[i]));
+	}
+	setText(0,str);
+	setIcon(0,QPixmap(KIconLoader::global()->loadIcon("folder",KIconLoader::Small)));
+}
+
+
+//-----------------------------------------------------------------------------
+MyItem::MyItem(R::iRProblemH<R::RObjH>* problem,QTreeWidget* tree,GNodeInfos* node)
+	: QTreeWidgetItem(tree), Obj(0), Node(node)
+{
+	QString str;
+	unsigned int i;
+
+	RAttrList View(20);
+	if(!Node->GetParent()) //theApp->MustDisplayFull())
 		View=node->GetAttr();
 	else
 	{
@@ -107,114 +130,10 @@ MyItem::MyItem(KDevHGADoc* doc,QListViewItem* parent,QListViewItem* item,GNodeIn
 	{
 		if(i>0)
 			str+=",";
-		str+=ToQString(Doc->GetWord(View[i]));
+		str+=ToQString(problem->GetAttrLabel(View[i]));
 	}
 	setText(0,str);
-	setPixmap(0,QPixmap(KGlobal::iconLoader()->loadIcon("folder",KIcon::Small)));
-}
-
-
-//-----------------------------------------------------------------------------
-MyItem::MyItem(KDevHGADoc* doc,QListView* parent,GNodeInfos* node)
-	: QListViewItem(parent), Obj(0), Node(node), Doc(doc)
-{
-	QString str;
-	unsigned int i;
-
-	RAttrList View(20);
-	if(theApp->MustDisplayFull())
-		View=node->GetAttr();
-	else
-	{
-		View.Diff(node->GetParent()->GetAttr(),node->GetAttr());
-	}
-	for(i=0;i<View.GetNbAttr();i++)
-	{
-		if(i>0)
-			str+=",";
-		str+=ToQString(Doc->GetWord(View[i]));
-	}
-	setText(0,str);
-	setPixmap(0,QPixmap(KGlobal::iconLoader()->loadIcon("folder",KIcon::Small)));
-}
-
-
-
-//------------------------------------------------------------------------------
-//
-// QInfoBox
-//
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-/**
-* The QInfoBox class provides a popupmenu that display informartion about a
-* specific object and geometric information.
-* @author Pascal Francq
-* @short Popup object information
-*/
-class QInfoBox : public QPopupMenu
-{
-	/**
-	* Widget that must have the focus after.
-	*/
-	QWidget* afterFocus;
-
-public:
-
-	/**
-	* Constructor of the popup.
-	* @param parent        Parent of the widget.
-	* @param item          Item
-	*/
-	QInfoBox(KDevHGADoc* doc,QWidget* parent,MyItem* item);
-
-protected:
-
-	/**
-	* Mouse release event method. When the mouse bouton is released, the popup
-	* is closed.
-	*/
-	virtual void mouseReleaseEvent(QMouseEvent*);
-};
-
-
-//------------------------------------------------------------------------------
-QInfoBox::QInfoBox(KDevHGADoc* doc,QWidget* parent,MyItem* item)
-	: QPopupMenu(0,"Info Box")
-{
-	RAttrList attr(40);
-	
-	// Node?
-	if(item->Node)
-	{
-		insertItem("Node "+QString::number(item->Node->GetId()));
-		attr=item->Node->GetAttr();
-	}
-	
-	// Object?
-	if(item->Obj)
-	{
-		insertItem(ToQString(item->Obj->GetName())+" ("+QString::number(item->Obj->GetId())+")");
-		attr=item->Obj->GetAttr();
-	}
-
-	// Put the attributes
-	insertItem("Attributes:");
-	for(size_t i=0;i<attr.GetNbAttr();i++)
-		insertItem("  "+ToQString(doc->GetWord(attr[i]))+" ("+QString::number(attr[i])+")");
-	
-	// Prepare end
-	afterFocus=parent;
-	afterFocus->parentWidget()->setFocus();
-}
-
-
-//------------------------------------------------------------------------------
-void QInfoBox::mouseReleaseEvent(QMouseEvent*)
-{
-	afterFocus->parentWidget()->setFocus();
-	delete(this);
+	setIcon(0,QPixmap(KIconLoader::global()->loadIcon("folder",KIconLoader::Small)));
 }
 
 
@@ -226,85 +145,112 @@ void QInfoBox::mouseReleaseEvent(QMouseEvent*)
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-QTreeInfos::QTreeInfos(KDevHGADoc* pDoc,QWidget* parent)
-	: QListView(parent,"Results"), Doc(pDoc), Chromos(0)
+QTreeInfos::QTreeInfos(QWidget* parent)
+	: QWidget(parent), Ui(new Ui_QTreeInfos()), Chromo(0)
 {
-	addColumn("Resulting Tree");
-	setRootIsDecorated(true);
-	setSorting(-1);
-	setSortColumn(-1);
-	connect(this,SIGNAL(rightButtonPressed( QListViewItem *, const QPoint &, int )),this,SLOT(slotPressEvent( QListViewItem *, const QPoint &, int )));
-	connect(theApp,SIGNAL(redrawTrees()),this,SLOT(redraw()));
+	static_cast<Ui_QTreeInfos*>(Ui)->setupUi(this);
+	static_cast<Ui_QTreeInfos*>(Ui)->Tree->setRootIsDecorated(true);
+	static_cast<Ui_QTreeInfos*>(Ui)->Tree->setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(static_cast<Ui_QTreeInfos*>(Ui)->Tree,SIGNAL(customContextMenuRequested(const QPoint&)),this,SLOT(contextMenu(const QPoint&)));
 }
 
 
 //-----------------------------------------------------------------------------
-void QTreeInfos::constObjs(RCursor<RObjH> objs,QListViewItem* item)
+void QTreeInfos::constObjs(RCursor<RObjH> objs,QTreeWidgetItem* item)
 {
-	QListViewItem* item2=0;
-
 	for(objs.Start();!objs.End();objs.Next())
-		item2=new MyItem(Doc,item,item2,objs());
+		new MyItem(Problem,item,objs());
 }
 
 
 //-----------------------------------------------------------------------------
-void QTreeInfos::constNode(QListViewItem* p,QListViewItem*& cur,GNodeInfos* n)
+void QTreeInfos::constNode(QTreeWidgetItem* p,QTreeWidgetItem*& cur,GNodeInfos* n)
 {
-	QListViewItem* item(0);
-	
-	if(p&&(!n->GetNbNodes())&&(!theApp->MustDisplayTerminals()))
+	QTreeWidgetItem* item(0);
+
+	if((!theApp->MustDisplayTerminals())&&(!n->GetNbNodes()))
 	{
 		item=p;
 	}
 	else
 	{
-		QListViewItem* item2=0;
+		QTreeWidgetItem* item2=0;
 
 		item=cur;
 		if(p)
-			item=new MyItem(Doc,p,item,n);
+			item=new MyItem(Problem,p,item,n);
 		else
-			item=new MyItem(Doc,this,n);
+			item=new MyItem(Problem,static_cast<Ui_QTreeInfos*>(Ui)->Tree,n);
 
 		// Continue the tree with the subnodes.
-		RCursor<GNodeInfos> Cur(Chromos->GetNodes(n));
+		RNodeCursor<GChromoH,GNodeInfos> Cur(n);
 		for(Cur.Start();!Cur.End();Cur.Next())
 			constNode(item,item2,Cur());
 	}
 
 	// Continue the tree with the subobjects.
 	if(theApp->MustDisplayObjects())
-		constObjs(Chromos->GetObjs(n),item);
+		constObjs(n->GetObjs(),item);
 }
 
 
 //-----------------------------------------------------------------------------
-void QTreeInfos::setNodes(GChromoH* chromos)
+void QTreeInfos::setProblem(R::iRProblemH<R::RObjH>* problem)
 {
-	Chromos=chromos;
-	redraw();
+	Problem=problem;
+}
+
+
+//-----------------------------------------------------------------------------
+void QTreeInfos::setNodes(GChromoH* chromo)
+{
+	Chromo=chromo;
+	repaint();
 }
 
 
 //------------------------------------------------------------------------------
-void QTreeInfos::slotPressEvent(QListViewItem* item, const QPoint& pos,int)
+void QTreeInfos::contextMenu(const QPoint& pos)
 {
-	QInfoBox* InfoBox=new QInfoBox(Doc,this,dynamic_cast<MyItem*>(item));
-	InfoBox->popup(pos);
+	MyItem* item(dynamic_cast<MyItem*>(static_cast<Ui_QTreeInfos*>(Ui)->Tree->itemAt(pos)));
+	if(!item)
+		return;
+
+	RAttrList attr(40);
+	QMenu Menu;
+
+	if(item->Node)
+	{
+		Menu.addAction("Node "+QString::number(item->Node->GetId()));
+		attr=item->Node->GetAttr();
+	}
+	else if(item->Obj)
+	{
+		Menu.addAction(ToQString(item->Obj->GetName())+" ("+QString::number(item->Obj->GetId())+")");
+		attr=item->Obj->GetAttr();
+	}
+
+	Menu.addSeparator();
+
+	// Put the attributes
+	for(size_t i=0;i<attr.GetNbAttr();i++)
+		Menu.addAction("  "+ToQString(Problem->GetAttrLabel(attr[i]))+" ("+QString::number(attr[i])+")");
+
+	Menu.exec(mapToGlobal(pos));
 }
 
 
 //------------------------------------------------------------------------------
-void QTreeInfos::redraw(void)
+void QTreeInfos::repaint(void)
 {
-	QListViewItem* cur=0;
+	if((!Chromo)||(!Problem))
+		return;
 
-	clear();
-	RCursor<GNodeInfos> Cur(Chromos->GetNodes(Chromos->GetTop()));
+	QTreeWidgetItem* cur=0;
+	static_cast<Ui_QTreeInfos*>(Ui)->Tree->clear();
+	RNodeCursor<GChromoH,GNodeInfos> Cur(*Chromo);
 	for(Cur.Start();!Cur.End();Cur.Next())
 		constNode(0,cur,Cur());
-	repaint();
 }
 
 

@@ -96,7 +96,7 @@ bool GInstH::StopCondition(void)
 //------------------------------------------------------------------------------
 void GInstH::PostRun(void)
 {
-	BestChromosome->CleanUp();
+//	BestChromosome->CleanUp();
 }
 
 

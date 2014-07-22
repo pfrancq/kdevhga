@@ -1,6 +1,6 @@
 /*
 
-	KHGAHeuristicView.cpp
+	KHeuristic.cpp
 
 	Window to follow the steps of an heuristic - Implementation.
 
@@ -54,76 +54,68 @@ using namespace GALILEI;
 
 //-----------------------------------------------------------------------------
 // include files for current application
-#include "kdevhga.h"
-#include "khgaheuristicview.h"
-#include "kdevhgadoc.h"
+#include <kdevhga.h>
+#include <kheuristic.h>
 
 
 
 //-----------------------------------------------------------------------------
 //
-// class KHGAHeuristicView
+// class KHeuristic
 //
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-KHGAHeuristicView::KHGAHeuristicView(KDevHGADoc* pDoc,const RString& pType,QWidget *parent, const char *name,int wflags)
-	: KDevHGAView(pDoc,parent,name,wflags), type(pType), Inst(0,1,*pDoc->Objs,"FirstFit",0), Objs(*pDoc->Objs)
+KHeuristic::KHeuristic(KPrjView* project)
+	: QMdiSubWindow(), Ui_KHeuristic(), Project(project), Inst(0,1,project->GetObjs(),"FirstFit",0)
 {
+	// Set the widget part
+	QWidget* ptr=new QWidget();
+	setupUi(ptr);
+	setWidget(ptr);
+	setAttribute(Qt::WA_DeleteOnClose);
+	Tree->setProblem(project);
+	Result->setText("Running...");
+
 	Inst.Init();
-	nbObjs = pDoc->Objs->GetNb();
-	draw=new QTreeInfos(pDoc,this);
-	draw->setNodes(Inst.Chromosomes[0]);
-	result=new QLabel(this);
 
 	// Init the heuristic
-	step=theApp->step;
+	step=theApp->MustStep();
 	Inst.GetHeuristic(0)->Init(Inst.Chromosomes[0]);
 	connect(this,SIGNAL(endRun()),theApp,SLOT(slotEndHeuristic(void)));
-}
 
-
-//-----------------------------------------------------------------------------
-void KHGAHeuristicView::setTitle(QString _title)
-{
 	time_t now;
 	static char today[30];
 	struct tm *l_time;
 
-	if(type=="FirstFit")
-		_title="First-Fit Heuristic: "+_title;
 	now=time((time_t *)0);
 	l_time = localtime(&now);
 	sprintf(today," (%u-%u-%u %u:%u:%u)",l_time->tm_year+1900,l_time->tm_mon+1,l_time->tm_mday,l_time->tm_hour,l_time->tm_min,l_time->tm_sec);
-	setCaption(_title+today);
+	setWindowTitle(ToQString("First Node: "+Project->GetURI().GetPath()+today));
 }
 
 
 //-----------------------------------------------------------------------------
-void KHGAHeuristicView::resizeEvent(QResizeEvent *)
-{
-	result->resize(width(),result->height());
-	result->move(0,height()-result->height());
-	draw->resize(width(),height()-result->height());
-}
-
-
-//-----------------------------------------------------------------------------
-void KHGAHeuristicView::RunHeuristic(void)
+void KHeuristic::RunHeuristic(void)
 {
 	Stop=false;
 
 	// Run the heuristic
 	if(step)
-		NextStep();
+		NextStep(false);
 	else
 		while((!Inst.GetHeuristic(0)->IsEnd())&&(!Stop))
-			NextStep();
+		{
+			//cout<<"Avant : Nb Top Nodes: "<<Inst.Chromosomes[0]->GetNbTopNodes()<<endl;
+			NextStep(false);
+			//cout<<"Après : Nb Top Nodes: "<<Inst.Chromosomes[0]->GetNbTopNodes()<<endl;
+		}
+	Tree->setNodes(Inst.Chromosomes[0]);
 }
 
 
 //-----------------------------------------------------------------------------
-void KHGAHeuristicView::NextStep(void)
+void KHeuristic::NextStep(bool paint)
 {
 	try
 	{
@@ -133,26 +125,27 @@ void KHGAHeuristicView::NextStep(void)
 		if(Inst.GetHeuristic(0)->IsEnd())
 		{
 			Inst.GetHeuristic(0)->PostRun();
-			result->setText("Done");
-			draw->setNodes(Inst.Chromosomes[0]);
+			Result->setText("Done");
+			if(paint)
+				Tree->setNodes(Inst.Chromosomes[0]);
 			emit endRun();
 		}
 		else
 		{
-			draw->setNodes(Inst.Chromosomes[0]);
+			if(paint)
+				Tree->setNodes(Inst.Chromosomes[0]);
 		}
-		KApplication::kApplication()->processEvents(1000);
 	}
 	catch(RException& e)
-    {
-		KMessageBox::error(this,e.GetMsg());
+   {
+		KMessageBox::error(this,ToQString(e.GetMsg()));
 		Stop=true;
-    }
+   }
 }
 
 
 //-----------------------------------------------------------------------------
-void KHGAHeuristicView::RunToEnd(void)
+void KHeuristic::RunToEnd(void)
 {
 	step=false;
 	while(!Inst.GetHeuristic(0)->IsEnd())
@@ -163,6 +156,7 @@ void KHGAHeuristicView::RunToEnd(void)
 
 
 //-----------------------------------------------------------------------------
-KHGAHeuristicView::~KHGAHeuristicView(void)
+KHeuristic::~KHeuristic(void)
 {
+	Project->remove(this);
 }
